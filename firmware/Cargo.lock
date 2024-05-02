@@ -489,6 +489,9 @@ name = "embedded-hal"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "361a90feb7004eca4019fb28352a9465666b24f840f5c3cddf0ff13920590b89"
+dependencies = [
+ "defmt",
+]
 
 [[package]]
 name = "embedded-hal-async"
@@ -496,6 +499,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c4c685bbef7fe13c3c6dd4da26841ed3980ef33e841cddfa15ce8a8fb3f1884"
 dependencies = [
+ "defmt",
  "embedded-hal 1.0.0",
 ]
 
@@ -583,6 +587,7 @@ dependencies = [
  "futures",
  "heapless 0.8.0",
  "libm",
+ "lora-phy",
  "micromath",
  "nalgebra 0.32.5",
  "nmea",
@@ -779,6 +784,23 @@ checksum = "3c168f8615b12bc01f9c17e2eb0cc07dcae1940121185446edc3744920e8ef45"
 dependencies = [
  "autocfg",
  "scopeguard",
+]
+
+[[package]]
+name = "lora-modulation"
+version = "0.1.4"
+source = "git+https://github.com/lora-rs/lora-rs#93824bb2cc7dd1816004385547f2a8c6e86fc389"
+
+[[package]]
+name = "lora-phy"
+version = "3.0.0-alpha.4"
+source = "git+https://github.com/lora-rs/lora-rs#93824bb2cc7dd1816004385547f2a8c6e86fc389"
+dependencies = [
+ "defmt",
+ "embedded-hal 1.0.0",
+ "embedded-hal-async",
+ "lora-modulation",
+ "num-traits",
 ]
 
 [[package]]
@@ -1311,13 +1333,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
-name = "vlf4-test"
+name = "vlf4-firmware"
 version = "0.1.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
  "defmt",
  "defmt-rtt",
+ "embassy-embedded-hal",
  "embassy-executor",
  "embassy-futures",
  "embassy-stm32",
@@ -1329,6 +1352,7 @@ dependencies = [
  "futures",
  "heapless 0.8.0",
  "libm",
+ "lora-phy",
  "panic-halt",
  "panic-probe",
 ]

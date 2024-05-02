@@ -2,7 +2,7 @@
 
 [package]
 edition = "2021"
-name = "vlf4-test"
+name = "vlf4-firmware"
 version = "0.1.0"
 
 [dependencies]
@@ -38,18 +38,19 @@ embassy-time = { version = "0.3.0", features = [
     "defmt-timestamp-uptime",
     "tick-hz-32_768",
 ] }
-embedded-hal-async = "1.0.0"
+embedded-hal-async = { version = "1.0.0", features = ["defmt-03"] }
 embedded-io-async = "0.6.1"
 panic-halt = "0.2.0"
 panic-probe = { version = "0.3.1", features = ["print-defmt"] }
 libm = "0.2.8"
 heapless = { version = "0.8.0", features = ["defmt-03"], default-features = false }
 firmware-common = { path = "../rust-monorepo/firmware-common" }
-# vlfs = { path = "../rust-monorepo/vlfs" }
+lora-phy = {  git = "https://github.com/lora-rs/lora-rs", default-features = false }
+embassy-embedded-hal = { version = "0.1.0", features = ["defmt"] }
 
 
 [[bin]]
-name = "vlf4-test"
+name = "vlf4-firmware"
 test = false
 bench = false
 

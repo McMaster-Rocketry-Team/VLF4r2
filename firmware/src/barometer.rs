@@ -1,14 +1,8 @@
-use embassy_stm32::{
-    gpio::{AnyPin, Level, Output, Pin, Speed},
-    peripherals::PA10,
-};
 use embassy_time::{Duration, Instant, Timer};
+use embedded_hal_async::spi::{ErrorKind, SpiDevice};
 use firmware_common::driver::barometer::{BaroReading, Barometer};
-
-use crate::{
-    shared_spi::{SharedSpiBus, SpiBusError},
-    sleep,
-};
+use embedded_hal_async::spi::Error;
+use crate::sleep;
 
 
 #[derive(Clone, Copy)]
@@ -21,28 +15,26 @@ struct Coefficients {
     tempsens: u16,
 }
 
-pub struct MS5607<'b, B: SharedSpiBus> {
-    cs: Output<'static, AnyPin>,
-    spi: &'b B,
+pub struct MS5607<B: SpiDevice> {
+    spi: B,
     coefficients: Option<Coefficients>,
 }
 
-impl<'b, B: SharedSpiBus> MS5607<'b, B> {
-    pub fn new(cs: PA10, spi: &'b B) -> Self {
+impl<B: SpiDevice> MS5607<B> {
+    pub fn new(spi_device: B) -> Self {
         Self {
-            cs: Output::new(cs.degrade(), Level::High, Speed::VeryHigh),
-            spi,
+            spi:spi_device,
             coefficients: None,
         }
     }
 }
 
-impl<'b, B: SharedSpiBus> Barometer for MS5607<'b, B> {
-    type Error = SpiBusError;
+impl<B: SpiDevice> Barometer for MS5607<B> {
+    type Error = ErrorKind;
 
-    async fn reset(&mut self) -> Result<(), SpiBusError> {
+    async fn reset(&mut self) -> Result<(), ErrorKind> {
         // reset
-        self.spi.transfer(&mut [0u8], &[0x1E], &mut self.cs).await?;
+        self.spi.transfer(&mut [0u8], &[0x1E]).await.map_err(|e|e.kind())?;
 
         sleep!(20);
 
@@ -52,8 +44,8 @@ impl<'b, B: SharedSpiBus> Barometer for MS5607<'b, B> {
             let write_data: [u8; 3] = [0xA0 | (addr << 1), 0, 0];
             let mut read_buffer = [0; 3];
             self.spi
-                .transfer(&mut read_buffer, &write_data, &mut self.cs)
-                .await?;
+                .transfer(&mut read_buffer, &write_data)
+                .await.map_err(|e|e.kind())?;
 
             coefficients[(addr - 1) as usize] =
                 ((read_buffer[1] as u16) << 8) | (read_buffer[2] as u16);
@@ -70,30 +62,30 @@ impl<'b, B: SharedSpiBus> Barometer for MS5607<'b, B> {
         Ok(())
     }
 
-    async fn read(&mut self) -> Result<BaroReading, SpiBusError> {
+    async fn read(&mut self) -> Result<BaroReading, ErrorKind> {
         // request measurement pressure with OSR=1024
         let timestamp = Instant::now().as_micros() as f64 / 1000.0 + 1.0; // timestamp of the pressure measurement
-        self.spi.transfer(&mut [0u8], &[0x44], &mut self.cs).await?;
+        self.spi.transfer(&mut [0u8], &[0x44]).await.map_err(|e|e.kind())?;
         Timer::after(Duration::from_micros(2280)).await;
 
         // read pressure measurement
         let write_data: [u8; 4] = [0x00, 0, 0, 0];
         let mut read_buffer = [0; 4];
         self.spi
-            .transfer(&mut read_buffer, &write_data, &mut self.cs)
-            .await?;
+            .transfer(&mut read_buffer, &write_data)
+            .await.map_err(|e|e.kind())?;
         let d1 = ((read_buffer[1] as u32) << 16)
             | ((read_buffer[2] as u32) << 8)
             | (read_buffer[3] as u32);
 
         // request measurement temperature with OSR=256
-        self.spi.transfer(&mut [0u8], &[0x50], &mut self.cs).await?;
+        self.spi.transfer(&mut [0u8], &[0x50]).await.map_err(|e|e.kind())?;
         Timer::after(Duration::from_micros(600)).await;
 
         // read temerature measurement
         self.spi
-            .transfer(&mut read_buffer, &write_data, &mut self.cs)
-            .await?;
+            .transfer(&mut read_buffer, &write_data)
+            .await.map_err(|e|e.kind())?;
         let d2 = ((read_buffer[1] as u32) << 16)
             | ((read_buffer[2] as u32) << 8)
             | (read_buffer[3] as u32);

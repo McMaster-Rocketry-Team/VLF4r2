@@ -1,11 +1,13 @@
+use defmt::trace;
 use embassy_stm32::{
     bind_interrupts,
-    gpio::{Level, Output, Speed},
-    peripherals::{DMA1_CH4, DMA1_CH5, PA0, PA1, PB6, UART4},
+    exti::ExtiInput,
+    gpio::{Input, Level, Output, Pull, Speed},
+    peripherals::{DMA1_CH4, DMA1_CH5, EXTI5, PA0, PA1, PB5, PB6, UART4},
     usart::{self, Config as UartConfig, Uart},
 };
 use embassy_time::Instant;
-use firmware_common::driver::gps::{NmeaSentence, GPS};
+use firmware_common::driver::gps;
 use heapless::String;
 
 use crate::sleep;
@@ -58,8 +60,8 @@ impl UartGPS {
     }
 }
 
-impl GPS for UartGPS {
-    async fn next_nmea_sentence(&mut self) -> NmeaSentence {
+impl gps::GPS for UartGPS {
+    async fn next_nmea_sentence(&mut self) -> gps::NmeaSentence {
         let uart = self.uart.as_mut().expect("GPS not initialized");
         'outer: loop {
             match uart.read_until_idle(&mut self.buffer).await {
@@ -74,10 +76,10 @@ impl GPS for UartGPS {
 
                             let sentence = self.sentence.clone();
                             self.sentence.clear();
-                            for j in (i+1)..length{
+                            for j in (i + 1)..length {
                                 self.sentence.push(self.buffer[j] as char).ok();
                             }
-                            break 'outer NmeaSentence {
+                            break 'outer gps::NmeaSentence {
                                 sentence,
                                 timestamp: Instant::now().as_micros() as f64 / 1000.0,
                             };
@@ -113,5 +115,24 @@ impl GPS for UartGPS {
         sleep!(200);
 
         self.uart.replace(uart);
+    }
+}
+
+pub struct GPSPPS {
+    pps: ExtiInput<'static, PB5>,
+}
+
+impl GPSPPS {
+    pub fn new(pps: PB5, exti: EXTI5) -> Self {
+        Self {
+            pps: ExtiInput::new(Input::new(pps, Pull::None), exti),
+        }
+    }
+}
+
+impl gps::GPSPPS for GPSPPS {
+    async fn wait_for_pps(&mut self) {
+        self.pps.wait_for_rising_edge().await;
+        trace!("PPS");
     }
 }
