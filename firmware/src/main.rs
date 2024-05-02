@@ -93,7 +93,9 @@ async fn main(_spawner: Spawner) {
     let mut spi_config = SpiConfig::default();
     spi_config.frequency = Hertz(1_000_000);
 
-    let mut spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(p.SPI1, p.PB3, p.PD7, p.PB4, p.DMA1_CH3, p.DMA1_CH2, spi_config));
+    let mut spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI1, p.PB3, p.PD7, p.PB4, p.DMA1_CH3, p.DMA1_CH2, spi_config,
+    ));
     let h2lis100dl_spi_device = SpiDeviceWithConfig::new(
         &spi1,
         Output::new(p.PD2, Level::High, Speed::High),
@@ -102,7 +104,7 @@ async fn main(_spawner: Spawner) {
     let mut h2lis100dl = H3LIS100DL::new(h2lis100dl_spi_device);
     h2lis100dl.reset().await.unwrap();
     loop {
-        info!("{}",h2lis100dl.read().await.unwrap());
+        info!("{}", h2lis100dl.read().await.unwrap());
         sleep!(50);
     }
     // let tx_buffer = [0x0F | 0b10000000, 0x00];
