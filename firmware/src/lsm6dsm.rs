@@ -7,11 +7,10 @@ use firmware_common::driver::imu::{IMUReading, IMU};
 
 use crate::sleep;
 
-const CTRL1_XL : u8 = 0x10;
-const CTRL2_G : u8 = 0x11;
-const CTRL3_C : u8 = 0x12;
+const CTRL1_XL: u8 = 0x10;
+const CTRL2_G: u8 = 0x11;
+const CTRL3_C: u8 = 0x12;
 const OUTX_L_G: u8 = 0x22;
- 
 
 pub struct LSM6DSM<B: SpiDevice> {
     spi: B,
@@ -22,7 +21,21 @@ impl<B: SpiDevice> LSM6DSM<B> {
         Self { spi: spi_device }
     }
 
-    pub async fn read_register(&mut self, address: u8) -> Result<u8, ErrorKind> {
+    /*
+       Set the sensor to low power mode
+
+       CTRL1_XL (10h) - 0b0011_11_00;  Set odr to 52Hz, full scale to 16g, low cutoff freq, high BW
+       CTRL2_G (11h) - 0b0011_11_00;   Set odr to 52Hz, full scale to 2000dps, low cutoff freq, high BW
+    */
+    pub async fn low_power(&mut self) -> Result<(), ErrorKind> {
+        self.write_register(CTRL1_XL, 0b0011_1100).await?;
+        sleep!(10);
+        self.write_register(CTRL2_G, 0b0011_1100).await?;
+        sleep!(10);
+        Ok(())
+    }
+
+    async fn read_register(&mut self, address: u8) -> Result<u8, ErrorKind> {
         let mut buffer = [0u8; 2];
 
         self.spi
@@ -33,25 +46,26 @@ impl<B: SpiDevice> LSM6DSM<B> {
         Ok(buffer[1])
     }
 
-    pub async fn write_register(&mut self, address: u8, value: u8) -> Result<(), ErrorKind> {
+    async fn write_register(&mut self, address: u8, value: u8) -> Result<(), ErrorKind> {
         self.spi
             .transfer(&mut [0u8; 2], &[address & !0b10000000, value])
             .await
             .map_err(|e| e.kind())?;
         Ok(())
+    }
 }
 
 impl<B: SpiDevice> IMU for LSM6DSM<B> {
     type Error = ErrorKind;
 
     /*
-        Reset the sensor
+       Reset the sensor
 
-        CTRL1_XL (10h) - 0b1010_11_00; Set odr (acceleration) to 6.66KHz, full scale to 16g, low cutoff freq, high BW
-        CTRL2_G (11h) - 0b1010_11_00;  Set odr (Gyro) to 6.66KHz, full scale to 2000dps, low cutoff freq, high BW
-        CTRL3_C (12h) - 0b1100_01_01;  Reboots memory content/software, 4-wire SPI, enable block data update
-     */
-    pub async fn reset(&mut self) -> Result<(), Self::Error> {
+       CTRL1_XL (10h) - 0b1010_11_00; Set odr (acceleration) to 6.66KHz, full scale to 16g, low cutoff freq, high BW
+       CTRL2_G (11h) - 0b1010_11_00;  Set odr (Gyro) to 6.66KHz, full scale to 2000dps, low cutoff freq, high BW
+       CTRL3_C (12h) - 0b1100_01_01;  Reboots memory content/software, 4-wire SPI, enable block data update
+    */
+    async fn reset(&mut self) -> Result<(), Self::Error> {
         self.write_register(CTRL1_XL, 0b1010_1100).await?;
         sleep!(10);
         self.write_register(CTRL2_G, 0b1010_1100).await?;
@@ -61,25 +75,15 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
         Ok(())
     }
 
-    /*
-        Set the sensor to low power mode
-
-        CTRL1_XL (10h) - 0b0011_11_00;  Set odr to 52Hz, full scale to 16g, low cutoff freq, high BW
-        CTRL2_G (11h) - 0b0011_11_00;   Set odr to 52Hz, full scale to 2000dps, low cutoff freq, high BW
-     */
-    pub async fn low_power(&mut self) -> Result<(), Self::Error> {
-        self.write_register(CTRL1_XL, 0b0011_1100).await?;
-        sleep!(10);
-        self.write_register(CTRL2_G, 0b0011_1100).await?;
-        sleep!(10);
-        Ok(())
-    }
-
-    pub async fn read(&mut self) -> Result<IMUReading, Self::Error> {
+    
+    async fn read(&mut self) -> Result<IMUReading, Self::Error> {
         let mut buffer = [0u8; 12];
 
         self.spi
-            .transfer(&mut buffer, &[OUTX_L_G | 0b10000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            .transfer(
+                &mut buffer,
+                &[OUTX_L_G | 0b10000000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            )
             .await
             .map_err(|e| e.kind())?;
 
@@ -95,7 +99,7 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
         let gyro_scale = 2000.0 / 32768.0; // ±2000dps range
 
         let imu_reading = IMUReading {
-            timestamp: Instant::now(),
+            timestamp: Instant::now().as_micros() as f64 / 1000.0,
             acc: [
                 acc_x as f32 * acc_scale,
                 acc_y as f32 * acc_scale,
@@ -110,5 +114,4 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
 
         Ok(imu_reading)
     }
-}
 }

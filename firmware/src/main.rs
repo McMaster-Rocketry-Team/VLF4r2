@@ -8,6 +8,7 @@ mod clock;
 mod fmt;
 mod gps;
 mod h3lis100dl;
+mod lsm6dsm;
 mod meg;
 mod utils;
 
