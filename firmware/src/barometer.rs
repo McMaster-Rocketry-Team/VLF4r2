@@ -23,7 +23,7 @@ pub struct MS5607<B: SpiDevice> {
 impl<B: SpiDevice> MS5607<B> {
     pub fn new(spi_device: B) -> Self {
         Self {
-            spi:spi_device,
+            spi: spi_device,
             coefficients: None,
         }
     }

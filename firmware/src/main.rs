@@ -3,37 +3,43 @@
 #![feature(type_alias_impl_trait)]
 #![feature(impl_trait_in_assoc_type)]
 
-// mod barometer;
 mod barometer;
 mod clock;
 mod fmt;
 mod gps;
 mod h3lis100dl;
+mod meg;
 mod utils;
+
+use core::mem::transmute;
 
 use crate::barometer::MS5607;
 use crate::clock::Clock;
 use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
-use defmt::info;
+use crate::meg::MMC5603;
+use defmt::{error, info};
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
-use embassy_stm32::can;
 use embassy_stm32::exti::{Channel, ExtiInput};
 use embassy_stm32::gpio::Pin;
+use embassy_stm32::i2c::Config as I2cConfig;
+use embassy_stm32::i2c::I2c;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
+use embassy_stm32::{can, i2c};
 use embassy_time::{Delay, Timer};
 use embedded_hal_async::spi::SpiDevice;
 use embedded_io_async::Write;
 use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::gps::{GPSParser, GPS};
 use firmware_common::driver::imu::IMU;
+use firmware_common::driver::meg::Megnetometer;
 use firmware_common::testMain;
 use futures::join;
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, PA0, PA1, UART4};
+use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, I2C4, PA0, PA1, UART4};
 use embassy_stm32::{
     bind_interrupts,
     gpio::{Input, Level, Output, Pull, Speed},
@@ -66,38 +72,170 @@ const LOWER_ALTITUDE: f32 = 300.0; // ezmini: 396.24
 //     FDCAN2_IT1 => can::IT1InterruptHandler<FDCAN2>;
 // });
 
+bind_interrupts!(struct Irqs {
+    I2C4_EV => i2c::EventInterruptHandler<I2C4>;
+    I2C4_ER => i2c::ErrorInterruptHandler<I2C4>;
+});
+
+#[link_section = ".ram_d3"]
+static mut RAM_D3: [u8; 16 * 1024] = [0u8; 16 * 1024];
+
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
     let mut config = Config::default();
     {
+        use embassy_stm32::rcc::mux::*;
         use embassy_stm32::rcc::*;
-        config.rcc.hsi = Some(HSIPrescaler::DIV1);
-        config.rcc.csi = true;
-        config.rcc.pll1 = Some(Pll {
-            source: PllSource::HSI,
-            prediv: PllPreDiv::DIV4,
-            mul: PllMul::MUL50,
-            divp: Some(PllDiv::DIV2),
-            divq: Some(PllDiv::DIV8), // used by SPI3. 100Mhz.
-            divr: None,
+
+        config.rcc.hsi = None;
+        config.rcc.hse = Some(Hse {
+            freq: mhz(16),
+            mode: HseMode::Oscillator,
         });
-        config.rcc.sys = Sysclk::PLL1_P; // 400 Mhz
-        config.rcc.ahb_pre = AHBPrescaler::DIV2; // 200 Mhz
-        config.rcc.apb1_pre = APBPrescaler::DIV2; // 100 Mhz
-        config.rcc.apb2_pre = APBPrescaler::DIV2; // 100 Mhz
-        config.rcc.apb3_pre = APBPrescaler::DIV2; // 100 Mhz
-        config.rcc.apb4_pre = APBPrescaler::DIV2; // 100 Mhz
-        config.rcc.voltage_scale = VoltageScale::Scale1;
+        config.rcc.csi = true;
+        config.rcc.hsi48 = None;
+
+        config.rcc.pll1 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV1,
+            mul: PllMul::MUL32,
+            divp: Some(PllDiv::DIV1),
+            divq: Some(PllDiv::DIV64),
+            divr: Some(PllDiv::DIV5),
+        });
+
+        config.rcc.pll2 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV1,
+            mul: PllMul::MUL12,
+            divp: Some(PllDiv::DIV2),
+            divq: Some(PllDiv::DIV128),
+            divr: Some(PllDiv::DIV2),
+        });
+        config.rcc.pll3 = Some(Pll {
+            source: PllSource::HSE,
+            prediv: PllPreDiv::DIV1,
+            mul: PllMul::MUL12,
+            divp: Some(PllDiv::DIV2),
+            divq: Some(PllDiv::DIV2),
+            divr: Some(PllDiv::DIV2),
+        });
+
+        config.rcc.sys = Sysclk::PLL1_P;
+        config.rcc.d1c_pre = AHBPrescaler::DIV1;
+
+        config.rcc.apb1_pre = APBPrescaler::DIV2;
+        config.rcc.apb2_pre = APBPrescaler::DIV2;
+        config.rcc.apb3_pre = APBPrescaler::DIV2;
+        config.rcc.apb4_pre = APBPrescaler::DIV2;
+        config.rcc.ahb_pre = AHBPrescaler::DIV2;
+
+        config.rcc.voltage_scale = VoltageScale::Scale0;
+
+        config.rcc.mux.spi123sel = Saisel::PLL2_P;
+        config.rcc.mux.usart16910sel = Usart16910sel::PLL3_Q;
+        config.rcc.mux.usart234578sel = Usart234578sel::PLL3_Q;
+        config.rcc.mux.i2c1235sel = I2c1235sel::PLL3_R;
+        config.rcc.mux.i2c4sel = I2c4sel::PLL3_R;
+        config.rcc.mux.adcsel = Adcsel::PLL3_R;
+        config.rcc.mux.fdcansel = Fdcansel::PLL1_Q;
+        config.rcc.mux.usbsel = Usbsel::PLL3_Q;
     }
     let p = embassy_stm32::init(config);
+
+    let buffer = unsafe {
+        &mut RAM_D3[0..2]
+    };
+
+    let mut i2c_config = I2cConfig::default();
+    i2c_config.sda_pullup = true;
+    i2c_config.scl_pullup = true;
+    let mut i2c4 = I2c::new(
+        p.I2C4,
+        p.PD12,
+        p.PD13,
+        Irqs,
+        p.BDMA_CH1,
+        p.BDMA_CH0,
+        Hertz(100_000),
+        i2c_config,
+    );
+
+    info!("b");
+    buffer[0] = 0x1b;
+    buffer[1] = 0b10000000;
+    i2c4.write(0x30, buffer).await.unwrap();
+    info!("c");
+
+
     info!("Hello, World!");
     let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
     let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
     let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
 
+    // loop {}
 
+    // let mut i2c3 = I2c::new_blocking(
+    //     p.I2C3,
+    //     p.PA8,
+    //     p.PC9,
+    //     // Irqs,
+    //     // p.BDMA_CH1,
+    //     // p.BDMA_CH0,
+    //     Hertz(100_000),
+    //     i2c_config,
+    // );
 
+    // let mut meg = MMC5603::new(i2c4);
+    // meg.reset().await.unwrap();
+    // loop {
+    //     info!("{:?}", meg.read().await.unwrap());
+    //     sleep!(100);
+    // }
 
+    // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
+    // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
+    // let mut can_err_n = Input::new(p.PD4, Pull::None);
+
+    // sleep!(10);
+    // can_en.set_high();
+    // can_stb_n.set_high();
+
+    // let mut can = can::CanConfigurator::new(p.FDCAN2, p.PB12, p.PB13, Irqs);
+    // can.set_bitrate(250_000);
+    // let can = can.into_normal_mode();
+    // info!("CAN Configured");
+
+    // let (mut tx, mut rx, _props) = can.split();
+
+    // let send_fut = async {
+    //     sleep!(5000);
+    //     loop {
+    //         sleep!(500);
+    //         let frame = can::frame::Frame::new_extended(10, &[44; 8]).unwrap();
+
+    //         info!("write");
+    //         tx.write(&frame).await;
+    //         sleep!(1);
+    //     }
+    // };
+
+    // let read_fut = async {
+    //     loop {
+    //         match rx.read().await {
+    //             Ok(_envelope) => {
+    //                 led1.set_high();
+    //                 sleep!(100);
+    //                 led1.set_low();
+    //             }
+    //             Err(err) => {
+    //                 error!("Error in frame {}", err);
+    //                 // panic!();
+    //             },
+    //         }
+    //     }
+    // };
+    // join!(send_fut, read_fut);
 
     // let mut spi_config = SpiConfig::default();
     // spi_config.frequency = Hertz(1_000_000);
@@ -136,20 +274,22 @@ async fn main(_spawner: Spawner) {
     // let mut gps_pps = GPSPPS::new(p.PB5, p.EXTI5);
     // let mut gps = UartGPS::new(p.PB6, p.UART4, p.PA1, p.PA0, p.DMA1_CH5, p.DMA1_CH4);
 
+    // info!("a");
     // let mut spi_config = SpiConfig::default();
     // spi_config.frequency = Hertz(250_000);
     // // should be spi6, but spi6 requires bdma which doesnt work
-    // let spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-    //     p.SPI1,
+    // let spi6 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+    //     p.SPI6,
     //     p.PA5,
     //     p.PA7,
     //     p.PA6,
-    //     p.DMA2_CH3,
-    //     p.DMA2_CH2,
+    //     p.BDMA_CH3,
+    //     p.BDMA_CH2,
     //     spi_config.clone(),
     // ));
+
     // let lora_spi_device = SpiDeviceWithConfig::new(
-    //     &spi1,
+    //     &spi6,
     //     Output::new(p.PE3, Level::High, Speed::High),
     //     spi_config,
     // );
@@ -161,14 +301,10 @@ async fn main(_spawner: Spawner) {
     //     use_dio2_as_rfswitch: false,
     //     rx_boost: true,
     // };
-    // let dio1 = Input::new(p.PC15.degrade(), Pull::Down);
-    // let dio1 = ExtiInput::new(dio1, p.EXTI15.degrade());
-    // let busy = Input::new(p.PC14.degrade(), Pull::Down);
-    // let busy = ExtiInput::new(busy, p.EXTI14.degrade());
     // let iv = GenericSx126xInterfaceVariant::new(
     //     Output::new(p.PC13.degrade(), Level::High, Speed::Low),
-    //     dio1,
-    //     busy,
+    //     ExtiInput::new(p.PC15, p.EXTI15, Pull::Down),
+    //     ExtiInput::new(p.PC14, p.EXTI14, Pull::Down),
     //     Some(Output::new(p.PC0.degrade(), Level::High, Speed::High)),
     //     Some(Output::new(p.PC2.degrade(), Level::High, Speed::High)),
     // )
