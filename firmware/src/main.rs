@@ -11,7 +11,9 @@ mod h3lis100dl;
 mod meg;
 mod utils;
 
+use core::fmt::Write;
 use core::mem::transmute;
+use core::str::from_utf8;
 
 use crate::barometer::MS5607;
 use crate::clock::Clock;
@@ -20,6 +22,7 @@ use crate::h3lis100dl::H3LIS100DL;
 use crate::meg::MMC5603;
 use defmt::{error, info};
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
+use embassy_stm32::adc::Adc;
 use embassy_stm32::exti::{Channel, ExtiInput};
 use embassy_stm32::gpio::Pin;
 use embassy_stm32::i2c::Config as I2cConfig;
@@ -29,7 +32,6 @@ use embassy_stm32::time::Hertz;
 use embassy_stm32::{can, i2c};
 use embassy_time::{Delay, Timer};
 use embedded_hal_async::spi::SpiDevice;
-use embedded_io_async::Write;
 use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::gps::{GPSParser, GPS};
 use firmware_common::driver::imu::IMU;
@@ -53,6 +55,7 @@ use embassy_sync::{
     mutex::Mutex,
     pubsub::{PubSubBehavior, PubSubChannel},
 };
+use heapless::String;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
 use lora_phy::mod_params::ModulationParams;
 use lora_phy::mod_params::{Bandwidth, CodingRate, SpreadingFactor};
@@ -146,30 +149,51 @@ async fn main(_spawner: Spawner) {
     let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
     let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
     let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
+    let mut en_5v = Output::new(p.PD9, Level::Low, Speed::Low);
 
-    let meg_buffer = unsafe {
-        &mut RAM_D3[0..10]
-    };
+    let mut flash_n_reset = Output::new(p.PD5, Level::Low, Speed::Low);
+    let mut flash_cs = Output::new(p.PC1, Level::High, Speed::Low);
+    sleep!(1);
+    flash_n_reset.set_high();
+    sleep!(1);
 
-    let mut i2c_config = I2cConfig::default();
-    i2c_config.sda_pullup = true;
-    i2c_config.scl_pullup = true;
-    let mut i2c4 = I2c::new(
-        p.I2C4,
-        p.PD12,
-        p.PD13,
-        Irqs,
-        p.BDMA_CH1,
-        p.BDMA_CH0,
-        Hertz(100_000),
-        i2c_config,
+    flash_cs.set_low();
+    let mut spi4 = Spi::new(
+        p.SPI4,
+        p.PE2,
+        p.PE6,
+        p.PE5,
+        p.DMA2_CH3,
+        p.DMA2_CH2,
+        SpiConfig::default(),
     );
+    flash_cs.set_high();
+
+    let mut buffer = [0u8; 8];
+    spi4.transfer(&mut buffer, &[0x9f,0,0,0,0,0,0,0]).await.unwrap();
+    info!("manufacture id: {:X}", buffer[1]);
+
+    // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
+    // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
+
+    // let mut i2c_config = I2cConfig::default();
+    // i2c_config.sda_pullup = true;
+    // i2c_config.scl_pullup = true;
+    // let mut i2c4 = I2c::new(
+    //     p.I2C4,
+    //     p.PD12,
+    //     p.PD13,
+    //     Irqs,
+    //     p.BDMA_CH1,
+    //     p.BDMA_CH0,
+    //     Hertz(100_000),
+    //     i2c_config,
+    // );
 
     // info!("b");
     // meg_buffer[0..2].clone_from_slice(&[0x1b, 0b10000000]);
     // i2c4.write(0x30, &meg_buffer[0..2]).await.unwrap();
     // info!("c");
-
 
     // loop {}
 
@@ -184,13 +208,13 @@ async fn main(_spawner: Spawner) {
     //     i2c_config,
     // );
 
-    let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
-    meg.reset().await.unwrap();
-    info!("meg reseted");
-    loop {
-        info!("{:?}", meg.read().await.unwrap());
-        sleep!(100);
-    }
+    // let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
+    // meg.reset().await.unwrap();
+    // info!("meg reseted");
+    // loop {
+    //     info!("{:?}", meg.read().await.unwrap());
+    //     sleep!(100);
+    // }
 
     // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
     // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
