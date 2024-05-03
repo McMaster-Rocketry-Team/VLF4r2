@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(type_alias_impl_trait)]
+#![feature(impl_trait_in_assoc_type)]
 
 // mod barometer;
 mod barometer;
@@ -16,6 +17,7 @@ use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
 use defmt::info;
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
+use embassy_stm32::can;
 use embassy_stm32::exti::{Channel, ExtiInput};
 use embassy_stm32::gpio::Pin;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
@@ -31,7 +33,7 @@ use futures::join;
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, PA0, PA1, UART4};
+use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, PA0, PA1, UART4};
 use embassy_stm32::{
     bind_interrupts,
     gpio::{Input, Level, Output, Pull, Speed},
@@ -58,6 +60,11 @@ use panic_probe as _;
 
 const UPPER_ALTITUDE: f32 = 500.0;
 const LOWER_ALTITUDE: f32 = 300.0; // ezmini: 396.24
+
+// bind_interrupts!(struct Irqs {
+//     FDCAN2_IT0 => can::IT0InterruptHandler<FDCAN2>;
+//     FDCAN2_IT1 => can::IT1InterruptHandler<FDCAN2>;
+// });
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
@@ -88,25 +95,27 @@ async fn main(_spawner: Spawner) {
     let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
     let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
 
-    // let mut cs = Output::new(p.PD2, Level::High, Speed::High);
 
-    let mut spi_config = SpiConfig::default();
-    spi_config.frequency = Hertz(1_000_000);
 
-    let mut spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-        p.SPI1, p.PB3, p.PD7, p.PB4, p.DMA1_CH3, p.DMA1_CH2, spi_config,
-    ));
-    let h2lis100dl_spi_device = SpiDeviceWithConfig::new(
-        &spi1,
-        Output::new(p.PD2, Level::High, Speed::High),
-        spi_config,
-    );
-    let mut h2lis100dl = H3LIS100DL::new(h2lis100dl_spi_device);
-    h2lis100dl.reset().await.unwrap();
-    loop {
-        info!("{}", h2lis100dl.read().await.unwrap());
-        sleep!(50);
-    }
+
+
+    // let mut spi_config = SpiConfig::default();
+    // spi_config.frequency = Hertz(1_000_000);
+
+    // let mut spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+    //     p.SPI1, p.PB3, p.PD7, p.PB4, p.DMA1_CH3, p.DMA1_CH2, spi_config,
+    // ));
+    // let h2lis100dl_spi_device = SpiDeviceWithConfig::new(
+    //     &spi1,
+    //     Output::new(p.PD2, Level::High, Speed::High),
+    //     spi_config,
+    // );
+    // let mut h2lis100dl = H3LIS100DL::new(h2lis100dl_spi_device);
+    // h2lis100dl.reset().await.unwrap();
+    // loop {
+    //     info!("{}", h2lis100dl.read().await.unwrap());
+    //     sleep!(50);
+    // }
     // let tx_buffer = [0x0F | 0b10000000, 0x00];
     // let mut rx_buffer = [0u8; 2];
     // cs.set_low();

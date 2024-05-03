@@ -2,7 +2,7 @@ use defmt::trace;
 use embassy_stm32::{
     bind_interrupts,
     exti::ExtiInput,
-    gpio::{Input, Level, Output, Pull, Speed},
+    gpio::{Level, Output, Pull, Speed},
     peripherals::{DMA1_CH4, DMA1_CH5, EXTI5, PA0, PA1, PB5, PB6, UART4},
     usart::{self, Config as UartConfig, Uart},
 };
@@ -17,10 +17,10 @@ bind_interrupts!(struct Irqs {
 });
 
 pub struct UartGPS {
-    uart: Option<Uart<'static, UART4, DMA1_CH4, DMA1_CH5>>,
+    uart: Option<Uart<'static, UART4, embassy_stm32::mode::Async>>,
     buffer: [u8; 9],
     sentence: String<84>,
-    nrst: Output<'static, PB6>,
+    nrst: Output<'static>,
 }
 
 impl UartGPS {
@@ -40,7 +40,7 @@ impl UartGPS {
         }
     }
 
-    fn create_uart(baudrate: u32) -> Uart<'static, UART4, DMA1_CH4, DMA1_CH5> {
+    fn create_uart(baudrate: u32) -> Uart<'static, UART4, embassy_stm32::mode::Async> {
         let mut config = UartConfig::default();
         config.baudrate = baudrate;
 
@@ -119,13 +119,13 @@ impl gps::GPS for UartGPS {
 }
 
 pub struct GPSPPS {
-    pps: ExtiInput<'static, PB5>,
+    pps: ExtiInput<'static>,
 }
 
 impl GPSPPS {
     pub fn new(pps: PB5, exti: EXTI5) -> Self {
         Self {
-            pps: ExtiInput::new(Input::new(pps, Pull::None), exti),
+            pps: ExtiInput::new(pps, exti, Pull::None),
         }
     }
 }
