@@ -18,6 +18,7 @@ use crate::barometer::MS5607;
 use crate::clock::Clock;
 use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
+use crate::lsm6dsm::LSM6DSM;
 use crate::meg::MMC5603;
 use defmt::{error, info};
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
@@ -148,29 +149,26 @@ async fn main(_spawner: Spawner) {
     let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
     let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
 
-    let meg_buffer = unsafe {
-        &mut RAM_D3[0..10]
-    };
+    // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
 
-    let mut i2c_config = I2cConfig::default();
-    i2c_config.sda_pullup = true;
-    i2c_config.scl_pullup = true;
-    let mut i2c4 = I2c::new(
-        p.I2C4,
-        p.PD12,
-        p.PD13,
-        Irqs,
-        p.BDMA_CH1,
-        p.BDMA_CH0,
-        Hertz(100_000),
-        i2c_config,
-    );
+    // let mut i2c_config = I2cConfig::default();
+    // i2c_config.sda_pullup = true;
+    // i2c_config.scl_pullup = true;
+    // let mut i2c4 = I2c::new(
+    //     p.I2C4,
+    //     p.PD12,
+    //     p.PD13,
+    //     Irqs,
+    //     p.BDMA_CH1,
+    //     p.BDMA_CH0,
+    //     Hertz(100_000),
+    //     i2c_config,
+    // );
 
     // info!("b");
     // meg_buffer[0..2].clone_from_slice(&[0x1b, 0b10000000]);
     // i2c4.write(0x30, &meg_buffer[0..2]).await.unwrap();
     // info!("c");
-
 
     // loop {}
 
@@ -185,13 +183,13 @@ async fn main(_spawner: Spawner) {
     //     i2c_config,
     // );
 
-    let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
-    meg.reset().await.unwrap();
-    info!("meg reseted");
-    loop {
-        info!("{:?}", meg.read().await.unwrap());
-        sleep!(100);
-    }
+    // let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
+    // meg.reset().await.unwrap();
+    // info!("meg reseted");
+    // loop {
+    //     info!("{:?}", meg.read().await.unwrap());
+    //     sleep!(100);
+    // }
 
     // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
     // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
@@ -236,6 +234,24 @@ async fn main(_spawner: Spawner) {
     //     }
     // };
     // join!(send_fut, read_fut);
+
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+
+    let spi3 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI3, p.PC10, p.PC12, p.PC11, p.DMA2_CH1, p.DMA2_CH0, spi_config,
+    ));
+    let lsm6dsm_spi_device = SpiDeviceWithConfig::new(
+        &spi3,
+        Output::new(p.PD2, Level::High, Speed::High),
+        spi_config,
+    );
+    let mut lsm6dsm = LSM6DSM::new(lsm6dsm_spi_device);
+    lsm6dsm.reset().await.unwrap();
+    loop {
+        info!("{}", lsm6dsm.read().await.unwrap());
+        sleep!(50);
+    }
 
     // let mut spi_config = SpiConfig::default();
     // spi_config.frequency = Hertz(1_000_000);
