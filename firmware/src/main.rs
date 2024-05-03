@@ -142,9 +142,13 @@ async fn main(_spawner: Spawner) {
         config.rcc.mux.usbsel = Usbsel::PLL3_Q;
     }
     let p = embassy_stm32::init(config);
+    info!("Hello, World!");
+    let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
+    let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
+    let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
 
-    let buffer = unsafe {
-        &mut RAM_D3[0..2]
+    let meg_buffer = unsafe {
+        &mut RAM_D3[0..10]
     };
 
     let mut i2c_config = I2cConfig::default();
@@ -161,17 +165,11 @@ async fn main(_spawner: Spawner) {
         i2c_config,
     );
 
-    info!("b");
-    buffer[0] = 0x1b;
-    buffer[1] = 0b10000000;
-    i2c4.write(0x30, buffer).await.unwrap();
-    info!("c");
+    // info!("b");
+    // meg_buffer[0..2].clone_from_slice(&[0x1b, 0b10000000]);
+    // i2c4.write(0x30, &meg_buffer[0..2]).await.unwrap();
+    // info!("c");
 
-
-    info!("Hello, World!");
-    let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
-    let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
-    let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
 
     // loop {}
 
@@ -186,12 +184,13 @@ async fn main(_spawner: Spawner) {
     //     i2c_config,
     // );
 
-    // let mut meg = MMC5603::new(i2c4);
-    // meg.reset().await.unwrap();
-    // loop {
-    //     info!("{:?}", meg.read().await.unwrap());
-    //     sleep!(100);
-    // }
+    let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
+    meg.reset().await.unwrap();
+    info!("meg reseted");
+    loop {
+        info!("{:?}", meg.read().await.unwrap());
+        sleep!(100);
+    }
 
     // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
     // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
