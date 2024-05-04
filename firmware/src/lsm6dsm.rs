@@ -90,7 +90,7 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
        CTRL3_C (12h) - 0b1100_01_01;  Reboots memory content/software, 4-wire SPI, enable block data update
     */
     async fn reset(&mut self) -> Result<(), Self::Error> {
-        self.write_register(CTRL3_C, 0b11000101).await?;
+        self.write_register(CTRL3_C, 0b10000101).await?;
         sleep!(10);
 
         let id = self.verify_identity().await?;
@@ -115,15 +115,16 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
             return Err(ErrorKind::Other);
         }
 
-        let mut buffer = [0u8; 12];
+        let mut buffer = [0u8; 13];
         self.spi
             .transfer(
                 &mut buffer,
-                &[OUTX_L_G | 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                &[OUTX_L_G | 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             )
             .await
             .map_err(|e| e.kind())?;
 
+        let buffer = &buffer[1..];
         let gyro_x = i16::from_le_bytes([buffer[0], buffer[1]]);
         let gyro_y = i16::from_le_bytes([buffer[2], buffer[3]]);
         let gyro_z = i16::from_le_bytes([buffer[4], buffer[5]]);

@@ -243,7 +243,7 @@ async fn main(_spawner: Spawner) {
     ));
     let lsm6dsm_spi_device = SpiDeviceWithConfig::new(
         &spi3,
-        Output::new(p.PD2, Level::High, Speed::High),
+        Output::new(p.PA15, Level::High, Speed::High),
         spi_config,
     );
     let mut lsm6dsm = LSM6DSM::new(lsm6dsm_spi_device);
