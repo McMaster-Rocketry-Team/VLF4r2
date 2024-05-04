@@ -1,11 +1,11 @@
 use embassy_time::Instant;
 
 #[derive(Clone, Copy)]
-pub struct Clock{}
+pub struct Clock {}
 
 impl Clock {
     pub fn new() -> Self {
-        Self{}
+        Self {}
     }
 }
 

@@ -8,6 +8,7 @@ mod clock;
 mod fmt;
 mod gps;
 mod h3lis100dl;
+mod lsm6dsm;
 mod meg;
 mod utils;
 
@@ -19,6 +20,7 @@ use crate::barometer::MS5607;
 use crate::clock::Clock;
 use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
+use crate::lsm6dsm::LSM6DSM;
 use crate::meg::MMC5603;
 use defmt::{error, info};
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
@@ -149,6 +151,7 @@ async fn main(_spawner: Spawner) {
     let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
     let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
     let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
+
     let mut en_5v = Output::new(p.PD9, Level::Low, Speed::Low);
 
     let mut flash_n_reset = Output::new(p.PD5, Level::Low, Speed::Low);
@@ -173,7 +176,6 @@ async fn main(_spawner: Spawner) {
     spi4.transfer(&mut buffer, &[0x9f,0,0,0,0,0,0,0]).await.unwrap();
     info!("manufacture id: {:X}", buffer[1]);
 
-    // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
     // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
 
     // let mut i2c_config = I2cConfig::default();
@@ -259,6 +261,24 @@ async fn main(_spawner: Spawner) {
     //     }
     // };
     // join!(send_fut, read_fut);
+
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+
+    let spi3 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI3, p.PC10, p.PC12, p.PC11, p.DMA2_CH1, p.DMA2_CH0, spi_config,
+    ));
+    let lsm6dsm_spi_device = SpiDeviceWithConfig::new(
+        &spi3,
+        Output::new(p.PA15, Level::High, Speed::High),
+        spi_config,
+    );
+    let mut lsm6dsm = LSM6DSM::new(lsm6dsm_spi_device);
+    lsm6dsm.reset().await.unwrap();
+    loop {
+        info!("{}", lsm6dsm.read().await.unwrap());
+        sleep!(50);
+    }
 
     // let mut spi_config = SpiConfig::default();
     // spi_config.frequency = Hertz(1_000_000);
