@@ -159,8 +159,7 @@ async fn main(_spawner: Spawner) {
     sleep!(1);
     flash_n_reset.set_high();
     sleep!(1);
-
-    flash_cs.set_low();
+    
     let mut spi4 = Spi::new(
         p.SPI4,
         p.PE2,
@@ -170,10 +169,11 @@ async fn main(_spawner: Spawner) {
         p.DMA2_CH2,
         SpiConfig::default(),
     );
-    flash_cs.set_high();
-
+    
     let mut buffer = [0u8; 8];
+    flash_cs.set_low();
     spi4.transfer(&mut buffer, &[0x9f,0,0,0,0,0,0,0]).await.unwrap();
+    flash_cs.set_high();
     info!("manufacture id: {:X}", buffer[1]);
 
     // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
