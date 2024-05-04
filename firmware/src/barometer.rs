@@ -1,9 +1,8 @@
+use crate::sleep;
 use embassy_time::{Duration, Instant, Timer};
+use embedded_hal_async::spi::Error;
 use embedded_hal_async::spi::{ErrorKind, SpiDevice};
 use firmware_common::driver::barometer::{BaroReading, Barometer};
-use embedded_hal_async::spi::Error;
-use crate::sleep;
-
 
 #[derive(Clone, Copy)]
 struct Coefficients {
@@ -34,7 +33,10 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
 
     async fn reset(&mut self) -> Result<(), ErrorKind> {
         // reset
-        self.spi.transfer(&mut [0u8], &[0x1E]).await.map_err(|e|e.kind())?;
+        self.spi
+            .transfer(&mut [0u8], &[0x1E])
+            .await
+            .map_err(|e| e.kind())?;
 
         sleep!(20);
 
@@ -45,7 +47,8 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
             let mut read_buffer = [0; 3];
             self.spi
                 .transfer(&mut read_buffer, &write_data)
-                .await.map_err(|e|e.kind())?;
+                .await
+                .map_err(|e| e.kind())?;
 
             coefficients[(addr - 1) as usize] =
                 ((read_buffer[1] as u16) << 8) | (read_buffer[2] as u16);
@@ -65,7 +68,10 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
     async fn read(&mut self) -> Result<BaroReading, ErrorKind> {
         // request measurement pressure with OSR=1024
         let timestamp = Instant::now().as_micros() as f64 / 1000.0 + 1.0; // timestamp of the pressure measurement
-        self.spi.transfer(&mut [0u8], &[0x44]).await.map_err(|e|e.kind())?;
+        self.spi
+            .transfer(&mut [0u8], &[0x44])
+            .await
+            .map_err(|e| e.kind())?;
         Timer::after(Duration::from_micros(2280)).await;
 
         // read pressure measurement
@@ -73,19 +79,24 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
         let mut read_buffer = [0; 4];
         self.spi
             .transfer(&mut read_buffer, &write_data)
-            .await.map_err(|e|e.kind())?;
+            .await
+            .map_err(|e| e.kind())?;
         let d1 = ((read_buffer[1] as u32) << 16)
             | ((read_buffer[2] as u32) << 8)
             | (read_buffer[3] as u32);
 
         // request measurement temperature with OSR=256
-        self.spi.transfer(&mut [0u8], &[0x50]).await.map_err(|e|e.kind())?;
+        self.spi
+            .transfer(&mut [0u8], &[0x50])
+            .await
+            .map_err(|e| e.kind())?;
         Timer::after(Duration::from_micros(600)).await;
 
         // read temerature measurement
         self.spi
             .transfer(&mut read_buffer, &write_data)
-            .await.map_err(|e|e.kind())?;
+            .await
+            .map_err(|e| e.kind())?;
         let d2 = ((read_buffer[1] as u32) << 16)
             | ((read_buffer[2] as u32) << 8)
             | (read_buffer[3] as u32);

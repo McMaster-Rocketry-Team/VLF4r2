@@ -25,7 +25,7 @@ impl<'a, B: I2c> MMC5603<'a, B> {
 
     async fn write_reg(&mut self, reg: u8, data: u8) -> Result<(), ErrorKind> {
         self.buffer[0..2].clone_from_slice(&[reg, data]);
-        
+
         self.i2c
             .write(ADDRESS, &self.buffer[0..2])
             .await
@@ -67,7 +67,7 @@ impl<'a, B: I2c> Megnetometer for MMC5603<'a, B> {
     async fn read(&mut self) -> Result<MegReading, ErrorKind> {
         let timestamp = Instant::now().as_micros() as f64 / 1000.0;
 
-        let (write_buffer, read_buffer) =self.buffer.split_at_mut(1);
+        let (write_buffer, read_buffer) = self.buffer.split_at_mut(1);
         write_buffer[0] = 0;
 
         self.i2c
