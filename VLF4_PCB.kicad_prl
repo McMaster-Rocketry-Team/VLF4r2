@@ -5,7 +5,7 @@
     "auto_track_width": true,
     "hidden_netclasses": [],
     "hidden_nets": [],
-    "high_contrast_mode": 1,
+    "high_contrast_mode": 0,
     "net_color_mode": 1,
     "opacity": {
       "images": 0.6,
@@ -64,27 +64,20 @@
       39,
       40
     ],
-    "visible_layers": "ffcdfff_ffffffff",
+    "visible_layers": "ffc1f8f_ffffffff",
     "zone_display_mode": 1
+  },
+  "git": {
+    "repo_password": "",
+    "repo_type": "",
+    "repo_username": "",
+    "ssh_key": ""
   },
   "meta": {
     "filename": "VLF4_PCB.kicad_prl",
     "version": 3
   },
   "project": {
-    "files": [
-      {
-        "name": "VLF4_PCB.kicad_pcb",
-        "open": false,
-        "window": {
-          "display": 0,
-          "maximized": true,
-          "pos_x": 2746,
-          "pos_y": 0,
-          "size_x": 1280,
-          "size_y": 1396
-        }
-      }
-    ]
+    "files": []
   }
 }

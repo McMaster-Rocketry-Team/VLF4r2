@@ -1,1653 +1,4160 @@
-(kicad_sch (version 20230121) (generator eeschema)
-
-  (uuid 286afe1a-64dd-42f3-ae11-79230a3a385d)
-
-  (paper "A4")
-
-  (lib_symbols
-    (symbol "Connector_Generic:Conn_02x03_Top_Bottom" (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)
-      (property "Reference" "J" (at 1.27 5.08 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Value" "Conn_02x03_Top_Bottom" (at 1.27 -5.08 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "~" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_keywords" "connector" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_description" "Generic connector, double row, 02x03, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_fp_filters" "Connector*:*_2x??_*" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "Conn_02x03_Top_Bottom_1_1"
-        (rectangle (start -1.27 -2.413) (end 0 -2.667)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (rectangle (start -1.27 0.127) (end 0 -0.127)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (rectangle (start -1.27 2.667) (end 0 2.413)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (rectangle (start -1.27 3.81) (end 3.81 -3.81)
-          (stroke (width 0.254) (type default))
-          (fill (type background))
-        )
-        (rectangle (start 3.81 -2.413) (end 2.54 -2.667)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (rectangle (start 3.81 0.127) (end 2.54 -0.127)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (rectangle (start 3.81 2.667) (end 2.54 2.413)
-          (stroke (width 0.1524) (type default))
-          (fill (type none))
-        )
-        (pin passive line (at -5.08 2.54 0) (length 3.81)
-          (name "Pin_1" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at -5.08 0 0) (length 3.81)
-          (name "Pin_2" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at -5.08 -2.54 0) (length 3.81)
-          (name "Pin_3" (effects (font (size 1.27 1.27))))
-          (number "3" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at 7.62 2.54 180) (length 3.81)
-          (name "Pin_4" (effects (font (size 1.27 1.27))))
-          (number "4" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at 7.62 0 180) (length 3.81)
-          (name "Pin_5" (effects (font (size 1.27 1.27))))
-          (number "5" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at 7.62 -2.54 180) (length 3.81)
-          (name "Pin_6" (effects (font (size 1.27 1.27))))
-          (number "6" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
-    (symbol "Device:R" (pin_numbers hide) (pin_names (offset 0)) (in_bom yes) (on_board yes)
-      (property "Reference" "R" (at 2.032 0 90)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Value" "R" (at 0 0 90)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "" (at -1.778 0 90)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "~" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_keywords" "R res resistor" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_description" "Resistor" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "ki_fp_filters" "R_*" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "R_0_1"
-        (rectangle (start -1.016 -2.54) (end 1.016 2.54)
-          (stroke (width 0.254) (type default))
-          (fill (type none))
-        )
-      )
-      (symbol "R_1_1"
-        (pin passive line (at 0 3.81 270) (length 1.27)
-          (name "~" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-        (pin passive line (at 0 -3.81 90) (length 1.27)
-          (name "~" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
-    (symbol "Rocketry:AP25P06K" (in_bom yes) (on_board yes)
-      (property "Reference" "Q" (at 0 15.24 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Value" "AP25P06K" (at 0 -15.24 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL" (at 0 -17.78 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "" (at 0 0 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "LCSC Part" "C2995326" (at 0 -20.32 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "AP25P06K_0_1"
-        (polyline
-          (pts
-            (xy 0 0)
-            (xy -2.29 0)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 2.54)
-            (xy 0 -2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 -2.54)
-            (xy 5.08 -2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 -1.78)
-            (xy 1.27 -3.3)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 0.76)
-            (xy 1.27 -1.02)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 2.54)
-            (xy 5.08 2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 3.56)
-            (xy 1.27 1.52)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 3.81 0)
-            (xy 2.79 -0.25)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 3.81 2.54)
-            (xy 3.81 0)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 5.08 5.08)
-            (xy 5.08 -5.08)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 5.84 0.76)
-            (xy 4.32 0.76)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 1.27 0)
-            (xy 3.81 0)
-            (xy 2.79 0.25)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 5.84 -0.51)
-            (xy 4.32 -0.51)
-            (xy 5.08 0.76)
-            (xy 5.84 -0.51)
-          )
-          (stroke (width 0) (type default))
-          (fill (type background))
-        )
-        (pin unspecified line (at -7.62 0 0) (length 5.08)
-          (name "G" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 5.08 10.16 270) (length 5.08)
-          (name "S" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 5.08 -10.16 90) (length 5.08)
-          (name "D" (effects (font (size 1.27 1.27))))
-          (number "3" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
-    (symbol "Rocketry:CJ3407" (in_bom yes) (on_board yes)
-      (property "Reference" "Q" (at 0 10.16 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Value" "CJ3407" (at 0 -10.16 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 0 -12.7 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 0 -15.24 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "LCSC Part" "C15903" (at 0 -17.78 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "CJ3407_0_1"
-        (polyline
-          (pts
-            (xy -2.54 0)
-            (xy -0.51 0)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy -0.51 2.29)
-            (xy -0.51 -2.29)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 -2.29)
-            (xy 0 -1.27)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 -0.51)
-            (xy 0 0.51)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 1.27)
-            (xy 0 2.29)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 -1.78)
-            (xy 0 -1.78)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 1.78)
-            (xy 0 1.78)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 0)
-            (xy 2.54 0)
-            (xy 2.54 -2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 -2.54)
-            (xy 5.08 -2.54)
-            (xy 5.08 -0.51)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 0)
-            (xy 1.02 0.51)
-            (xy 1.02 -0.51)
-            (xy 2.54 0)
-          )
-          (stroke (width 0) (type default))
-          (fill (type background))
-        )
-        (polyline
-          (pts
-            (xy 2.54 1.78)
-            (xy 2.54 2.54)
-            (xy 5.08 2.54)
-            (xy 5.08 0.76)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 5.08 -0.51)
-            (xy 5.84 0.76)
-            (xy 4.32 0.76)
-            (xy 5.08 -0.51)
-          )
-          (stroke (width 0) (type default))
-          (fill (type background))
-        )
-        (polyline
-          (pts
-            (xy 5.84 -0.51)
-            (xy 5.59 -0.51)
-            (xy 4.57 -0.51)
-            (xy 4.32 -0.51)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (pin unspecified line (at -5.08 0 0) (length 2.54)
-          (name "G" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 2.54 -5.08 90) (length 2.54)
-          (name "S" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 2.54 5.08 270) (length 2.54)
-          (name "D" (effects (font (size 1.27 1.27))))
-          (number "3" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
-    (symbol "Rocketry:MMBT5551_C2145" (in_bom yes) (on_board yes)
-      (property "Reference" "Q" (at 0 10.16 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Value" "MMBT5551_C2145" (at 0 -10.16 0)
-        (effects (font (size 1.27 1.27)))
-      )
-      (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR" (at 0 -12.7 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html" (at 0 -15.24 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (property "LCSC Part" "C2145" (at 0 -17.78 0)
-        (effects (font (size 1.27 1.27)) hide)
-      )
-      (symbol "MMBT5551_C2145_0_1"
-        (polyline
-          (pts
-            (xy 0 -0.76)
-            (xy 2.54 -2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 0 2.29)
-            (xy 0 -2.29)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 2.54)
-            (xy 0 0.76)
-          )
-          (stroke (width 0) (type default))
-          (fill (type none))
-        )
-        (polyline
-          (pts
-            (xy 2.54 -2.54)
-            (xy 1.78 -1.27)
-            (xy 1.02 -2.29)
-            (xy 2.54 -2.54)
-          )
-          (stroke (width 0) (type default))
-          (fill (type background))
-        )
-        (pin unspecified line (at -2.54 0 0) (length 2.54)
-          (name "B" (effects (font (size 1.27 1.27))))
-          (number "1" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 2.54 -5.08 90) (length 2.54)
-          (name "E" (effects (font (size 1.27 1.27))))
-          (number "2" (effects (font (size 1.27 1.27))))
-        )
-        (pin unspecified line (at 2.54 5.08 270) (length 2.54)
-          (name "C" (effects (font (size 1.27 1.27))))
-          (number "3" (effects (font (size 1.27 1.27))))
-        )
-      )
-    )
-  )
-
-  (junction (at 233.68 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid 07f9888f-c086-4655-a74b-7a4da5f6438f)
-  )
-  (junction (at 217.17 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid 1cd2379c-4175-45f2-9bb4-f0a712138e76)
-  )
-  (junction (at 226.06 71.12) (diameter 0) (color 0 0 0 0)
-    (uuid 29d67b17-774d-4daf-985c-289c35fd15c6)
-  )
-  (junction (at 127 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid 2bc1d750-bd4a-4f2d-99bb-0164d664c2ad)
-  )
-  (junction (at 135.89 71.12) (diameter 0) (color 0 0 0 0)
-    (uuid 3954e418-fb4a-48c2-b7be-d33a29002c47)
-  )
-  (junction (at 36.83 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid 4a85c82e-08d4-48c3-8bff-1150c5479ffb)
-  )
-  (junction (at 217.17 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid 55e9c432-fc64-4352-a524-08ce104a5007)
-  )
-  (junction (at 257.81 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid 8ba1b196-c5ec-4c3a-9fa3-429affde435f)
-  )
-  (junction (at 143.51 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid 90a3b8b2-363f-41da-af81-d77b1249b305)
-  )
-  (junction (at 115.57 26.67) (diameter 0) (color 0 0 0 0)
-    (uuid 98d7ec24-c4ba-491e-9bd0-9cf2eb0e11f2)
-  )
-  (junction (at 36.83 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid a2a5c2b3-7a8d-4ec4-a4b2-5836c66c1ec0)
-  )
-  (junction (at 160.02 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid a57a1d9e-b9fc-4462-ab74-05eec9a66b9f)
-  )
-  (junction (at 53.34 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid a89c78b8-5acd-4b18-93c5-d1c14ed00586)
-  )
-  (junction (at 69.85 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid b8fabf5c-4009-4405-b28f-fa02f3767ec9)
-  )
-  (junction (at 77.47 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid c5ce9b23-4799-4104-9cd8-dabb59998791)
-  )
-  (junction (at 45.72 71.12) (diameter 0) (color 0 0 0 0)
-    (uuid c8b02d68-1455-458a-82a0-19e3e0895095)
-  )
-  (junction (at 250.19 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid e8eaf63c-350f-4706-a8ed-9524b3ba1495)
-  )
-  (junction (at 167.64 48.26) (diameter 0) (color 0 0 0 0)
-    (uuid f2be6ad8-3815-4754-87ca-b0280456fa02)
-  )
-  (junction (at 127 60.96) (diameter 0) (color 0 0 0 0)
-    (uuid ffd45e9b-f117-4538-a300-1e43c6961bb8)
-  )
-
-  (wire (pts (xy 226.06 74.93) (xy 226.06 71.12))
-    (stroke (width 0) (type default))
-    (uuid 0575fc82-14da-422b-bbb4-ba487793ec99)
-  )
-  (wire (pts (xy 160.02 55.88) (xy 160.02 59.69))
-    (stroke (width 0) (type default))
-    (uuid 0ff1c230-9df4-401e-8b94-4f10a3fb05e0)
-  )
-  (wire (pts (xy 224.79 83.82) (xy 228.6 83.82))
-    (stroke (width 0) (type default))
-    (uuid 19397fa7-7e2a-423f-9444-b450f95d47ff)
-  )
-  (wire (pts (xy 115.57 24.13) (xy 115.57 26.67))
-    (stroke (width 0) (type default))
-    (uuid 23334784-1afa-4443-8b4b-e3c4ab481a57)
-  )
-  (wire (pts (xy 153.67 48.26) (xy 160.02 48.26))
-    (stroke (width 0) (type default))
-    (uuid 24f9e07c-5d6c-4bf0-8c39-954b1d4c1e5c)
-  )
-  (wire (pts (xy 250.19 48.26) (xy 257.81 48.26))
-    (stroke (width 0) (type default))
-    (uuid 253c291b-18d9-490c-921e-13ea4548094e)
-  )
-  (wire (pts (xy 135.89 74.93) (xy 135.89 71.12))
-    (stroke (width 0) (type default))
-    (uuid 266447b3-cc49-4d95-92cd-1285d5e8ee6c)
-  )
-  (wire (pts (xy 45.72 74.93) (xy 45.72 71.12))
-    (stroke (width 0) (type default))
-    (uuid 2e6ae56c-3284-4dc3-b774-da4c15a34074)
-  )
-  (wire (pts (xy 224.79 71.12) (xy 226.06 71.12))
-    (stroke (width 0) (type default))
-    (uuid 42bf2e49-ec7b-456b-a868-7433abb4f1fc)
-  )
-  (wire (pts (xy 143.51 88.9) (xy 143.51 93.98))
-    (stroke (width 0) (type default))
-    (uuid 44031072-6e7a-450e-87c0-b85721d17e6d)
-  )
-  (wire (pts (xy 125.73 74.93) (xy 135.89 74.93))
-    (stroke (width 0) (type default))
-    (uuid 4ae7d47f-26c0-4f23-b7c9-0f04734f12a0)
-  )
-  (wire (pts (xy 217.17 48.26) (xy 223.52 48.26))
-    (stroke (width 0) (type default))
-    (uuid 4b105931-2f0a-4ee6-9c19-ac9e2da62dfa)
-  )
-  (wire (pts (xy 217.17 60.96) (xy 217.17 71.12))
-    (stroke (width 0) (type default))
-    (uuid 4b5b9f33-7902-410a-b7c9-292cd266459e)
-  )
-  (wire (pts (xy 215.9 74.93) (xy 226.06 74.93))
-    (stroke (width 0) (type default))
-    (uuid 4e1a30e0-e77e-438e-9fed-5dae503b9f2c)
-  )
-  (wire (pts (xy 127 48.26) (xy 133.35 48.26))
-    (stroke (width 0) (type default))
-    (uuid 50b6d218-2dd2-4672-9faa-f1ea1aafd8e0)
-  )
-  (wire (pts (xy 233.68 88.9) (xy 233.68 93.98))
-    (stroke (width 0) (type default))
-    (uuid 55da7ec3-e3da-495d-8728-3a2efbad6423)
-  )
-  (wire (pts (xy 265.43 58.42) (xy 265.43 60.96))
-    (stroke (width 0) (type default))
-    (uuid 566261f8-8144-4a98-b33c-860979cfb255)
-  )
-  (wire (pts (xy 63.5 48.26) (xy 69.85 48.26))
-    (stroke (width 0) (type default))
-    (uuid 571a81e2-fd50-4fe1-83b3-adc971df7993)
-  )
-  (wire (pts (xy 250.19 55.88) (xy 250.19 59.69))
-    (stroke (width 0) (type default))
-    (uuid 5ba80977-fc87-4e57-9de5-6975e42aad0d)
-  )
-  (wire (pts (xy 160.02 48.26) (xy 167.64 48.26))
-    (stroke (width 0) (type default))
-    (uuid 5c1404d9-0314-4fcd-8d71-bfd2252a2303)
-  )
-  (wire (pts (xy 243.84 48.26) (xy 250.19 48.26))
-    (stroke (width 0) (type default))
-    (uuid 649b5cdd-99fb-46bc-a815-ba9ac941feb0)
-  )
-  (wire (pts (xy 36.83 60.96) (xy 36.83 71.12))
-    (stroke (width 0) (type default))
-    (uuid 67bff8a7-6bc0-4fac-bf31-c297956d9f00)
-  )
-  (wire (pts (xy 53.34 76.2) (xy 53.34 78.74))
-    (stroke (width 0) (type default))
-    (uuid 69e8e2f0-3a81-49da-8e67-0de826a457cd)
-  )
-  (wire (pts (xy 209.55 48.26) (xy 217.17 48.26))
-    (stroke (width 0) (type default))
-    (uuid 6bb9e7da-3e27-4cdf-a5f2-fc01705c0b59)
-  )
-  (wire (pts (xy 257.81 48.26) (xy 262.89 48.26))
-    (stroke (width 0) (type default))
-    (uuid 6d5e7ea2-ba93-4fec-8f7f-ff83257170f3)
-  )
-  (wire (pts (xy 69.85 48.26) (xy 77.47 48.26))
-    (stroke (width 0) (type default))
-    (uuid 6de39876-aa46-4fcd-b18c-e102e113cdc7)
-  )
-  (wire (pts (xy 77.47 48.26) (xy 82.55 48.26))
-    (stroke (width 0) (type default))
-    (uuid 72fb4630-9261-4180-b367-09476310e0a4)
-  )
-  (wire (pts (xy 77.47 48.26) (xy 77.47 66.04))
-    (stroke (width 0) (type default))
-    (uuid 7665b1dc-a8f1-4815-b83f-8fb02f5681d1)
-  )
-  (wire (pts (xy 167.64 48.26) (xy 172.72 48.26))
-    (stroke (width 0) (type default))
-    (uuid 7c742b49-528e-4f19-997a-a956ddd3a694)
-  )
-  (wire (pts (xy 175.26 71.12) (xy 175.26 74.93))
-    (stroke (width 0) (type default))
-    (uuid 7ceb0ac0-e4c3-4c7c-8a1a-525650d89ac5)
-  )
-  (wire (pts (xy 265.43 71.12) (xy 265.43 74.93))
-    (stroke (width 0) (type default))
-    (uuid 80e6937d-35a2-4aac-a41a-3057c064315e)
-  )
-  (wire (pts (xy 44.45 60.96) (xy 53.34 60.96))
-    (stroke (width 0) (type default))
-    (uuid 813f919f-f6ef-4f8c-b54c-8ef285be353d)
-  )
-  (wire (pts (xy 29.21 48.26) (xy 36.83 48.26))
-    (stroke (width 0) (type default))
-    (uuid 939dcab5-7201-4d53-865b-27444e6d9d07)
-  )
-  (wire (pts (xy 36.83 48.26) (xy 43.18 48.26))
-    (stroke (width 0) (type default))
-    (uuid 945c6770-f6c6-4cf0-a7e3-f575888b0a63)
-  )
-  (wire (pts (xy 217.17 48.26) (xy 217.17 60.96))
-    (stroke (width 0) (type default))
-    (uuid 94bb00ca-38e8-48bc-a1a6-b7fd9d6d6b90)
-  )
-  (wire (pts (xy 53.34 88.9) (xy 53.34 93.98))
-    (stroke (width 0) (type default))
-    (uuid 9bcec491-2137-48e6-873b-e6f7d455bd11)
-  )
-  (wire (pts (xy 233.68 60.96) (xy 233.68 66.04))
-    (stroke (width 0) (type default))
-    (uuid a557355d-cbae-46b9-8187-e8766cca5799)
-  )
-  (wire (pts (xy 143.51 76.2) (xy 143.51 78.74))
-    (stroke (width 0) (type default))
-    (uuid afa6632e-83ed-43a8-b986-e4cb9834b746)
-  )
-  (wire (pts (xy 127 60.96) (xy 127 71.12))
-    (stroke (width 0) (type default))
-    (uuid b03dc8a5-7404-4170-94e7-dff74d6f77c9)
-  )
-  (wire (pts (xy 85.09 58.42) (xy 85.09 60.96))
-    (stroke (width 0) (type default))
-    (uuid b63bd83b-33b0-40bf-996e-e444e9ddabe1)
-  )
-  (wire (pts (xy 167.64 48.26) (xy 167.64 66.04))
-    (stroke (width 0) (type default))
-    (uuid b765a76d-4d0e-45f6-8982-df43ea804f3c)
-  )
-  (wire (pts (xy 134.62 71.12) (xy 135.89 71.12))
-    (stroke (width 0) (type default))
-    (uuid b80b46b3-b6b2-4c62-82be-da719a256911)
-  )
-  (wire (pts (xy 53.34 60.96) (xy 53.34 66.04))
-    (stroke (width 0) (type default))
-    (uuid bbc6ef5d-929c-4c04-b4c5-7f66440753a5)
-  )
-  (wire (pts (xy 44.45 71.12) (xy 45.72 71.12))
-    (stroke (width 0) (type default))
-    (uuid bc6b76e6-b8d9-4c94-a8bf-1c56449f2a65)
-  )
-  (wire (pts (xy 143.51 60.96) (xy 143.51 66.04))
-    (stroke (width 0) (type default))
-    (uuid bd2a325d-34f9-4db4-a2a6-e32feed8bfda)
-  )
-  (wire (pts (xy 175.26 58.42) (xy 175.26 60.96))
-    (stroke (width 0) (type default))
-    (uuid bde919fc-f000-4847-9732-665e9f6515b6)
-  )
-  (wire (pts (xy 115.57 26.67) (xy 115.57 29.21))
-    (stroke (width 0) (type default))
-    (uuid c259f5c6-8229-4fc7-beb2-64ce58e05dde)
-  )
-  (wire (pts (xy 44.45 83.82) (xy 48.26 83.82))
-    (stroke (width 0) (type default))
-    (uuid c269ebb0-967d-4dd6-8842-7e35f7090241)
-  )
-  (wire (pts (xy 36.83 48.26) (xy 36.83 60.96))
-    (stroke (width 0) (type default))
-    (uuid c4be268e-48e3-4f6f-9796-90387a0d8f76)
-  )
-  (wire (pts (xy 134.62 60.96) (xy 143.51 60.96))
-    (stroke (width 0) (type default))
-    (uuid c7e91d55-7fcc-44d5-ace6-f6dcb0cc6617)
-  )
-  (wire (pts (xy 119.38 48.26) (xy 127 48.26))
-    (stroke (width 0) (type default))
-    (uuid d866363e-c613-47b9-b2b6-04c138c1dd61)
-  )
-  (wire (pts (xy 69.85 55.88) (xy 69.85 59.69))
-    (stroke (width 0) (type default))
-    (uuid dbc5c507-d4b4-4a12-84c2-8e55e6d307c8)
-  )
-  (wire (pts (xy 257.81 48.26) (xy 257.81 66.04))
-    (stroke (width 0) (type default))
-    (uuid dd1c9212-34d0-43fe-ac6c-1496ca5e3fb1)
-  )
-  (wire (pts (xy 224.79 60.96) (xy 233.68 60.96))
-    (stroke (width 0) (type default))
-    (uuid e225fda6-a36c-452a-afad-8f16a5314019)
-  )
-  (wire (pts (xy 127 48.26) (xy 127 60.96))
-    (stroke (width 0) (type default))
-    (uuid e4b1a524-f4d1-4f71-bd47-7759e56d9b5c)
-  )
-  (wire (pts (xy 233.68 76.2) (xy 233.68 78.74))
-    (stroke (width 0) (type default))
-    (uuid ef0e0235-9569-4e42-b865-c47143e62f2b)
-  )
-  (wire (pts (xy 134.62 83.82) (xy 138.43 83.82))
-    (stroke (width 0) (type default))
-    (uuid efeacc37-62c8-4ade-a2e6-e8361b4725a8)
-  )
-  (wire (pts (xy 35.56 74.93) (xy 45.72 74.93))
-    (stroke (width 0) (type default))
-    (uuid f8cb112a-1986-47d3-b26b-b25ae2d6163e)
-  )
-  (wire (pts (xy 85.09 71.12) (xy 85.09 74.93))
-    (stroke (width 0) (type default))
-    (uuid f9cc89b9-b618-4462-8caa-9c9f9b8e0c5d)
-  )
-
-  (label "GND" (at 74.93 24.13 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 0c6d4cb0-25d6-4707-add1-07551dbf4ce7)
-  )
-  (label "GND" (at 265.43 58.42 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 126a086f-cc15-4aba-ba4e-d3da3cb03851)
-  )
-  (label "ARM_SIGNAL" (at 69.85 31.75 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 17429705-97d9-4fcf-97fa-96c19b4f295d)
-  )
-  (label "GND" (at 233.68 93.98 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 1a95b182-256c-4cd7-9e37-28131c353037)
-  )
-  (label "PYRO_PWR" (at 29.21 48.26 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid 1f087735-c099-44bc-b1eb-15f02da3fb3f)
-  )
-  (label "GND" (at 85.09 58.42 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 23e65be0-58a8-4d26-875f-ea2fad554970)
-  )
-  (label "PYRO_PWR" (at 250.19 59.69 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid 2c1be1c2-25cf-433a-aa66-30830facde3e)
-  )
-  (label "PYRO_2" (at 128.27 26.67 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 3e5f0c46-b637-474e-80a5-c8a684517549)
-  )
-  (label "PYRO_3" (at 128.27 29.21 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 3f2fbdcd-cf07-414b-bbe5-810877cfa6f5)
-  )
-  (label "GND" (at 143.51 93.98 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 4be70a05-df45-4ff9-8f7e-be005673c5a9)
-  )
-  (label "PYRO_PWR" (at 31.75 25.4 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 4f8813e3-9264-4d1f-9c8b-ca521f09025a)
-  )
-  (label "GND" (at 31.75 30.48 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 53d8eddb-1c3b-47e1-abcf-e29016e07564)
-  )
-  (label "ARM_SIGNAL" (at 125.73 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid 690ccd27-ee4b-49e5-af53-20049e8ddd84)
-  )
-  (label "PYRO_PWR" (at 160.02 59.69 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid 6d4e2631-0e53-4ada-ad1b-5b078235f973)
-  )
-  (label "PYRO_1" (at 82.55 48.26 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 755c9648-2b18-4917-afed-085bc21b72a0)
-  )
-  (label "GND" (at 175.26 58.42 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 7816d610-4e8c-43d6-9345-ab9045990c44)
-  )
-  (label "ARM_SIGNAL" (at 31.75 20.32 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 9189ed92-7120-4276-ad8a-e6ed143d88f7)
-  )
-  (label "PYRO_1" (at 128.27 24.13 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 98feef5d-51f6-46fa-9836-11ec24beb9f2)
-  )
-  (label "PYRO_3" (at 262.89 48.26 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid a11c6f92-ca88-4f52-b26a-5b1361076e8e)
-  )
-  (label "PYRO_PWR" (at 209.55 48.26 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid a1faf7b7-5bd0-499e-9e38-893f34954f5e)
-  )
-  (label "GND" (at 115.57 24.13 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid a1ffd078-4831-4d10-bf3e-d75ec8eac7f3)
-  )
-  (label "PYRO_PWR" (at 69.85 59.69 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid a759ea1e-1562-496b-8399-564f64e82e06)
-  )
-  (label "PYRO_PWR" (at 119.38 48.26 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid a857c8d7-5292-4d65-b106-bb741ce1704f)
-  )
-  (label "GND" (at 53.34 93.98 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid aae4b9fb-6fba-4f45-9559-664b9f77408e)
-  )
-  (label "PYRO_2" (at 172.72 48.26 0) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid b42fcb7c-d9a4-4a07-b1cc-c012ad30fbb9)
-  )
-  (label "ARM_SIGNAL" (at 215.9 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid bf9f7a93-f5c9-4537-bff8-b60799cbb2f4)
-  )
-  (label "ARM_SIGNAL" (at 35.56 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right bottom))
-    (uuid c0e8372b-d0ee-4605-8d9d-f6fa07362fb1)
-  )
-
-  (hierarchical_label "PYRO3_CONT" (shape output) (at 265.43 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 24a2d1bf-d4ba-40e3-9c4b-a747e866b25a)
-  )
-  (hierarchical_label "PYRO2_CTRL" (shape input) (at 127 83.82 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 2c54fbd0-79fc-4825-9a67-1eee91b1f407)
-  )
-  (hierarchical_label "GND" (shape input) (at 31.75 30.48 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 329613bb-cc32-4192-a266-d7754a5fceb3)
-  )
-  (hierarchical_label "ARM_DETECT" (shape output) (at 64.77 24.13 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 49d724e2-5465-47db-90d0-4c9f77577ee5)
-  )
-  (hierarchical_label "ARM_SIGNAL" (shape input) (at 31.75 20.32 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 4c76e5b8-3780-4994-8683-902216f96565)
-  )
-  (hierarchical_label "PYRO_PWR_IN" (shape input) (at 31.75 25.4 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 510e9443-e49c-4b44-bedf-3be0c1d32ac5)
-  )
-  (hierarchical_label "PYRO1_CTRL" (shape input) (at 36.83 83.82 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 7b6e54a0-2de6-42fe-ad9a-ce83b70bd6e6)
-  )
-  (hierarchical_label "PYRO3_CTRL" (shape input) (at 217.17 83.82 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid 8612e13a-7b2c-4f1f-a033-e615193ade7a)
-  )
-  (hierarchical_label "PYRO2_CONT" (shape output) (at 175.26 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid a6bacaa0-7abf-4506-8540-c25b11c0f73f)
-  )
-  (hierarchical_label "PYRO1_CONT" (shape output) (at 85.09 74.93 180) (fields_autoplaced)
-    (effects (font (size 1.27 1.27)) (justify right))
-    (uuid b9720814-39df-480b-809a-9f03e57fbd18)
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 262.89 66.04 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 05bcf0f3-51ac-4ca0-bd27-660d886f5b3f)
-    (property "Reference" "Q15" (at 273.05 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "CJ3407" (at 270.51 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 262.89 78.74 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 262.89 81.28 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 262.89 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 20cc9fff-4379-4edc-b239-50bd1ec67345))
-    (pin "2" (uuid 129964c6-f47a-4505-834c-52e3e50f6bb1))
-    (pin "3" (uuid 67012041-cf54-412c-a0fe-9aff8d43a4ef))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q15") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 69.85 52.07 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 0674fff7-6bcd-48ea-88f7-b774302069a9)
-    (property "Reference" "R14" (at 72.39 50.8 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "33K" (at 72.39 53.34 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 71.628 52.07 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 69.85 52.07 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid f5db99e2-6a76-4bf8-b8dc-d3911b279ad5))
-    (pin "2" (uuid 222a0eef-dc01-4362-890e-7df919fc9b06))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R14") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 160.02 52.07 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 18035a4f-15c9-466b-a0f7-14b76682fa88)
-    (property "Reference" "R18" (at 162.56 50.8 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "33K" (at 162.56 53.34 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 161.798 52.07 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 160.02 52.07 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid ceeaf4ee-e429-4413-a27f-39a2691ed161))
-    (pin "2" (uuid 167e2277-2de8-4c18-800f-cdd1ad6667e2))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R18") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 82.55 66.04 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 294d95f5-67f6-4c2d-bea7-d7e47152e68a)
-    (property "Reference" "Q7" (at 92.71 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "CJ3407" (at 90.17 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 82.55 78.74 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 82.55 81.28 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 82.55 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 47709a38-88b4-457d-be2c-245087642595))
-    (pin "2" (uuid 4a59b77f-9628-42f9-80e8-6961d304c78d))
-    (pin "3" (uuid 5e6d66d2-10e4-4706-becf-b7940ef18fe9))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q7") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 231.14 71.12 0) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 2d2646a2-b42d-40df-931f-351ba7d9f773)
-    (property "Reference" "Q12" (at 238.76 69.85 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "CJ3407" (at 238.76 72.39 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 231.14 58.42 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 231.14 55.88 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 231.14 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid c8280349-c704-4e2b-a880-00fa7bcbc40b))
-    (pin "2" (uuid 5415ea36-a91c-40fb-93d8-c2b8566d6ec1))
-    (pin "3" (uuid 9cbe2ab0-4f68-4b88-b373-34838b1fa5fe))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q12") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 130.81 60.96 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 3253fc0d-3448-4cb2-8a25-1abc77ef98e7)
-    (property "Reference" "R15" (at 130.81 54.61 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "10K" (at 130.81 57.15 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 130.81 62.738 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 130.81 60.96 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 91915e7b-d075-4123-99e5-83aad2cfaa8c))
-    (pin "2" (uuid ebfc6fef-5324-4a72-b90e-e75bea37dcd5))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R15") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 140.97 71.12 0) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 36f80faa-dc93-4ff8-9286-8a722801c990)
-    (property "Reference" "Q8" (at 148.59 69.85 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "CJ3407" (at 148.59 72.39 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 140.97 58.42 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 140.97 55.88 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 140.97 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 8c1c470a-2a45-4f52-a1de-2a717f3d6871))
-    (pin "2" (uuid d7a2ca02-3e19-4bf4-854a-2e08ede680bf))
-    (pin "3" (uuid 6244959c-f026-4d28-802b-88d419f6588b))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q8") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 40.64 83.82 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 40f192ba-f858-4cfd-a581-6dcd278a890d)
-    (property "Reference" "R13" (at 40.64 77.47 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "510R" (at 40.64 80.01 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 40.64 82.042 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 40.64 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 68bd54da-472e-485f-b79f-5cd612c0e219))
-    (pin "2" (uuid 27759aed-6e30-4349-96c5-5b7116d5cb90))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R13") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:AP25P06K") (at 53.34 53.34 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 43034de7-933c-4b8c-b4d8-cc4181e65bc2)
-    (property "Reference" "Q4" (at 53.34 43.18 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "AP25P06K" (at 53.34 45.72 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL" (at 71.12 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 53.34 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2995326" (at 73.66 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 1d35bf2f-e0ea-4e41-a4c0-309f979ab2e8))
-    (pin "2" (uuid b6c9b5a4-1386-4785-a5f1-421d428eb477))
-    (pin "3" (uuid e1ba9ac5-f654-481d-9228-9e79fd569ff2))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q4") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 69.85 26.67 270) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 48c72371-0046-4349-8bf8-5e34bc1071ee)
-    (property "Reference" "Q3" (at 69.85 16.51 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "CJ3407" (at 69.85 19.05 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 57.15 26.67 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 54.61 26.67 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 52.07 26.67 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 797d6c31-c31d-4345-b38b-379d7749e91a))
-    (pin "2" (uuid 4f019553-d896-4c2b-b992-2d60b1a058d7))
-    (pin "3" (uuid fb461c25-4da2-4dbd-ab6a-b79f383c97ae))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q3") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 172.72 66.04 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no)
-    (uuid 4afec5f0-7541-471e-9166-320452166994)
-    (property "Reference" "Q11" (at 182.88 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "CJ3407" (at 180.34 66.04 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 172.72 78.74 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 172.72 81.28 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 172.72 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 09b1bac8-f9df-459e-ae6e-864bb75fed04))
-    (pin "2" (uuid 563fbd6c-3816-4d6d-bb5e-72897deb962b))
-    (pin "3" (uuid 7ac089b1-e58b-4a3f-8a77-870884093c92))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q11") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 250.19 52.07 180) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 5880b63c-5801-4b2a-943d-91f660225e35)
-    (property "Reference" "R22" (at 252.73 50.8 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Value" "33K" (at 252.73 53.34 0)
-      (effects (font (size 1.27 1.27)) (justify right))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 251.968 52.07 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 250.19 52.07 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 8830e806-692d-41a4-b645-ef92c27301d8))
-    (pin "2" (uuid 41d3d344-ebb7-4bdd-91e9-dff28455baf2))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R22") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:MMBT5551_C2145") (at 50.8 83.82 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 5c10db7d-5555-4e90-8e29-08f7eafbb828)
-    (property "Reference" "Q6" (at 54.61 82.55 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "MMBT5551_C2145" (at 54.61 85.09 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR" (at 50.8 96.52 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html" (at 50.8 99.06 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2145" (at 50.8 101.6 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 1587d8eb-696a-4b60-8630-eaae751d9ea2))
-    (pin "2" (uuid d03395d8-a2c3-47b2-8a72-4813c66cc8b6))
-    (pin "3" (uuid d2794eaa-1014-4116-a0b8-ede09d01bfa4))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q6") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:MMBT5551_C2145") (at 140.97 83.82 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 65b78e71-166a-47f5-a53e-ea5cf375876b)
-    (property "Reference" "Q9" (at 144.78 82.55 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "MMBT5551_C2145" (at 144.78 85.09 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR" (at 140.97 96.52 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html" (at 140.97 99.06 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2145" (at 140.97 101.6 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 44e55ecd-ab13-4278-b762-39d92364cfa4))
-    (pin "2" (uuid fb1e9718-bf29-4d72-b1dc-0a8c197dfcec))
-    (pin "3" (uuid 6c61dc43-7ef4-4c47-81e6-7b9bcb6d72f1))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q9") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Connector_Generic:Conn_02x03_Top_Bottom") (at 120.65 26.67 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 66086207-3aa1-45f9-89e8-c3dabc3996c2)
-    (property "Reference" "J_EXT1" (at 121.92 17.78 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "Conn_02x03_Top_Bottom" (at 121.92 20.32 0)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Molex:1054051106" (at 120.65 26.67 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 120.65 26.67 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 4aa83e57-d916-46ca-8158-7dc98944af82))
-    (pin "2" (uuid 9a770b82-6863-48c1-a173-9c22127aa651))
-    (pin "3" (uuid 438e77d3-f3aa-4a59-953e-201a164d21fc))
-    (pin "4" (uuid 5382f9fc-da3c-4a45-ba06-20ebc2013a95))
-    (pin "5" (uuid a4356702-9103-4faf-8340-5cc92a2e4c11))
-    (pin "6" (uuid 63c03d24-b3ff-4cf6-9898-0f7f25f75e5f))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc"
-          (reference "J_EXT1") (unit 1)
-        )
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "J_PYRO1") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 220.98 71.12 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 7c7a2580-69a3-48ab-982a-7395792faece)
-    (property "Reference" "R20" (at 220.98 64.77 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "33K" (at 220.98 67.31 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 220.98 72.898 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 220.98 71.12 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 8b25af93-5cb1-4beb-ae92-f20c6d8d70de))
-    (pin "2" (uuid 4259c41a-0e53-44d3-b796-21a0848150f8))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R20") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 130.81 71.12 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 8b786965-2163-4b00-8029-a0894e6fcf40)
-    (property "Reference" "R16" (at 130.81 64.77 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "33K" (at 130.81 67.31 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 130.81 72.898 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 130.81 71.12 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 3df75876-1405-4a3c-83bb-991089ece254))
-    (pin "2" (uuid e10f2ade-e7d0-4722-8ddd-b1573969fcc0))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R16") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 130.81 83.82 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid 997f1ced-9498-47ec-9c10-e0131cb2b234)
-    (property "Reference" "R17" (at 130.81 77.47 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "510R" (at 130.81 80.01 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 130.81 82.042 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 130.81 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid af31aff4-0730-434b-9f42-0f277e6fbcc8))
-    (pin "2" (uuid b575beb6-e31f-4d8d-a085-a806e07f8489))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R17") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:CJ3407") (at 50.8 71.12 0) (mirror x) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid b22d7c14-d52c-4a30-81fd-5c50e276b4fa)
-    (property "Reference" "Q5" (at 58.42 69.85 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "CJ3407" (at 58.42 72.39 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR" (at 50.8 58.42 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html" (at 50.8 55.88 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C15903" (at 50.8 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid cf57ae7f-8528-445e-97cf-c2dbb30a2756))
-    (pin "2" (uuid 881215a5-3148-445d-b62d-c44f49e68341))
-    (pin "3" (uuid 53d6c0f1-24b6-4c3a-a05e-583bb77b9a52))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q5") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 220.98 83.82 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid b5bbeb14-0e20-4044-ae7b-19a0b61fd9d2)
-    (property "Reference" "R21" (at 220.98 77.47 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "510R" (at 220.98 80.01 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 220.98 82.042 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 220.98 83.82 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid ebd7af05-c8f7-4986-ba91-98be0c576374))
-    (pin "2" (uuid 3e77ae64-0721-40de-93bd-c14bdd3a7815))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R21") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 40.64 71.12 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid bd650646-7d73-4cec-92f0-0e43472878d0)
-    (property "Reference" "R12" (at 40.64 64.77 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "33K" (at 40.64 67.31 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 40.64 72.898 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 40.64 71.12 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid a6ab489f-beb6-49a0-83c3-09a918af9f77))
-    (pin "2" (uuid f55107c0-1b4c-42c6-9989-e67213d5e5df))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R12") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:AP25P06K") (at 233.68 53.34 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid d3bb907a-2e3d-41d0-9b49-4f88f9902a88)
-    (property "Reference" "Q14" (at 233.68 43.18 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "AP25P06K" (at 233.68 45.72 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL" (at 251.46 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 233.68 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2995326" (at 254 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid de1fadd0-d3fd-4963-8457-7d4912241a89))
-    (pin "2" (uuid 7f50ad7a-6ab3-4344-9f27-3e703e0545e1))
-    (pin "3" (uuid 637ccc61-326a-435b-97bf-f813e2e934e3))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q14") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:AP25P06K") (at 143.51 53.34 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid d4b85e3e-d69c-42fb-9c41-bebf0d49b90f)
-    (property "Reference" "Q10" (at 143.51 43.18 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "AP25P06K" (at 143.51 45.72 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL" (at 161.29 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "" (at 143.51 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2995326" (at 163.83 53.34 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 1c86230f-fdb0-4809-80e0-bfeb75eb8228))
-    (pin "2" (uuid fc6f1e78-d25b-40af-ac40-0d6332b39044))
-    (pin "3" (uuid d7515920-c288-4cb4-8c5c-e9bed066027c))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q10") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 40.64 60.96 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid dff562ae-26e1-4473-840d-f71776297ccb)
-    (property "Reference" "R11" (at 40.64 54.61 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "10K" (at 40.64 57.15 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 40.64 62.738 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 40.64 60.96 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 965c188d-e649-4b18-8c3d-c85f6e48d2cd))
-    (pin "2" (uuid 5cf4f71c-dffa-46e3-8be6-de526c4555d1))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R11") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:R") (at 220.98 60.96 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid eb1547fb-75f1-4bf6-b9c2-5a3aaa28faa9)
-    (property "Reference" "R19" (at 220.98 54.61 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "10K" (at 220.98 57.15 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Resistor_SMD:R_0402_1005Metric" (at 220.98 62.738 90)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 220.98 60.96 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 89067cca-cb41-4831-8d7e-12040e9ad53e))
-    (pin "2" (uuid 84946473-b307-4dd5-901b-b4f6f16c31c9))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "R19") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Rocketry:MMBT5551_C2145") (at 231.14 83.82 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid fb3136ae-e993-43b9-a836-85d91a30007a)
-    (property "Reference" "Q13" (at 234.95 82.55 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Value" "MMBT5551_C2145" (at 234.95 85.09 0)
-      (effects (font (size 1.27 1.27)) (justify left))
-    )
-    (property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR" (at 231.14 96.52 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html" (at 231.14 99.06 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "LCSC Part" "C2145" (at 231.14 101.6 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "1" (uuid 8e1a49a5-fd9d-4dc4-9c62-b54c894a4951))
-    (pin "2" (uuid a6d5014f-c3c7-4e67-a471-b2ed17bcaafa))
-    (pin "3" (uuid cc055929-ef9d-462f-98d5-a8c591cb24cd))
-    (instances
-      (project "VLF4_PCB"
-        (path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
-          (reference "Q13") (unit 1)
-        )
-      )
-    )
-  )
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "286afe1a-64dd-42f3-ae11-79230a3a385d")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Connector_Generic:Conn_02x03_Top_Bottom"
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 1.27 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_02x03_Top_Bottom"
+				(at 1.27 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, double row, 02x03, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_2x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_02x03_Top_Bottom_1_1"
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 2.667)
+					(end 0 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 3.81)
+					(end 3.81 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start 3.81 -2.413)
+					(end 2.54 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start 3.81 0.127)
+					(end 2.54 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start 3.81 2.667)
+					(end 2.54 2.413)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 2.54 180)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 0 180)
+					(length 3.81)
+					(name "Pin_5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 -2.54 180)
+					(length 3.81)
+					(name "Pin_6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Device:R"
+			(pin_numbers hide)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Rocketry:AP25P06K"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "AP25P06K"
+				(at 0 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C2995326"
+				(at 0 -20.32 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "AP25P06K_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy -2.29 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 -2.54) (xy 5.08 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 -1.78) (xy 1.27 -3.3)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0.76) (xy 1.27 -1.02)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 2.54) (xy 5.08 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 3.56) (xy 1.27 1.52)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 0) (xy 2.79 -0.25)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 2.54) (xy 3.81 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.08 5.08) (xy 5.08 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.84 0.76) (xy 4.32 0.76)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0) (xy 3.81 0) (xy 2.79 0.25)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.84 -0.51) (xy 4.32 -0.51) (xy 5.08 0.76) (xy 5.84 -0.51)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin unspecified line
+					(at -7.62 0 0)
+					(length 5.08)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 5.08 10.16 270)
+					(length 5.08)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 5.08 -10.16 90)
+					(length 5.08)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Rocketry:CJ3407"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "CJ3407"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+				(at 0 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C15903"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "CJ3407_0_1"
+				(polyline
+					(pts
+						(xy -2.54 0) (xy -0.51 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -0.51 2.29) (xy -0.51 -2.29)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -2.29) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 -0.51) (xy 0 0.51)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27) (xy 0 2.29)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -1.78) (xy 0 -1.78)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.78) (xy 0 1.78)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 2.54 0) (xy 2.54 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 5.08 -2.54) (xy 5.08 -0.51)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 0) (xy 1.02 0.51) (xy 1.02 -0.51) (xy 2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.78) (xy 2.54 2.54) (xy 5.08 2.54) (xy 5.08 0.76)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.08 -0.51) (xy 5.84 0.76) (xy 4.32 0.76) (xy 5.08 -0.51)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy 5.84 -0.51) (xy 5.59 -0.51) (xy 4.57 -0.51) (xy 4.32 -0.51)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin unspecified line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Rocketry:MMBT5551_C2145"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MMBT5551_C2145"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html"
+				(at 0 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "LCSC Part" "C2145"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "MMBT5551_C2145_0_1"
+				(polyline
+					(pts
+						(xy 0 -0.76) (xy 2.54 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.29) (xy 0 -2.29)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 0 0.76)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 1.78 -1.27) (xy 1.02 -2.29) (xy 2.54 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin unspecified line
+					(at -2.54 0 0)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "E"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin unspecified line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "C"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+	(junction
+		(at 233.68 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "07f9888f-c086-4655-a74b-7a4da5f6438f")
+	)
+	(junction
+		(at 217.17 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1cd2379c-4175-45f2-9bb4-f0a712138e76")
+	)
+	(junction
+		(at 226.06 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "29d67b17-774d-4daf-985c-289c35fd15c6")
+	)
+	(junction
+		(at 127 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2bc1d750-bd4a-4f2d-99bb-0164d664c2ad")
+	)
+	(junction
+		(at 135.89 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3954e418-fb4a-48c2-b7be-d33a29002c47")
+	)
+	(junction
+		(at 36.83 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4a85c82e-08d4-48c3-8bff-1150c5479ffb")
+	)
+	(junction
+		(at 217.17 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "55e9c432-fc64-4352-a524-08ce104a5007")
+	)
+	(junction
+		(at 257.81 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8ba1b196-c5ec-4c3a-9fa3-429affde435f")
+	)
+	(junction
+		(at 143.51 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "90a3b8b2-363f-41da-af81-d77b1249b305")
+	)
+	(junction
+		(at 115.57 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "98d7ec24-c4ba-491e-9bd0-9cf2eb0e11f2")
+	)
+	(junction
+		(at 36.83 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a2a5c2b3-7a8d-4ec4-a4b2-5836c66c1ec0")
+	)
+	(junction
+		(at 160.02 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a57a1d9e-b9fc-4462-ab74-05eec9a66b9f")
+	)
+	(junction
+		(at 53.34 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a89c78b8-5acd-4b18-93c5-d1c14ed00586")
+	)
+	(junction
+		(at 69.85 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b8fabf5c-4009-4405-b28f-fa02f3767ec9")
+	)
+	(junction
+		(at 77.47 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c5ce9b23-4799-4104-9cd8-dabb59998791")
+	)
+	(junction
+		(at 45.72 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c8b02d68-1455-458a-82a0-19e3e0895095")
+	)
+	(junction
+		(at 250.19 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e8eaf63c-350f-4706-a8ed-9524b3ba1495")
+	)
+	(junction
+		(at 167.64 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f2be6ad8-3815-4754-87ca-b0280456fa02")
+	)
+	(junction
+		(at 127 60.96)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ffd45e9b-f117-4538-a300-1e43c6961bb8")
+	)
+	(wire
+		(pts
+			(xy 226.06 74.93) (xy 226.06 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0575fc82-14da-422b-bbb4-ba487793ec99")
+	)
+	(wire
+		(pts
+			(xy 160.02 55.88) (xy 160.02 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ff1c230-9df4-401e-8b94-4f10a3fb05e0")
+	)
+	(wire
+		(pts
+			(xy 224.79 83.82) (xy 228.6 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "19397fa7-7e2a-423f-9444-b450f95d47ff")
+	)
+	(wire
+		(pts
+			(xy 115.57 24.13) (xy 115.57 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "23334784-1afa-4443-8b4b-e3c4ab481a57")
+	)
+	(wire
+		(pts
+			(xy 153.67 48.26) (xy 160.02 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "24f9e07c-5d6c-4bf0-8c39-954b1d4c1e5c")
+	)
+	(wire
+		(pts
+			(xy 250.19 48.26) (xy 257.81 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "253c291b-18d9-490c-921e-13ea4548094e")
+	)
+	(wire
+		(pts
+			(xy 135.89 74.93) (xy 135.89 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "266447b3-cc49-4d95-92cd-1285d5e8ee6c")
+	)
+	(wire
+		(pts
+			(xy 45.72 74.93) (xy 45.72 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2e6ae56c-3284-4dc3-b774-da4c15a34074")
+	)
+	(wire
+		(pts
+			(xy 224.79 71.12) (xy 226.06 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42bf2e49-ec7b-456b-a868-7433abb4f1fc")
+	)
+	(wire
+		(pts
+			(xy 143.51 88.9) (xy 143.51 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "44031072-6e7a-450e-87c0-b85721d17e6d")
+	)
+	(wire
+		(pts
+			(xy 125.73 74.93) (xy 135.89 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4ae7d47f-26c0-4f23-b7c9-0f04734f12a0")
+	)
+	(wire
+		(pts
+			(xy 217.17 48.26) (xy 223.52 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b105931-2f0a-4ee6-9c19-ac9e2da62dfa")
+	)
+	(wire
+		(pts
+			(xy 217.17 60.96) (xy 217.17 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b5b9f33-7902-410a-b7c9-292cd266459e")
+	)
+	(wire
+		(pts
+			(xy 215.9 74.93) (xy 226.06 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4e1a30e0-e77e-438e-9fed-5dae503b9f2c")
+	)
+	(wire
+		(pts
+			(xy 127 48.26) (xy 133.35 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "50b6d218-2dd2-4672-9faa-f1ea1aafd8e0")
+	)
+	(wire
+		(pts
+			(xy 233.68 88.9) (xy 233.68 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55da7ec3-e3da-495d-8728-3a2efbad6423")
+	)
+	(wire
+		(pts
+			(xy 265.43 58.42) (xy 265.43 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "566261f8-8144-4a98-b33c-860979cfb255")
+	)
+	(wire
+		(pts
+			(xy 63.5 48.26) (xy 69.85 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "571a81e2-fd50-4fe1-83b3-adc971df7993")
+	)
+	(wire
+		(pts
+			(xy 250.19 55.88) (xy 250.19 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5ba80977-fc87-4e57-9de5-6975e42aad0d")
+	)
+	(wire
+		(pts
+			(xy 160.02 48.26) (xy 167.64 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c1404d9-0314-4fcd-8d71-bfd2252a2303")
+	)
+	(wire
+		(pts
+			(xy 243.84 48.26) (xy 250.19 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "649b5cdd-99fb-46bc-a815-ba9ac941feb0")
+	)
+	(wire
+		(pts
+			(xy 36.83 60.96) (xy 36.83 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "67bff8a7-6bc0-4fac-bf31-c297956d9f00")
+	)
+	(wire
+		(pts
+			(xy 53.34 76.2) (xy 53.34 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "69e8e2f0-3a81-49da-8e67-0de826a457cd")
+	)
+	(wire
+		(pts
+			(xy 209.55 48.26) (xy 217.17 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6bb9e7da-3e27-4cdf-a5f2-fc01705c0b59")
+	)
+	(wire
+		(pts
+			(xy 257.81 48.26) (xy 262.89 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6d5e7ea2-ba93-4fec-8f7f-ff83257170f3")
+	)
+	(wire
+		(pts
+			(xy 69.85 48.26) (xy 77.47 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6de39876-aa46-4fcd-b18c-e102e113cdc7")
+	)
+	(wire
+		(pts
+			(xy 77.47 48.26) (xy 82.55 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "72fb4630-9261-4180-b367-09476310e0a4")
+	)
+	(wire
+		(pts
+			(xy 77.47 48.26) (xy 77.47 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7665b1dc-a8f1-4815-b83f-8fb02f5681d1")
+	)
+	(wire
+		(pts
+			(xy 167.64 48.26) (xy 172.72 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c742b49-528e-4f19-997a-a956ddd3a694")
+	)
+	(wire
+		(pts
+			(xy 175.26 71.12) (xy 175.26 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ceb0ac0-e4c3-4c7c-8a1a-525650d89ac5")
+	)
+	(wire
+		(pts
+			(xy 265.43 71.12) (xy 265.43 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80e6937d-35a2-4aac-a41a-3057c064315e")
+	)
+	(wire
+		(pts
+			(xy 44.45 60.96) (xy 53.34 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "813f919f-f6ef-4f8c-b54c-8ef285be353d")
+	)
+	(wire
+		(pts
+			(xy 29.21 48.26) (xy 36.83 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "939dcab5-7201-4d53-865b-27444e6d9d07")
+	)
+	(wire
+		(pts
+			(xy 36.83 48.26) (xy 43.18 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "945c6770-f6c6-4cf0-a7e3-f575888b0a63")
+	)
+	(wire
+		(pts
+			(xy 217.17 48.26) (xy 217.17 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "94bb00ca-38e8-48bc-a1a6-b7fd9d6d6b90")
+	)
+	(wire
+		(pts
+			(xy 53.34 88.9) (xy 53.34 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9bcec491-2137-48e6-873b-e6f7d455bd11")
+	)
+	(wire
+		(pts
+			(xy 233.68 60.96) (xy 233.68 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a557355d-cbae-46b9-8187-e8766cca5799")
+	)
+	(wire
+		(pts
+			(xy 143.51 76.2) (xy 143.51 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "afa6632e-83ed-43a8-b986-e4cb9834b746")
+	)
+	(wire
+		(pts
+			(xy 127 60.96) (xy 127 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b03dc8a5-7404-4170-94e7-dff74d6f77c9")
+	)
+	(wire
+		(pts
+			(xy 85.09 58.42) (xy 85.09 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b63bd83b-33b0-40bf-996e-e444e9ddabe1")
+	)
+	(wire
+		(pts
+			(xy 167.64 48.26) (xy 167.64 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b765a76d-4d0e-45f6-8982-df43ea804f3c")
+	)
+	(wire
+		(pts
+			(xy 134.62 71.12) (xy 135.89 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b80b46b3-b6b2-4c62-82be-da719a256911")
+	)
+	(wire
+		(pts
+			(xy 53.34 60.96) (xy 53.34 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bbc6ef5d-929c-4c04-b4c5-7f66440753a5")
+	)
+	(wire
+		(pts
+			(xy 44.45 71.12) (xy 45.72 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bc6b76e6-b8d9-4c94-a8bf-1c56449f2a65")
+	)
+	(wire
+		(pts
+			(xy 143.51 60.96) (xy 143.51 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd2a325d-34f9-4db4-a2a6-e32feed8bfda")
+	)
+	(wire
+		(pts
+			(xy 175.26 58.42) (xy 175.26 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bde919fc-f000-4847-9732-665e9f6515b6")
+	)
+	(wire
+		(pts
+			(xy 115.57 26.67) (xy 115.57 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c259f5c6-8229-4fc7-beb2-64ce58e05dde")
+	)
+	(wire
+		(pts
+			(xy 44.45 83.82) (xy 48.26 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c269ebb0-967d-4dd6-8842-7e35f7090241")
+	)
+	(wire
+		(pts
+			(xy 36.83 48.26) (xy 36.83 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4be268e-48e3-4f6f-9796-90387a0d8f76")
+	)
+	(wire
+		(pts
+			(xy 134.62 60.96) (xy 143.51 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c7e91d55-7fcc-44d5-ace6-f6dcb0cc6617")
+	)
+	(wire
+		(pts
+			(xy 119.38 48.26) (xy 127 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d866363e-c613-47b9-b2b6-04c138c1dd61")
+	)
+	(wire
+		(pts
+			(xy 69.85 55.88) (xy 69.85 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dbc5c507-d4b4-4a12-84c2-8e55e6d307c8")
+	)
+	(wire
+		(pts
+			(xy 257.81 48.26) (xy 257.81 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dd1c9212-34d0-43fe-ac6c-1496ca5e3fb1")
+	)
+	(wire
+		(pts
+			(xy 224.79 60.96) (xy 233.68 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e225fda6-a36c-452a-afad-8f16a5314019")
+	)
+	(wire
+		(pts
+			(xy 127 48.26) (xy 127 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4b1a524-f4d1-4f71-bd47-7759e56d9b5c")
+	)
+	(wire
+		(pts
+			(xy 233.68 76.2) (xy 233.68 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef0e0235-9569-4e42-b865-c47143e62f2b")
+	)
+	(wire
+		(pts
+			(xy 134.62 83.82) (xy 138.43 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "efeacc37-62c8-4ade-a2e6-e8361b4725a8")
+	)
+	(wire
+		(pts
+			(xy 35.56 74.93) (xy 45.72 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f8cb112a-1986-47d3-b26b-b25ae2d6163e")
+	)
+	(wire
+		(pts
+			(xy 85.09 71.12) (xy 85.09 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f9cc89b9-b618-4462-8caa-9c9f9b8e0c5d")
+	)
+	(label "GND"
+		(at 74.93 24.13 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0c6d4cb0-25d6-4707-add1-07551dbf4ce7")
+	)
+	(label "GND"
+		(at 265.43 58.42 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "126a086f-cc15-4aba-ba4e-d3da3cb03851")
+	)
+	(label "ARM_SIGNAL"
+		(at 69.85 31.75 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "17429705-97d9-4fcf-97fa-96c19b4f295d")
+	)
+	(label "GND"
+		(at 233.68 93.98 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1a95b182-256c-4cd7-9e37-28131c353037")
+	)
+	(label "PYRO_PWR"
+		(at 29.21 48.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "1f087735-c099-44bc-b1eb-15f02da3fb3f")
+	)
+	(label "GND"
+		(at 85.09 58.42 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "23e65be0-58a8-4d26-875f-ea2fad554970")
+	)
+	(label "PYRO_PWR"
+		(at 250.19 59.69 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "2c1be1c2-25cf-433a-aa66-30830facde3e")
+	)
+	(label "PYRO_2"
+		(at 128.27 26.67 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3e5f0c46-b637-474e-80a5-c8a684517549")
+	)
+	(label "PYRO_3"
+		(at 128.27 29.21 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3f2fbdcd-cf07-414b-bbe5-810877cfa6f5")
+	)
+	(label "GND"
+		(at 143.51 93.98 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4be70a05-df45-4ff9-8f7e-be005673c5a9")
+	)
+	(label "PYRO_PWR"
+		(at 31.75 25.4 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4f8813e3-9264-4d1f-9c8b-ca521f09025a")
+	)
+	(label "GND"
+		(at 31.75 30.48 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "53d8eddb-1c3b-47e1-abcf-e29016e07564")
+	)
+	(label "ARM_SIGNAL"
+		(at 125.73 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "690ccd27-ee4b-49e5-af53-20049e8ddd84")
+	)
+	(label "PYRO_PWR"
+		(at 160.02 59.69 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "6d4e2631-0e53-4ada-ad1b-5b078235f973")
+	)
+	(label "PYRO_1"
+		(at 82.55 48.26 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "755c9648-2b18-4917-afed-085bc21b72a0")
+	)
+	(label "GND"
+		(at 175.26 58.42 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7816d610-4e8c-43d6-9345-ab9045990c44")
+	)
+	(label "ARM_SIGNAL"
+		(at 31.75 20.32 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "9189ed92-7120-4276-ad8a-e6ed143d88f7")
+	)
+	(label "PYRO_1"
+		(at 128.27 24.13 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "98feef5d-51f6-46fa-9836-11ec24beb9f2")
+	)
+	(label "PYRO_3"
+		(at 262.89 48.26 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a11c6f92-ca88-4f52-b26a-5b1361076e8e")
+	)
+	(label "PYRO_PWR"
+		(at 209.55 48.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "a1faf7b7-5bd0-499e-9e38-893f34954f5e")
+	)
+	(label "GND"
+		(at 115.57 24.13 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "a1ffd078-4831-4d10-bf3e-d75ec8eac7f3")
+	)
+	(label "PYRO_PWR"
+		(at 69.85 59.69 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "a759ea1e-1562-496b-8399-564f64e82e06")
+	)
+	(label "PYRO_PWR"
+		(at 119.38 48.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "a857c8d7-5292-4d65-b106-bb741ce1704f")
+	)
+	(label "GND"
+		(at 53.34 93.98 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "aae4b9fb-6fba-4f45-9559-664b9f77408e")
+	)
+	(label "PYRO_2"
+		(at 172.72 48.26 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "b42fcb7c-d9a4-4a07-b1cc-c012ad30fbb9")
+	)
+	(label "ARM_SIGNAL"
+		(at 215.9 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "bf9f7a93-f5c9-4537-bff8-b60799cbb2f4")
+	)
+	(label "ARM_SIGNAL"
+		(at 35.56 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c0e8372b-d0ee-4605-8d9d-f6fa07362fb1")
+	)
+	(hierarchical_label "PYRO3_CONT"
+		(shape output)
+		(at 265.43 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "24a2d1bf-d4ba-40e3-9c4b-a747e866b25a")
+	)
+	(hierarchical_label "PYRO2_CTRL"
+		(shape input)
+		(at 127 83.82 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "2c54fbd0-79fc-4825-9a67-1eee91b1f407")
+	)
+	(hierarchical_label "GND"
+		(shape input)
+		(at 31.75 30.48 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "329613bb-cc32-4192-a266-d7754a5fceb3")
+	)
+	(hierarchical_label "ARM_DETECT"
+		(shape output)
+		(at 64.77 24.13 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "49d724e2-5465-47db-90d0-4c9f77577ee5")
+	)
+	(hierarchical_label "ARM_SIGNAL"
+		(shape input)
+		(at 31.75 20.32 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "4c76e5b8-3780-4994-8683-902216f96565")
+	)
+	(hierarchical_label "PYRO_PWR_IN"
+		(shape input)
+		(at 31.75 25.4 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "510e9443-e49c-4b44-bedf-3be0c1d32ac5")
+	)
+	(hierarchical_label "PYRO1_CTRL"
+		(shape input)
+		(at 36.83 83.82 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7b6e54a0-2de6-42fe-ad9a-ce83b70bd6e6")
+	)
+	(hierarchical_label "PYRO3_CTRL"
+		(shape input)
+		(at 217.17 83.82 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8612e13a-7b2c-4f1f-a033-e615193ade7a")
+	)
+	(hierarchical_label "PYRO2_CONT"
+		(shape output)
+		(at 175.26 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a6bacaa0-7abf-4506-8540-c25b11c0f73f")
+	)
+	(hierarchical_label "PYRO1_CONT"
+		(shape output)
+		(at 85.09 74.93 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b9720814-39df-480b-809a-9f03e57fbd18")
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 262.89 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "05bcf0f3-51ac-4ca0-bd27-660d886f5b3f")
+		(property "Reference" "Q15"
+			(at 273.05 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 270.51 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 262.89 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 262.89 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 262.89 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 262.89 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "20cc9fff-4379-4edc-b239-50bd1ec67345")
+		)
+		(pin "2"
+			(uuid "129964c6-f47a-4505-834c-52e3e50f6bb1")
+		)
+		(pin "3"
+			(uuid "67012041-cf54-412c-a0fe-9aff8d43a4ef")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 52.07 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0674fff7-6bcd-48ea-88f7-b774302069a9")
+		(property "Reference" "R14"
+			(at 72.39 50.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "100K"
+			(at 72.39 53.3399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 71.628 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 69.85 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f5db99e2-6a76-4bf8-b8dc-d3911b279ad5")
+		)
+		(pin "2"
+			(uuid "222a0eef-dc01-4362-890e-7df919fc9b06")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 160.02 52.07 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "18035a4f-15c9-466b-a0f7-14b76682fa88")
+		(property "Reference" "R18"
+			(at 162.56 50.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "100K"
+			(at 162.56 53.3399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 161.798 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 160.02 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 160.02 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ceeaf4ee-e429-4413-a27f-39a2691ed161")
+		)
+		(pin "2"
+			(uuid "167e2277-2de8-4c18-800f-cdd1ad6667e2")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 82.55 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "294d95f5-67f6-4c2d-bea7-d7e47152e68a")
+		(property "Reference" "Q7"
+			(at 92.71 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 90.17 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 82.55 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 82.55 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 82.55 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 82.55 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "47709a38-88b4-457d-be2c-245087642595")
+		)
+		(pin "2"
+			(uuid "4a59b77f-9628-42f9-80e8-6961d304c78d")
+		)
+		(pin "3"
+			(uuid "5e6d66d2-10e4-4706-becf-b7940ef18fe9")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 231.14 71.12 0)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2d2646a2-b42d-40df-931f-351ba7d9f773")
+		(property "Reference" "Q12"
+			(at 238.76 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 238.76 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 231.14 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 231.14 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 231.14 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 231.14 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c8280349-c704-4e2b-a880-00fa7bcbc40b")
+		)
+		(pin "2"
+			(uuid "5415ea36-a91c-40fb-93d8-c2b8566d6ec1")
+		)
+		(pin "3"
+			(uuid "9cbe2ab0-4f68-4b88-b373-34838b1fa5fe")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 130.81 60.96 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3253fc0d-3448-4cb2-8a25-1abc77ef98e7")
+		(property "Reference" "R15"
+			(at 130.81 54.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 130.81 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 130.81 62.738 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 130.81 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 130.81 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "91915e7b-d075-4123-99e5-83aad2cfaa8c")
+		)
+		(pin "2"
+			(uuid "ebfc6fef-5324-4a72-b90e-e75bea37dcd5")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 140.97 71.12 0)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "36f80faa-dc93-4ff8-9286-8a722801c990")
+		(property "Reference" "Q8"
+			(at 148.59 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 148.59 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 140.97 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 140.97 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 140.97 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 140.97 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8c1c470a-2a45-4f52-a1de-2a717f3d6871")
+		)
+		(pin "2"
+			(uuid "d7a2ca02-3e19-4bf4-854a-2e08ede680bf")
+		)
+		(pin "3"
+			(uuid "6244959c-f026-4d28-802b-88d419f6588b")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 83.82 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "40f192ba-f858-4cfd-a581-6dcd278a890d")
+		(property "Reference" "R13"
+			(at 40.64 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "510R"
+			(at 40.64 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 40.64 82.042 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 40.64 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "68bd54da-472e-485f-b79f-5cd612c0e219")
+		)
+		(pin "2"
+			(uuid "27759aed-6e30-4349-96c5-5b7116d5cb90")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:AP25P06K")
+		(at 53.34 53.34 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "43034de7-933c-4b8c-b4d8-cc4181e65bc2")
+		(property "Reference" "Q4"
+			(at 53.34 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AP25P06K"
+			(at 53.34 45.72 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL"
+			(at 71.12 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 53.34 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 53.34 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2995326"
+			(at 73.66 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1d35bf2f-e0ea-4e41-a4c0-309f979ab2e8")
+		)
+		(pin "2"
+			(uuid "b6c9b5a4-1386-4785-a5f1-421d428eb477")
+		)
+		(pin "3"
+			(uuid "e1ba9ac5-f654-481d-9228-9e79fd569ff2")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 69.85 26.67 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "48c72371-0046-4349-8bf8-5e34bc1071ee")
+		(property "Reference" "Q3"
+			(at 69.85 16.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 69.85 19.05 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 57.15 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 54.61 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 52.07 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "797d6c31-c31d-4345-b38b-379d7749e91a")
+		)
+		(pin "2"
+			(uuid "4f019553-d896-4c2b-b992-2d60b1a058d7")
+		)
+		(pin "3"
+			(uuid "fb461c25-4da2-4dbd-ab6a-b79f383c97ae")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 172.72 66.04 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4afec5f0-7541-471e-9166-320452166994")
+		(property "Reference" "Q11"
+			(at 182.88 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 180.34 66.04 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 172.72 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 172.72 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 172.72 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 172.72 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "09b1bac8-f9df-459e-ae6e-864bb75fed04")
+		)
+		(pin "2"
+			(uuid "563fbd6c-3816-4d6d-bb5e-72897deb962b")
+		)
+		(pin "3"
+			(uuid "7ac089b1-e58b-4a3f-8a77-870884093c92")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 250.19 52.07 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5880b63c-5801-4b2a-943d-91f660225e35")
+		(property "Reference" "R22"
+			(at 252.73 50.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "100K"
+			(at 252.73 53.3399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 251.968 52.07 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 250.19 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8830e806-692d-41a4-b645-ef92c27301d8")
+		)
+		(pin "2"
+			(uuid "41d3d344-ebb7-4bdd-91e9-dff28455baf2")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:MMBT5551_C2145")
+		(at 50.8 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5c10db7d-5555-4e90-8e29-08f7eafbb828")
+		(property "Reference" "Q6"
+			(at 54.61 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MMBT5551_C2145"
+			(at 54.61 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 50.8 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html"
+			(at 50.8 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2145"
+			(at 50.8 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1587d8eb-696a-4b60-8630-eaae751d9ea2")
+		)
+		(pin "2"
+			(uuid "d03395d8-a2c3-47b2-8a72-4813c66cc8b6")
+		)
+		(pin "3"
+			(uuid "d2794eaa-1014-4116-a0b8-ede09d01bfa4")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:MMBT5551_C2145")
+		(at 140.97 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "65b78e71-166a-47f5-a53e-ea5cf375876b")
+		(property "Reference" "Q9"
+			(at 144.78 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MMBT5551_C2145"
+			(at 144.78 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 140.97 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html"
+			(at 140.97 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 140.97 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2145"
+			(at 140.97 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "44e55ecd-ab13-4278-b762-39d92364cfa4")
+		)
+		(pin "2"
+			(uuid "fb1e9718-bf29-4d72-b1dc-0a8c197dfcec")
+		)
+		(pin "3"
+			(uuid "6c61dc43-7ef4-4c47-81e6-7b9bcb6d72f1")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_02x03_Top_Bottom")
+		(at 120.65 26.67 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "66086207-3aa1-45f9-89e8-c3dabc3996c2")
+		(property "Reference" "J_PYRO1"
+			(at 121.92 17.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Conn_02x03_Top_Bottom"
+			(at 121.92 20.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Molex:1054051106"
+			(at 120.65 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 120.65 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 120.65 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4aa83e57-d916-46ca-8158-7dc98944af82")
+		)
+		(pin "2"
+			(uuid "9a770b82-6863-48c1-a173-9c22127aa651")
+		)
+		(pin "3"
+			(uuid "438e77d3-f3aa-4a59-953e-201a164d21fc")
+		)
+		(pin "4"
+			(uuid "5382f9fc-da3c-4a45-ba06-20ebc2013a95")
+		)
+		(pin "5"
+			(uuid "a4356702-9103-4faf-8340-5cc92a2e4c11")
+		)
+		(pin "6"
+			(uuid "63c03d24-b3ff-4cf6-9898-0f7f25f75e5f")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "J_PYRO1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 220.98 71.12 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7c7a2580-69a3-48ab-982a-7395792faece")
+		(property "Reference" "R20"
+			(at 220.98 64.77 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "33K"
+			(at 220.98 67.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 220.98 72.898 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 220.98 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 220.98 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8b25af93-5cb1-4beb-ae92-f20c6d8d70de")
+		)
+		(pin "2"
+			(uuid "4259c41a-0e53-44d3-b796-21a0848150f8")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 130.81 71.12 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8b786965-2163-4b00-8029-a0894e6fcf40")
+		(property "Reference" "R16"
+			(at 130.81 64.77 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "33K"
+			(at 130.81 67.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 130.81 72.898 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 130.81 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 130.81 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3df75876-1405-4a3c-83bb-991089ece254")
+		)
+		(pin "2"
+			(uuid "e10f2ade-e7d0-4722-8ddd-b1573969fcc0")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 130.81 83.82 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "997f1ced-9498-47ec-9c10-e0131cb2b234")
+		(property "Reference" "R17"
+			(at 130.81 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "510R"
+			(at 130.81 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 130.81 82.042 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 130.81 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 130.81 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "af31aff4-0730-434b-9f42-0f277e6fbcc8")
+		)
+		(pin "2"
+			(uuid "b575beb6-e31f-4d8d-a085-a806e07f8489")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:CJ3407")
+		(at 50.8 71.12 0)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b22d7c14-d52c-4a30-81fd-5c50e276b4fa")
+		(property "Reference" "Q5"
+			(at 58.42 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "CJ3407"
+			(at 58.42 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.6-P1.90-LS2.8-BR"
+			(at 50.8 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/MOSFET_CJ3407-3407_C15903.html"
+			(at 50.8 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 50.8 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C15903"
+			(at 50.8 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cf57ae7f-8528-445e-97cf-c2dbb30a2756")
+		)
+		(pin "2"
+			(uuid "881215a5-3148-445d-b62d-c44f49e68341")
+		)
+		(pin "3"
+			(uuid "53d6c0f1-24b6-4c3a-a05e-583bb77b9a52")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 220.98 83.82 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b5bbeb14-0e20-4044-ae7b-19a0b61fd9d2")
+		(property "Reference" "R21"
+			(at 220.98 77.47 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "510R"
+			(at 220.98 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 220.98 82.042 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 220.98 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 220.98 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ebd7af05-c8f7-4986-ba91-98be0c576374")
+		)
+		(pin "2"
+			(uuid "3e77ae64-0721-40de-93bd-c14bdd3a7815")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R21")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 71.12 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bd650646-7d73-4cec-92f0-0e43472878d0")
+		(property "Reference" "R12"
+			(at 40.64 64.77 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "33K"
+			(at 40.64 67.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 40.64 72.898 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 40.64 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a6ab489f-beb6-49a0-83c3-09a918af9f77")
+		)
+		(pin "2"
+			(uuid "f55107c0-1b4c-42c6-9989-e67213d5e5df")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:AP25P06K")
+		(at 233.68 53.34 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d3bb907a-2e3d-41d0-9b49-4f88f9902a88")
+		(property "Reference" "Q14"
+			(at 233.68 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AP25P06K"
+			(at 233.68 45.72 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL"
+			(at 251.46 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 233.68 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 233.68 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2995326"
+			(at 254 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "de1fadd0-d3fd-4963-8457-7d4912241a89")
+		)
+		(pin "2"
+			(uuid "7f50ad7a-6ab3-4344-9f27-3e703e0545e1")
+		)
+		(pin "3"
+			(uuid "637ccc61-326a-435b-97bf-f813e2e934e3")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:AP25P06K")
+		(at 143.51 53.34 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d4b85e3e-d69c-42fb-9c41-bebf0d49b90f")
+		(property "Reference" "Q10"
+			(at 143.51 43.18 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AP25P06K"
+			(at 143.51 45.72 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Rocketry:TO-252-2_L6.6-W6.1-P4.57-LS10.1-BL"
+			(at 161.29 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 143.51 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2995326"
+			(at 163.83 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1c86230f-fdb0-4809-80e0-bfeb75eb8228")
+		)
+		(pin "2"
+			(uuid "fc6f1e78-d25b-40af-ac40-0d6332b39044")
+		)
+		(pin "3"
+			(uuid "d7515920-c288-4cb4-8c5c-e9bed066027c")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 60.96 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "dff562ae-26e1-4473-840d-f71776297ccb")
+		(property "Reference" "R11"
+			(at 40.64 54.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 40.64 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 40.64 62.738 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 40.64 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "965c188d-e649-4b18-8c3d-c85f6e48d2cd")
+		)
+		(pin "2"
+			(uuid "5cf4f71c-dffa-46e3-8be6-de526c4555d1")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 220.98 60.96 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "eb1547fb-75f1-4bf6-b9c2-5a3aaa28faa9")
+		(property "Reference" "R19"
+			(at 220.98 54.61 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 220.98 57.15 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 220.98 62.738 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 220.98 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 220.98 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "89067cca-cb41-4831-8d7e-12040e9ad53e")
+		)
+		(pin "2"
+			(uuid "84946473-b307-4dd5-901b-b4f6f16c31c9")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "R19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Rocketry:MMBT5551_C2145")
+		(at 231.14 83.82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "fb3136ae-e993-43b9-a836-85d91a30007a")
+		(property "Reference" "Q13"
+			(at 234.95 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MMBT5551_C2145"
+			(at 234.95 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Rocketry:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 231.14 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://lcsc.com/product-detail/Transistors-NPN-PNP_MMBT5551-G1-H-200-300_C2145.html"
+			(at 231.14 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 231.14 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC Part" "C2145"
+			(at 231.14 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8e1a49a5-fd9d-4dc4-9c62-b54c894a4951")
+		)
+		(pin "2"
+			(uuid "a6d5014f-c3c7-4e67-a471-b2ed17bcaafa")
+		)
+		(pin "3"
+			(uuid "cc055929-ef9d-462f-98d5-a8c591cb24cd")
+		)
+		(instances
+			(project "VLF4_PCB"
+				(path "/2b2e7a46-7688-49d7-b5d0-90683ba998fa/af526286-5dbc-420e-b8b1-7fab36bc15cc/9f6e196e-52ef-460c-9d76-ef7257bf981e"
+					(reference "Q13")
+					(unit 1)
+				)
+			)
+		)
+	)
 )
