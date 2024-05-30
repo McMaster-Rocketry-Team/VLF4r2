@@ -14,27 +14,41 @@ struct Coefficients {
     tempsens: u16,
 }
 
-pub struct MS5607<B: SpiDevice> {
+pub struct MS5607<'a, B: SpiDevice> {
     spi: B,
     coefficients: Option<Coefficients>,
+    buffer: &'a mut [u8],
 }
 
-impl<B: SpiDevice> MS5607<B> {
-    pub fn new(spi_device: B) -> Self {
+impl<'a, B: SpiDevice> MS5607<'a, B> {
+    pub fn new(spi_device: B, buffer: &'a mut [u8]) -> Self {
+        defmt::assert!(buffer.len() == 8, "Buffer length must be 8");
         Self {
             spi: spi_device,
             coefficients: None,
+            buffer,
         }
     }
 }
 
-impl<B: SpiDevice> Barometer for MS5607<B> {
+macro_rules! create_buffer {
+    ($self: expr, $write_data: expr) => {{
+        let read_length = $write_data.len(); // read length is equal to the length of the write data
+        let (read_buffer, write_buffer) = $self.buffer.split_at_mut(read_length);
+        let write_buffer = &mut write_buffer[read_length..(read_length + $write_data.len())];
+        write_buffer.copy_from_slice(&$write_data);
+        (read_buffer, write_buffer)
+    }};
+}
+
+impl<'a, B: SpiDevice> Barometer for MS5607<'a, B> {
     type Error = ErrorKind;
 
     async fn reset(&mut self) -> Result<(), ErrorKind> {
+        let (read_buffer, write_buffer) = create_buffer!(self, [0x1E]);
         // reset
         self.spi
-            .transfer(&mut [0u8], &[0x1E])
+            .transfer(read_buffer, write_buffer)
             .await
             .map_err(|e| e.kind())?;
 
@@ -43,10 +57,9 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
         // read coefficients
         let mut coefficients = [0u16; 6];
         for addr in 1..=6 {
-            let write_data: [u8; 3] = [0xA0 | (addr << 1), 0, 0];
-            let mut read_buffer = [0; 3];
+            let (read_buffer, write_buffer) = create_buffer!(self, [0xA0 | (addr << 1), 0, 0]);
             self.spi
-                .transfer(&mut read_buffer, &write_data)
+                .transfer(read_buffer, &write_buffer)
                 .await
                 .map_err(|e| e.kind())?;
 
@@ -68,17 +81,17 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
     async fn read(&mut self) -> Result<BaroReading, ErrorKind> {
         // request measurement pressure with OSR=1024
         let timestamp = Instant::now().as_micros() as f64 / 1000.0 + 1.0; // timestamp of the pressure measurement
+        let (read_buffer, write_buffer) = create_buffer!(self, [0x44]);
         self.spi
-            .transfer(&mut [0u8], &[0x44])
+            .transfer(read_buffer, write_buffer)
             .await
             .map_err(|e| e.kind())?;
         Timer::after(Duration::from_micros(2280)).await;
 
         // read pressure measurement
-        let write_data: [u8; 4] = [0x00, 0, 0, 0];
-        let mut read_buffer = [0; 4];
+        let (read_buffer, write_buffer) = create_buffer!(self, [0x00, 0, 0, 0]);
         self.spi
-            .transfer(&mut read_buffer, &write_data)
+            .transfer(read_buffer, write_buffer)
             .await
             .map_err(|e| e.kind())?;
         let d1 = ((read_buffer[1] as u32) << 16)
@@ -86,15 +99,17 @@ impl<B: SpiDevice> Barometer for MS5607<B> {
             | (read_buffer[3] as u32);
 
         // request measurement temperature with OSR=256
+        let (read_buffer, write_buffer) = create_buffer!(self, [0x50]);
         self.spi
-            .transfer(&mut [0u8], &[0x50])
+            .transfer(read_buffer, write_buffer)
             .await
             .map_err(|e| e.kind())?;
         Timer::after(Duration::from_micros(600)).await;
 
         // read temerature measurement
+        let (read_buffer, write_buffer) = create_buffer!(self, [0x00, 0, 0, 0]);
         self.spi
-            .transfer(&mut read_buffer, &write_data)
+            .transfer(read_buffer, write_buffer)
             .await
             .map_err(|e| e.kind())?;
         let d2 = ((read_buffer[1] as u32) << 16)

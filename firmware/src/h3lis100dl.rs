@@ -46,6 +46,7 @@ impl<B: SpiDevice> IMU for H3LIS100DL<B> {
 
     async fn read(&mut self) -> Result<IMUReading, Self::Error> {
         let timestamp = Instant::now().as_micros() as f64 / 1000.0;
+        // TODO merge into one read?
         let x = self.read_register(OUT_X_REG).await? as i8;
         let y = self.read_register(OUT_Y_REG).await? as i8;
         let z = self.read_register(OUT_Z_REG).await? as i8;

@@ -3,28 +3,41 @@
 #![feature(type_alias_impl_trait)]
 #![feature(impl_trait_in_assoc_type)]
 
-mod barometer;
+mod adc;
+mod buzzer;
 mod clock;
+mod e22;
 mod fmt;
 mod gps;
 mod h3lis100dl;
+mod indicator;
 mod lsm6dsm;
-mod meg;
+mod mmc5603;
+mod ms5607;
+mod rng;
+mod spi_flash;
+mod timer;
+mod usb;
+mod pyro;
+mod sys_reset;
 mod utils;
 
 use core::fmt::Write;
 use core::mem::transmute;
 use core::str::from_utf8;
 
-use crate::barometer::MS5607;
 use crate::clock::Clock;
 use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
 use crate::lsm6dsm::LSM6DSM;
-use crate::meg::MMC5603;
+use crate::mmc5603::MMC5603;
+use crate::ms5607::MS5607;
+use adc::{BatteryAdc, CurrentAdc};
+use buzzer::Buzzer;
 use defmt::{error, info};
+use e22::E22;
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
-use embassy_stm32::adc::Adc;
+use embassy_stm32::adc::{Adc, SampleTime};
 use embassy_stm32::exti::{Channel, ExtiInput};
 use embassy_stm32::gpio::Pin;
 use embassy_stm32::i2c::Config as I2cConfig;
@@ -43,7 +56,7 @@ use futures::join;
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, I2C4, PA0, PA1, UART4};
+use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, I2C1, I2C4, PA0, PA1, UART4};
 use embassy_stm32::{
     bind_interrupts,
     gpio::{Input, Level, Output, Pull, Speed},
@@ -58,19 +71,24 @@ use embassy_sync::{
     pubsub::{PubSubBehavior, PubSubChannel},
 };
 use heapless::String;
+use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
 use lora_phy::mod_params::ModulationParams;
 use lora_phy::mod_params::{Bandwidth, CodingRate, SpreadingFactor};
 use lora_phy::mod_traits::{InterfaceVariant, RadioKind};
-use lora_phy::sx126x::{self, Sx126x, Sx126xVariant, TcxoCtrlVoltage};
+use lora_phy::sx126x::{self, Sx1262, Sx126x, Sx126xVariant, TcxoCtrlVoltage};
 use lora_phy::{LoRa, RxMode};
 #[cfg(not(debug_assertions))]
 use panic_halt as _;
 #[cfg(debug_assertions)]
 use panic_probe as _;
-
-const UPPER_ALTITUDE: f32 = 500.0;
-const LOWER_ALTITUDE: f32 = 300.0; // ezmini: 396.24
+use pyro::{ArmingSwitch, PyroContinuity, PyroCtrl};
+use rng::RNG;
+use spi_flash::{CrcWrapper, SpiFlash};
+use sys_reset::SysReset;
+use timer::EmbassyTimer;
+use usb::Usb;
+use vlfs::{EraseTune, ManagedEraseFlash};
 
 // bind_interrupts!(struct Irqs {
 //     FDCAN2_IT0 => can::IT0InterruptHandler<FDCAN2>;
@@ -78,8 +96,8 @@ const LOWER_ALTITUDE: f32 = 300.0; // ezmini: 396.24
 // });
 
 bind_interrupts!(struct Irqs {
-    I2C4_EV => i2c::EventInterruptHandler<I2C4>;
-    I2C4_ER => i2c::ErrorInterruptHandler<I2C4>;
+    I2C1_EV => i2c::EventInterruptHandler<I2C1>;
+    I2C1_ER => i2c::ErrorInterruptHandler<I2C1>;
 });
 
 #[link_section = ".ram_d3"]
@@ -148,75 +166,152 @@ async fn main(_spawner: Spawner) {
     }
     let p = embassy_stm32::init(config);
     info!("Hello, World!");
-    let mut led1 = Output::new(p.PE1, Level::Low, Speed::Low); // blue
-    let mut led2 = Output::new(p.PE4, Level::Low, Speed::Low); // green
-    let mut led3 = Output::new(p.PB9, Level::Low, Speed::Low); // red
+    let mut led_blue = GPIOLED::new(p.PB12.degrade(), false);
+    let mut led_green = GPIOLED::new(p.PC4.degrade(), false);
+    let mut led_red = GPIOLED::new(p.PD10.degrade(), false);
+    let mut en_5v = Output::new(p.PE3, Level::High, Speed::Low);
 
-    let mut en_5v = Output::new(p.PD9, Level::Low, Speed::Low);
+    let baro_buffer = unsafe { &mut RAM_D3[0..8] };
 
-    let mut flash_n_reset = Output::new(p.PD5, Level::Low, Speed::Low);
-    let mut flash_cs = Output::new(p.PC1, Level::High, Speed::Low);
-    sleep!(1);
-    flash_n_reset.set_high();
-    sleep!(1);
-    
-    let mut spi4 = Spi::new(
-        p.SPI4,
-        p.PE2,
-        p.PE6,
-        p.PE5,
-        p.DMA2_CH3,
-        p.DMA2_CH2,
-        SpiConfig::default(),
+    // baro
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+    let spi6 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI6, p.PB3, p.PB5, p.PB4, p.BDMA_CH1, p.BDMA_CH0, spi_config,
+    ));
+    let baro_spi_device = SpiDeviceWithConfig::new(
+        &spi6,
+        Output::new(p.PC14, Level::High, Speed::High),
+        spi_config,
     );
-    
-    let mut buffer = [0u8; 8];
-    flash_cs.set_low();
-    spi4.transfer(&mut buffer, &[0x9f,0,0,0,0,0,0,0]).await.unwrap();
-    flash_cs.set_high();
-    info!("manufacture id: {:X}", buffer[1]);
+    let baro = MS5607::new(baro_spi_device, baro_buffer);
 
-    // let meg_buffer = unsafe { &mut RAM_D3[0..10] };
+    // flash
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+    let spi4 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI4, p.PE12, p.PE14, p.PE13, p.DMA1_CH1, p.DMA1_CH0, spi_config,
+    ));
 
-    // let mut i2c_config = I2cConfig::default();
-    // i2c_config.sda_pullup = true;
-    // i2c_config.scl_pullup = true;
-    // let mut i2c4 = I2c::new(
-    //     p.I2C4,
-    //     p.PD12,
-    //     p.PD13,
-    //     Irqs,
-    //     p.BDMA_CH1,
-    //     p.BDMA_CH0,
-    //     Hertz(100_000),
-    //     i2c_config,
-    // );
+    let flash_spi_device = SpiDeviceWithConfig::new(
+        &spi4,
+        Output::new(p.PE15, Level::High, Speed::High),
+        spi_config,
+    );
 
-    // info!("b");
-    // meg_buffer[0..2].clone_from_slice(&[0x1b, 0b10000000]);
-    // i2c4.write(0x30, &meg_buffer[0..2]).await.unwrap();
-    // info!("c");
+    let flash_n_reset = Output::new(p.PD9, Level::Low, Speed::Low);
+    let flash = SpiFlash::new(flash_spi_device, flash_n_reset);
+    let flash = ManagedEraseFlash::new(
+        flash,
+        Delay,
+        EraseTune {
+            erase_us_every_write_256b: 1000,
+        },
+    );
 
-    // loop {}
+    // CRC
+    let crc = CrcWrapper::new(p.CRC);
 
-    // let mut i2c3 = I2c::new_blocking(
-    //     p.I2C3,
-    //     p.PA8,
-    //     p.PC9,
-    //     // Irqs,
-    //     // p.BDMA_CH1,
-    //     // p.BDMA_CH0,
-    //     Hertz(100_000),
-    //     i2c_config,
-    // );
+    // Low G IMU
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+    let spi3 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI3, p.PC10, p.PC12, p.PC11, p.DMA1_CH4, p.DMA1_CH5, spi_config,
+    ));
+    let low_g_imu_spi_device = SpiDeviceWithConfig::new(
+        &spi3,
+        Output::new(p.PC13, Level::High, Speed::High),
+        spi_config,
+    );
+    let low_g_imu = LSM6DSM::new(low_g_imu_spi_device);
 
-    // let mut meg = MMC5603::new(i2c4, meg_buffer.try_into().unwrap());
-    // meg.reset().await.unwrap();
-    // info!("meg reseted");
-    // loop {
-    //     info!("{:?}", meg.read().await.unwrap());
-    //     sleep!(100);
-    // }
+    // High G IMU
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(1_000_000);
+    let spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI1, p.PA5, p.PA7, p.PA6, p.DMA1_CH3, p.DMA1_CH2, spi_config,
+    ));
+    let high_g_imu_spi_device = SpiDeviceWithConfig::new(
+        &spi1,
+        Output::new(p.PA1, Level::High, Speed::High),
+        spi_config,
+    );
+    let high_g_imu = H3LIS100DL::new(high_g_imu_spi_device);
+
+    // ADC
+    let battery_adc = BatteryAdc::new(p.ADC1, p.PC0).await;
+    let current_adc = CurrentAdc::new(p.ADC2, p.ADC3, p.PC1, p.PC3).await;
+
+    // meg
+    let mut i2c_config = I2cConfig::default();
+    i2c_config.sda_pullup = true;
+    i2c_config.scl_pullup = true;
+    let i2c1 = I2c::new(
+        p.I2C1,
+        p.PB8,
+        p.PB9,
+        Irqs,
+        p.DMA1_CH7,
+        p.DMA1_CH6,
+        Hertz(100_000),
+        i2c_config,
+    );
+    let meg = MMC5603::new(i2c1);
+
+    // GPS
+    let gps_pps = GPSPPS::new(ExtiInput::new(p.PD12, p.EXTI12, Pull::None));
+    let gps = UartGPS::new(p.PE9, p.USART2, p.PA3, p.PA2, p.DMA2_CH0, p.DMA2_CH1);
+
+    // Buzzer
+    let buzzer = Buzzer::new(p.TIM2, p.PA0);
+
+    // lora
+    let mut spi_config = SpiConfig::default();
+    spi_config.frequency = Hertz(250_000);
+    let spi2 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        p.SPI2, p.PB13, p.PB15, p.PB14, p.DMA2_CH3, p.DMA2_CH2, spi_config,
+    ));
+
+    let lora_spi_device = SpiDeviceWithConfig::new(
+        &spi2,
+        Output::new(p.PB0, Level::High, Speed::High),
+        spi_config,
+    );
+
+    let config = sx126x::Config {
+        chip: E22,
+        tcxo_ctrl: Some(TcxoCtrlVoltage::Ctrl1V7),
+        use_dcdc: true,
+        rx_boost: true,
+    };
+    let iv = GenericSx126xInterfaceVariant::new(
+        Output::new(p.PE8.degrade(), Level::High, Speed::Low),
+        ExtiInput::new(p.PD15, p.EXTI15, Pull::Down),
+        ExtiInput::new(p.PD13, p.EXTI13, Pull::Down),
+        Some(Output::new(p.PC5.degrade(), Level::High, Speed::High)),
+        Some(Output::new(p.PD14.degrade(), Level::High, Speed::High)),
+    )
+    .unwrap();
+    let sx1262 = Sx126x::new(lora_spi_device, iv, config);
+    let lora = LoRa::new(sx1262, false, Delay).await.unwrap();
+
+    // Rng
+    let rng = RNG::new(p.RNG);
+
+    // USB
+    let (usb, mut usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
+
+    // Pyro
+    let arming_switch = ArmingSwitch::new(ExtiInput::new(p.PD11, p.EXTI11, Pull::Up));
+    let pyro1_cont = PyroContinuity::new(ExtiInput::new(p.PC6, p.EXTI6, Pull::Up));
+    let pyro1_ctrl = PyroCtrl::new(p.PC9.degrade());
+    let pyro2_cont = PyroContinuity::new(ExtiInput::new(p.PA10, p.EXTI10, Pull::Up));
+    let pyro2_ctrl = PyroCtrl::new(p.PC7.degrade());
+    let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
+    let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
+
+    // System Reset
+    let sys_reset = SysReset::new();
 
     // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
     // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
@@ -262,48 +357,6 @@ async fn main(_spawner: Spawner) {
     // };
     // join!(send_fut, read_fut);
 
-    let mut spi_config = SpiConfig::default();
-    spi_config.frequency = Hertz(1_000_000);
-
-    let spi3 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-        p.SPI3, p.PC10, p.PC12, p.PC11, p.DMA2_CH1, p.DMA2_CH0, spi_config,
-    ));
-    let lsm6dsm_spi_device = SpiDeviceWithConfig::new(
-        &spi3,
-        Output::new(p.PA15, Level::High, Speed::High),
-        spi_config,
-    );
-    let mut lsm6dsm = LSM6DSM::new(lsm6dsm_spi_device);
-    lsm6dsm.reset().await.unwrap();
-    loop {
-        info!("{}", lsm6dsm.read().await.unwrap());
-        sleep!(50);
-    }
-
-    // let mut spi_config = SpiConfig::default();
-    // spi_config.frequency = Hertz(1_000_000);
-
-    // let mut spi1 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-    //     p.SPI1, p.PB3, p.PD7, p.PB4, p.DMA1_CH3, p.DMA1_CH2, spi_config,
-    // ));
-    // let h2lis100dl_spi_device = SpiDeviceWithConfig::new(
-    //     &spi1,
-    //     Output::new(p.PD2, Level::High, Speed::High),
-    //     spi_config,
-    // );
-    // let mut h2lis100dl = H3LIS100DL::new(h2lis100dl_spi_device);
-    // h2lis100dl.reset().await.unwrap();
-    // loop {
-    //     info!("{}", h2lis100dl.read().await.unwrap());
-    //     sleep!(50);
-    // }
-    // let tx_buffer = [0x0F | 0b10000000, 0x00];
-    // let mut rx_buffer = [0u8; 2];
-    // cs.set_low();
-    // spi1.transfer(&mut rx_buffer, &tx_buffer).await.unwrap();
-    // cs.set_high();
-    // info!("{=u8:08b}", &rx_buffer[1]);
-
     // loop {
     //     sleep!(10);
     //     let tx_buffer = [0x2d | 0b10000000, 0x0];
@@ -314,46 +367,7 @@ async fn main(_spawner: Spawner) {
     //     info!("{=u8:08b}", &rx_buffer[1]);
     // }
 
-    // let mut gps_pps = GPSPPS::new(p.PB5, p.EXTI5);
-    // let mut gps = UartGPS::new(p.PB6, p.UART4, p.PA1, p.PA0, p.DMA1_CH5, p.DMA1_CH4);
-
     // info!("a");
-    // let mut spi_config = SpiConfig::default();
-    // spi_config.frequency = Hertz(250_000);
-    // // should be spi6, but spi6 requires bdma which doesnt work
-    // let spi6 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-    //     p.SPI6,
-    //     p.PA5,
-    //     p.PA7,
-    //     p.PA6,
-    //     p.BDMA_CH3,
-    //     p.BDMA_CH2,
-    //     spi_config.clone(),
-    // ));
-
-    // let lora_spi_device = SpiDeviceWithConfig::new(
-    //     &spi6,
-    //     Output::new(p.PE3, Level::High, Speed::High),
-    //     spi_config,
-    // );
-
-    // let config = sx126x::Config {
-    //     chip: Sx126xVariant::Sx1262,
-    //     tcxo_ctrl: Some(TcxoCtrlVoltage::Ctrl1V7),
-    //     use_dcdc: true,
-    //     use_dio2_as_rfswitch: false,
-    //     rx_boost: true,
-    // };
-    // let iv = GenericSx126xInterfaceVariant::new(
-    //     Output::new(p.PC13.degrade(), Level::High, Speed::Low),
-    //     ExtiInput::new(p.PC15, p.EXTI15, Pull::Down),
-    //     ExtiInput::new(p.PC14, p.EXTI14, Pull::Down),
-    //     Some(Output::new(p.PC0.degrade(), Level::High, Speed::High)),
-    //     Some(Output::new(p.PC2.degrade(), Level::High, Speed::High)),
-    // )
-    // .unwrap();
-    // let sx1262 = Sx126x::new(lora_spi_device, iv, config);
-    // let mut lora = LoRa::new(sx1262, false, Delay).await.unwrap();
 
     // let modulation_params = lora
     //     .create_modulation_params(

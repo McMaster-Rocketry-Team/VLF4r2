@@ -2,8 +2,9 @@ use defmt::trace;
 use embassy_stm32::{
     bind_interrupts,
     exti::ExtiInput,
-    gpio::{Level, Output, Pull, Speed},
-    peripherals::{DMA1_CH4, DMA1_CH5, EXTI5, PA0, PA1, PB5, PB6, UART4},
+    gpio::{Level, Output, Speed},
+    mode::Async,
+    peripherals::{DMA2_CH0, DMA2_CH1, PA2, PA3, PE9, USART2},
     usart::{self, Config as UartConfig, Uart},
 };
 use embassy_time::Instant;
@@ -13,11 +14,11 @@ use heapless::String;
 use crate::sleep;
 
 bind_interrupts!(struct Irqs {
-    UART4 => usart::InterruptHandler<UART4>;
+    USART2 => usart::InterruptHandler<USART2>;
 });
 
 pub struct UartGPS {
-    uart: Option<Uart<'static, UART4, embassy_stm32::mode::Async>>,
+    uart: Option<Uart<'static, Async>>,
     buffer: [u8; 9],
     sentence: String<84>,
     nrst: Output<'static>,
@@ -25,12 +26,12 @@ pub struct UartGPS {
 
 impl UartGPS {
     pub fn new(
-        nsrt: PB6,
-        _uart: UART4,
-        _rx: PA1,
-        _tx: PA0,
-        _rx_dma: DMA1_CH5,
-        _tx_dma: DMA1_CH4,
+        nsrt: PE9,
+        _uart: USART2,
+        _rx: PA3,
+        _tx: PA2,
+        _rx_dma: DMA2_CH0,
+        _tx_dma: DMA2_CH1,
     ) -> Self {
         Self {
             uart: None,
@@ -40,19 +41,19 @@ impl UartGPS {
         }
     }
 
-    fn create_uart(baudrate: u32) -> Uart<'static, UART4, embassy_stm32::mode::Async> {
+    fn create_uart(baudrate: u32) -> Uart<'static, Async> {
         let mut config = UartConfig::default();
         config.baudrate = baudrate;
 
         // Safety: peripherals stealed here are all claimed by the constructor.
         unsafe {
             Uart::new(
-                UART4::steal(),
-                PA1::steal(),
-                PA0::steal(),
+                USART2::steal(),
+                PA3::steal(),
+                PA2::steal(),
                 Irqs,
-                DMA1_CH4::steal(),
-                DMA1_CH5::steal(),
+                DMA2_CH1::steal(),
+                DMA2_CH0::steal(),
                 config,
             )
             .unwrap()
@@ -123,10 +124,8 @@ pub struct GPSPPS {
 }
 
 impl GPSPPS {
-    pub fn new(pps: PB5, exti: EXTI5) -> Self {
-        Self {
-            pps: ExtiInput::new(pps, exti, Pull::None),
-        }
+    pub fn new(pps: ExtiInput<'static>) -> Self {
+        Self { pps }
     }
 }
 

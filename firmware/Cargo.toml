@@ -2,7 +2,7 @@
 
 [package]
 edition = "2021"
-name = "vlf4-firmware"
+name = "vlf4r2-firmware"
 version = "0.1.0"
 
 [dependencies]
@@ -21,6 +21,7 @@ embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features
     "integrated-timers",
 ] }
 embassy-futures = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
+embassy-usb = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
 futures = { version = "0.3.17", default-features = false, features = [
     "async-await",
 ] }
@@ -44,13 +45,15 @@ panic-halt = "0.2.0"
 panic-probe = { version = "0.3.1", features = ["print-defmt"] }
 libm = "0.2.8"
 heapless = { version = "0.8.0", features = ["defmt-03"], default-features = false }
-firmware-common = { path = "../rust-monorepo/firmware-common" }
 lora-phy = {  git = "https://github.com/lora-rs/lora-rs", default-features = false }
 embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
+firmware-common = { path = "../rust-monorepo/firmware-common" }
+vlfs = { path = "../rust-monorepo/vlfs" }
+stm32-device-signature = { version = "0.3.3", features = ["stm32h72x"] }
 
 
 [[bin]]
-name = "vlf4-firmware"
+name = "vlf4r2-firmware"
 test = false
 bench = false
 
