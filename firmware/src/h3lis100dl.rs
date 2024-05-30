@@ -37,7 +37,7 @@ impl<B: SpiDevice> IMU for H3LIS100DL<B> {
     async fn reset(&mut self) -> Result<(), Self::Error> {
         // power on, set ODR to 400HZ, enable all axes
         self.spi
-            .transfer(&mut [0u8; 2], &[CTRL_REG1, 0b001_10_111])
+            .transfer(&mut [0u8; 2], &[CTRL_REG1, 0b0011_0111])
             .await
             .map_err(|e| e.kind())?;
         sleep!(10);

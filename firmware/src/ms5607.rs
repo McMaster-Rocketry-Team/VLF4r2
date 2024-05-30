@@ -59,7 +59,7 @@ impl<'a, B: SpiDevice> Barometer for MS5607<'a, B> {
         for addr in 1..=6 {
             let (read_buffer, write_buffer) = create_buffer!(self, [0xA0 | (addr << 1), 0, 0]);
             self.spi
-                .transfer(read_buffer, &write_buffer)
+                .transfer(read_buffer, write_buffer)
                 .await
                 .map_err(|e| e.kind())?;
 
@@ -120,7 +120,7 @@ impl<'a, B: SpiDevice> Barometer for MS5607<'a, B> {
 
         // temperature calculation
         let dt: i64 = ((d2 as i32) - ((coeffs.t_ref as i32) << 8)) as i64;
-        let mut temperature = (2000i64 + ((dt as i64 * coeffs.tempsens as i64) >> 23)) as i32;
+        let mut temperature = (2000i64 + ((dt * coeffs.tempsens as i64) >> 23)) as i32;
 
         // compensated pressure calculation
         let mut off = ((coeffs.off_t1 as i64) << 17) + (((coeffs.tco as i64) * dt) >> 6);

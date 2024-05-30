@@ -13,6 +13,6 @@ impl EmbassyTimer {
 
 impl VLFSTimer for EmbassyTimer {
     fn now_ms(&self) -> f64 {
-        return Instant::now().as_micros() as f64 / 1000.0;
+        Instant::now().as_micros() as f64 / 1000.0
     }
 }

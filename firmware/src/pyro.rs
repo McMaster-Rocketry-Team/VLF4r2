@@ -1,7 +1,6 @@
 use embassy_stm32::{
     exti::ExtiInput,
-    gpio::{AnyPin, Input, Level, Output, Pull, Speed},
-    peripherals::{EXTI14, EXTI2, EXTI4, EXTI9, PB3, PB4, PB5, PB9, PC13, PC14, PD2},
+    gpio::{AnyPin, Level, Output, Speed},
 };
 use firmware_common::driver::arming::HardwareArming;
 use firmware_common::driver::pyro::{Continuity, PyroCtrl as PyroCtrlDriver};

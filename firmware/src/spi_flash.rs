@@ -153,7 +153,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0x21, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -171,7 +171,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0x52, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -189,7 +189,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0xDC, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -213,7 +213,7 @@ where
         read_buffer: &'b mut [u8],
     ) -> Result<&'b [u8], SpiFlashError> {
         self.temp_buffer[0] = 0x13;
-        (&mut self.temp_buffer[1..5]).copy_from_slice(&address.to_be_bytes());
+        self.temp_buffer[1..5].copy_from_slice(&address.to_be_bytes());
 
         let first_5_bytes: [u8; 5] = read_buffer[0..5].try_into().unwrap();
 
@@ -225,7 +225,7 @@ where
             .await
             .map_err(|e| e.kind())?;
 
-        (&mut read_buffer[0..5]).copy_from_slice(&first_5_bytes);
+        read_buffer[0..5].copy_from_slice(&first_5_bytes);
         Ok(&read_buffer[5..(read_length + 5)])
     }
 
@@ -241,7 +241,7 @@ where
         let first_5_bytes: [u8; 5] = write_buffer[0..5].try_into().unwrap();
 
         write_buffer[0] = 0x12;
-        (&mut write_buffer[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_buffer[1..5].copy_from_slice(&address.to_be_bytes());
         write_buffer[4] = 0;
 
         let transfer_len = min(261, write_buffer.len());
@@ -253,7 +253,7 @@ where
             .await
             .map_err(|e| e.kind())?;
 
-        (&mut write_buffer[0..5]).copy_from_slice(&first_5_bytes);
+        write_buffer[0..5].copy_from_slice(&first_5_bytes);
 
         self.wait_till_not_busy(Duration::from_micros(500), Duration::from_millis(4))
             .await?;
@@ -284,7 +284,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0x21, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -299,7 +299,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0x52, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -314,7 +314,7 @@ where
         self.enable_write().await?;
 
         let mut write_data: [u8; 5] = [0xDC, 0, 0, 0, 0];
-        (&mut write_data[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_data[1..5].copy_from_slice(&address.to_be_bytes());
 
         let mut read_buffer = [0u8; 5];
 
@@ -371,7 +371,7 @@ where
         read_buffer: &'b mut [u8],
     ) -> Result<&'b [u8], SpiFlashError> {
         self.temp_buffer[0] = 0x13;
-        (&mut self.temp_buffer[1..5]).copy_from_slice(&address.to_be_bytes());
+        self.temp_buffer[1..5].copy_from_slice(&address.to_be_bytes());
 
         let first_5_bytes: [u8; 5] = read_buffer[0..5].try_into().unwrap();
 
@@ -383,7 +383,7 @@ where
             .await
             .map_err(|e| e.kind())?;
 
-        (&mut read_buffer[0..5]).copy_from_slice(&first_5_bytes);
+        read_buffer[0..5].copy_from_slice(&first_5_bytes);
         Ok(&read_buffer[5..(read_length + 5)])
     }
 
@@ -397,7 +397,7 @@ where
         let first_5_bytes: [u8; 5] = write_buffer[0..5].try_into().unwrap();
 
         write_buffer[0] = 0x12;
-        (&mut write_buffer[1..5]).copy_from_slice(&address.to_be_bytes());
+        write_buffer[1..5].copy_from_slice(&address.to_be_bytes());
         write_buffer[4] = 0;
 
         let transfer_len = min(261, write_buffer.len());
@@ -409,7 +409,7 @@ where
             .await
             .map_err(|e| e.kind())?;
 
-        (&mut write_buffer[0..5]).copy_from_slice(&first_5_bytes);
+        write_buffer[0..5].copy_from_slice(&first_5_bytes);
 
         self.wait_till_not_busy(Duration::from_micros(500), Duration::from_millis(4))
             .await?;

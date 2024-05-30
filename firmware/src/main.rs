@@ -22,11 +22,6 @@ mod pyro;
 mod sys_reset;
 mod utils;
 
-use core::fmt::Write;
-use core::mem::transmute;
-use core::str::from_utf8;
-
-use crate::clock::Clock;
 use crate::gps::{UartGPS, GPSPPS};
 use crate::h3lis100dl::H3LIS100DL;
 use crate::lsm6dsm::LSM6DSM;
@@ -34,50 +29,35 @@ use crate::mmc5603::MMC5603;
 use crate::ms5607::MS5607;
 use adc::{BatteryAdc, CurrentAdc};
 use buzzer::Buzzer;
-use defmt::{error, info};
+use defmt::info;
 use e22::E22;
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
-use embassy_stm32::adc::{Adc, SampleTime};
-use embassy_stm32::exti::{Channel, ExtiInput};
+use embassy_stm32::exti::ExtiInput;
 use embassy_stm32::gpio::Pin;
 use embassy_stm32::i2c::Config as I2cConfig;
 use embassy_stm32::i2c::I2c;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
-use embassy_stm32::{can, i2c};
-use embassy_time::{Delay, Timer};
-use embedded_hal_async::spi::SpiDevice;
-use firmware_common::driver::barometer::Barometer;
-use firmware_common::driver::gps::{GPSParser, GPS};
-use firmware_common::driver::imu::IMU;
-use firmware_common::driver::meg::Megnetometer;
-use firmware_common::testMain;
-use futures::join;
+use embassy_stm32::i2c;
+use embassy_time::Delay;
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, FDCAN2, I2C1, I2C4, PA0, PA1, UART4};
+use embassy_stm32::peripherals::I2C1;
 use embassy_stm32::{
     bind_interrupts,
-    gpio::{Input, Level, Output, Pull, Speed},
-    spi,
+    gpio::{Level, Output, Pull, Speed},
     time::mhz,
-    usart::{self, Config as UartConfig, Parity, Uart},
     Config,
 };
 use embassy_sync::{
     blocking_mutex::raw::NoopRawMutex,
     mutex::Mutex,
-    pubsub::{PubSubBehavior, PubSubChannel},
 };
-use heapless::String;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
-use lora_phy::mod_params::ModulationParams;
-use lora_phy::mod_params::{Bandwidth, CodingRate, SpreadingFactor};
-use lora_phy::mod_traits::{InterfaceVariant, RadioKind};
-use lora_phy::sx126x::{self, Sx1262, Sx126x, Sx126xVariant, TcxoCtrlVoltage};
-use lora_phy::{LoRa, RxMode};
+use lora_phy::sx126x::{self, Sx126x, TcxoCtrlVoltage};
+use lora_phy::LoRa;
 #[cfg(not(debug_assertions))]
 use panic_halt as _;
 #[cfg(debug_assertions)]
@@ -86,7 +66,6 @@ use pyro::{ArmingSwitch, PyroContinuity, PyroCtrl};
 use rng::RNG;
 use spi_flash::{CrcWrapper, SpiFlash};
 use sys_reset::SysReset;
-use timer::EmbassyTimer;
 use usb::Usb;
 use vlfs::{EraseTune, ManagedEraseFlash};
 
@@ -166,10 +145,10 @@ async fn main(_spawner: Spawner) {
     }
     let p = embassy_stm32::init(config);
     info!("Hello, World!");
-    let mut led_blue = GPIOLED::new(p.PB12.degrade(), false);
-    let mut led_green = GPIOLED::new(p.PC4.degrade(), false);
-    let mut led_red = GPIOLED::new(p.PD10.degrade(), false);
-    let mut en_5v = Output::new(p.PE3, Level::High, Speed::Low);
+    let led_blue = GPIOLED::new(p.PB12.degrade(), false);
+    let led_green = GPIOLED::new(p.PC4.degrade(), false);
+    let led_red = GPIOLED::new(p.PD10.degrade(), false);
+    let en_5v = Output::new(p.PE3, Level::High, Speed::Low);
 
     let baro_buffer = unsafe { &mut RAM_D3[0..8] };
 
@@ -299,7 +278,7 @@ async fn main(_spawner: Spawner) {
     let rng = RNG::new(p.RNG);
 
     // USB
-    let (usb, mut usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
+    let (usb, usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
 
     // Pyro
     let arming_switch = ArmingSwitch::new(ExtiInput::new(p.PD11, p.EXTI11, Pull::Up));
