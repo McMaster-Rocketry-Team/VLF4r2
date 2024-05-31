@@ -3,16 +3,17 @@
 #![feature(type_alias_impl_trait)]
 #![feature(impl_trait_in_assoc_type)]
 
-use defmt::info;
-use embassy_executor::Spawner;
-use embassy_stm32::{gpio::Pin, time::mhz, Config};
-use firmware_common::driver::indicator::Indicator;
-use indicator::GPIOLED;
-use panic_probe as _;
+use defmt::{info, unwrap};
 use defmt_rtt as _;
+use embassy_executor::Spawner;
+use embassy_stm32::{
+    bind_interrupts, peripherals, rng::{self, Rng}, time::mhz, Config
+};
+use panic_probe as _;
 
-mod indicator;
-mod utils;
+bind_interrupts!(struct Irqs {
+    RNG => rng::InterruptHandler<peripherals::RNG>;
+});
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
@@ -28,6 +29,7 @@ async fn main(_spawner: Spawner) {
         });
         config.rcc.csi = true;
         config.rcc.hsi48 = None;
+        config.rcc.ls = LsConfig::default_lsi();
 
         config.rcc.pll1 = Some(Pll {
             source: PllSource::HSE,
@@ -72,19 +74,17 @@ async fn main(_spawner: Spawner) {
         config.rcc.mux.i2c1235sel = I2c1235sel::PLL3_R;
         config.rcc.mux.i2c4sel = I2c4sel::PLL3_R;
         config.rcc.mux.adcsel = Adcsel::PLL3_R;
-        config.rcc.mux.fdcansel = Fdcansel::PLL1_Q;
+        config.rcc.mux.fdcansel = Fdcansel::PLL2_Q;
         config.rcc.mux.usbsel = Usbsel::PLL3_Q;
+        config.rcc.mux.rngsel = Rngsel::PLL1_Q;
     }
     let p = embassy_stm32::init(config);
-    info!("Hello, World!");
 
-    let mut led_blue = GPIOLED::new(p.PB12.degrade(), false);
-    loop {
-        info!("LED on");
-        led_blue.set_enable(true).await;
-        sleep!(500);
-        info!("LED off");
-        led_blue.set_enable(false).await;
-        sleep!(500);
-    }
+    info!("Setting up RNG...");
+    let mut rng = Rng::new(p.RNG, Irqs);
+    info!("RNG ready!");
+
+    let mut buf = [0u8; 16];
+    unwrap!(rng.async_fill_bytes(&mut buf).await);
+    info!("random bytes: {:02x}", buf);
 }
