@@ -57,6 +57,12 @@ name = "vlf4r2-firmware"
 test = false
 bench = false
 
+[[bin]]
+name = "bringup"
+path = "src/bring_up.rs"
+test = false
+bench = false
+
 [profile.dev]
 debug = true
 opt-level = "z"
