@@ -52,6 +52,8 @@ use embassy_stm32::{
     Config,
 };
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, mutex::Mutex};
+use firmware_common::driver::barometer::Barometer;
+use firmware_common::driver::buzzer::Buzzer as _;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
 use firmware_common::driver::serial::DummySerial;
@@ -62,9 +64,9 @@ use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
 use lora_phy::sx126x::{self, Sx126x, TcxoCtrlVoltage};
 use lora_phy::LoRa;
-#[cfg(not(debug_assertions))]
-use panic_halt as _;
-#[cfg(debug_assertions)]
+// #[cfg(not(debug_assertions))]
+// use panic_halt as _;
+// #[cfg(debug_assertions)]
 use panic_probe as _;
 use pyro::{ArmingSwitch, PyroContinuity, PyroCtrl};
 use rng::RNG;
@@ -174,7 +176,7 @@ async fn main(_spawner: Spawner) {
         // baro
         debug!("Setting up Barometer");
         let mut spi_config = SpiConfig::default();
-        spi_config.frequency = Hertz(1_000_000);
+        spi_config.frequency = Hertz(250_000);
         let spi6 = Mutex::<NoopRawMutex, _>::new(Spi::new(
             p.SPI6, p.PB3, p.PB5, p.PB4, p.BDMA_CH1, p.BDMA_CH0, spi_config,
         ));
@@ -183,7 +185,9 @@ async fn main(_spawner: Spawner) {
             Output::new(p.PC14, Level::High, Speed::High),
             spi_config,
         );
-        let baro = MS5607::new(baro_spi_device, baro_buffer);
+        let mut baro = MS5607::new(baro_spi_device, baro_buffer);
+        debug!("resetting");
+        baro.reset().await.unwrap();
 
         // flash
         debug!("Setting up Flash");
@@ -270,7 +274,7 @@ async fn main(_spawner: Spawner) {
 
         // Buzzer
         debug!("Setting up Buzzer");
-        let buzzer = Buzzer::new(p.TIM2, p.PA0);
+        let mut buzzer = Buzzer::new(p.TIM2, p.PA0);
 
         // lora
         debug!("Setting up LoRa");
@@ -324,6 +328,8 @@ async fn main(_spawner: Spawner) {
         // System Reset
         let sys_reset = SysReset::new();
 
+        buzzer.play(3000, 50).await;
+
         let mut device_manager = DeviceManager::new(
             sys_reset,
             Clock::new(),
@@ -355,7 +361,7 @@ async fn main(_spawner: Spawner) {
         info!("Starting firmware common");
         let firmware_common_future = init(
             &mut device_manager,
-            Some(firmware_common::DeviceMode::GroundTestAvionics),
+            Some(firmware_common::DeviceMode::GroundTestGCM),
         );
 
         #[allow(unreachable_code)]

@@ -36,7 +36,7 @@ macro_rules! create_buffer {
     ($self: expr, $write_data: expr) => {{
         let read_length = $write_data.len(); // read length is equal to the length of the write data
         let (read_buffer, write_buffer) = $self.buffer.split_at_mut(read_length);
-        let write_buffer = &mut write_buffer[read_length..(read_length + $write_data.len())];
+        let write_buffer = &mut write_buffer[..$write_data.len()];
         write_buffer.copy_from_slice(&$write_data);
         (read_buffer, write_buffer)
     }};
