@@ -38,6 +38,7 @@ use embassy_stm32::gpio::Pin;
 use embassy_stm32::i2c;
 use embassy_stm32::i2c::Config as I2cConfig;
 use embassy_stm32::i2c::I2c;
+use embassy_stm32::pac;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
 
@@ -52,8 +53,8 @@ use embassy_stm32::{
     Config,
 };
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, mutex::Mutex};
+use firmware_common::driver::adc::ADC;
 use firmware_common::driver::barometer::Barometer;
-use firmware_common::driver::buzzer::Buzzer as _;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
 use firmware_common::driver::serial::DummySerial;
@@ -100,8 +101,8 @@ async fn main(_spawner: Spawner) {
             freq: mhz(16),
             mode: HseMode::Oscillator,
         });
-        config.rcc.csi = true;
-        config.rcc.hsi48 = None;
+        config.rcc.csi = false;
+        config.rcc.hsi48 = Some(Hsi48Config{sync_from_usb: false});
         config.rcc.ls = LsConfig::default_lsi();
 
         config.rcc.pll1 = Some(Pll {
@@ -109,24 +110,24 @@ async fn main(_spawner: Spawner) {
             prediv: PllPreDiv::DIV1,
             mul: PllMul::MUL32,
             divp: Some(PllDiv::DIV1),
-            divq: Some(PllDiv::DIV64),
-            divr: Some(PllDiv::DIV5),
+            divq: Some(PllDiv::DIV4),
+            divr: Some(PllDiv::DIV2),
         });
 
         config.rcc.pll2 = Some(Pll {
             source: PllSource::HSE,
             prediv: PllPreDiv::DIV1,
-            mul: PllMul::MUL12,
-            divp: Some(PllDiv::DIV2),
-            divq: Some(PllDiv::DIV128),
+            mul: PllMul::MUL20,
+            divp: Some(PllDiv::DIV32),
+            divq: Some(PllDiv::DIV2),
             divr: Some(PllDiv::DIV2),
         });
         config.rcc.pll3 = Some(Pll {
             source: PllSource::HSE,
             prediv: PllPreDiv::DIV1,
-            mul: PllMul::MUL12,
+            mul: PllMul::MUL24,
             divp: Some(PllDiv::DIV2),
-            divq: Some(PllDiv::DIV2),
+            divq: Some(PllDiv::DIV8),
             divr: Some(PllDiv::DIV2),
         });
 
@@ -141,19 +142,21 @@ async fn main(_spawner: Spawner) {
 
         config.rcc.voltage_scale = VoltageScale::Scale0;
 
-        config.rcc.mux.spi123sel = Saisel::PLL2_P;
-        config.rcc.mux.usart16910sel = Usart16910sel::PLL3_Q;
-        config.rcc.mux.usart234578sel = Usart234578sel::PLL3_Q;
-        config.rcc.mux.i2c1235sel = I2c1235sel::PLL3_R;
-        config.rcc.mux.i2c4sel = I2c4sel::PLL3_R;
-        config.rcc.mux.adcsel = Adcsel::PLL3_R;
-        config.rcc.mux.fdcansel = Fdcansel::PLL2_Q;
+        config.rcc.mux.spi123sel = Saisel::PLL1_Q;
+        config.rcc.mux.usart234578sel = Usart234578sel::PCLK1;
+        config.rcc.mux.rngsel = Rngsel::HSI48;
+        config.rcc.mux.i2c4sel = I2c4sel::PCLK4;
+        config.rcc.mux.i2c1235sel = I2c1235sel::PCLK1;
+        config.rcc.mux.spi6sel = Spi6sel::PCLK4;
+        config.rcc.mux.spi45sel = Spi45sel::PCLK2;
+        config.rcc.mux.adcsel = Adcsel::PLL2_P;
+        config.rcc.mux.fdcansel = Fdcansel::PLL1_Q;
         config.rcc.mux.usbsel = Usbsel::PLL3_Q;
-        config.rcc.mux.rngsel = Rngsel::PLL1_Q;
     }
     let p = embassy_stm32::init(config);
     info!("Hello, World!");
-    
+    let rcc_cr = pac::RCC.cr().read();
+    debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
 
     let baro_buffer = unsafe { &mut RAM_D3[0..8] };
 
@@ -165,7 +168,6 @@ async fn main(_spawner: Spawner) {
         //     sleep!(250)
         // }
     };
-
 
     let main_fut = async {
         let led_blue = GPIOLED::new(p.PB12.degrade(), false);
@@ -247,8 +249,8 @@ async fn main(_spawner: Spawner) {
 
         // ADC
         debug!("Setting up ADCs");
-        let battery_adc = BatteryAdc::new(p.ADC1, p.PC0).await;
-        let current_adc = CurrentAdc::new(p.ADC2, p.ADC3, p.PC1, p.PC3).await;
+        let mut battery_adc = BatteryAdc::new(p.ADC1, p.PC0).await;
+        let mut current_adc = CurrentAdc::new(p.ADC2, p.ADC3, p.PC1, p.PC3).await;
 
         // meg
         debug!("Setting up Megnetometer");
@@ -307,13 +309,15 @@ async fn main(_spawner: Spawner) {
         let sx1262 = Sx126x::new(lora_spi_device, iv, config);
         let lora = LoRa::new(sx1262, false, Delay).await.unwrap();
 
+        let rcc_cr = pac::RCC.cr().read();
+        debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
         // Rng
         debug!("Setting up RNG");
         let rng = RNG::new(p.RNG);
 
         // USB
-        // debug!("Setting up USB");
-        // let (usb, mut usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
+        debug!("Setting up USB");
+        let (usb, mut usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
 
         // Pyro
         debug!("Setting up Pyro");
@@ -328,7 +332,12 @@ async fn main(_spawner: Spawner) {
         // System Reset
         let sys_reset = SysReset::new();
 
-        buzzer.play(3000, 50).await;
+        loop {
+            // info!("Battery: {}V", battery_adc.read().await.unwrap());
+            battery_adc.read().await.unwrap();
+            current_adc.read().await.unwrap();
+            sleep!(100);
+        }
 
         let mut device_manager = DeviceManager::new(
             sys_reset,
@@ -344,7 +353,7 @@ async fn main(_spawner: Spawner) {
             (pyro3_cont, pyro3_ctrl),
             arming_switch,
             DummySerial::new(Delay),
-            DummyUSB::new(Delay),
+            usb,
             buzzer,
             meg,
             lora,
@@ -367,8 +376,8 @@ async fn main(_spawner: Spawner) {
         #[allow(unreachable_code)]
         {
             join!(
-                firmware_common_future, 
-                // usb_runner.run(),
+                firmware_common_future,
+                usb_runner.run(),
             );
         }
     };
@@ -430,140 +439,4 @@ async fn main(_spawner: Spawner) {
     // }
 
     // info!("a");
-
-    // let modulation_params = lora
-    //     .create_modulation_params(
-    //         SpreadingFactor::_12,
-    //         Bandwidth::_250KHz,
-    //         CodingRate::_4_8,
-    //         903_900_000,
-    //     )
-    //     .unwrap();
-    // let mut tx_params = lora
-    //     .create_tx_packet_params(4, false, false, false, &modulation_params)
-    //     .unwrap();
-
-    // info!("lora ready");
-    // let buffer = "Hello VLF4".as_bytes();
-    // loop {
-    //     sleep!(5000);
-    //     lora.prepare_for_tx(&modulation_params, &mut tx_params, 22, buffer)
-    //         .await;
-    //     lora.tx().await;
-    //     lora.sleep(true).await;
-    //     led2.set_high();
-    //     sleep!(100);
-    //     led2.set_low();
-    // }
-
-    // let rx_pkt_params = lora
-    //     .create_rx_packet_params(4, false, 50, false, false, &modulation_params)
-    //     .unwrap();
-    // lora.prepare_for_rx(RxMode::Single(1000), &modulation_params, &rx_pkt_params)
-    //     .await
-    //     .unwrap();
-    // info!("b");
-    // let mut receiving_buffer = [00u8; 100];
-    // let result = lora.rx(&rx_pkt_params, &mut receiving_buffer).await;
-    // info!("lora init done");
-    // loop {}
-
-    // testMain(Clock::new(), gps, gps_pps, Delay).await;
-
-    // let mut spi_config = spi::Config::default();
-    // spi_config.frequency = mhz(1);
-
-    // let baro_spi = spi::Spi::new(
-    //     p.SPI2, p.PB10, p.PB15, p.PB14, p.DMA1_CH1, p.DMA1_CH0, spi_config,
-    // );
-
-    // let baro_spi = Mutex::<NoopRawMutex, _>::new(baro_spi);
-
-    // // Baro
-    // let mut barometer = MS5607::new(p.PA10, &baro_spi);
-
-    // sleep!(500);
-    // led1.set_low();
-    // led2.set_low();
-    // led3.set_low();
-
-    // let altitude_channel = PubSubChannel::<NoopRawMutex, f32, 1, 3, 1>::new();
-
-    // let baro_fut = async {
-    //     let mut list = [0.0f32; 100];
-
-    //     info!("reseting baro");
-    //     barometer.reset().await.unwrap();
-    //     let ground_altitude = barometer.read().await.unwrap().altitude();
-    //     loop {
-    //         let reading = barometer.read().await.unwrap();
-    //         let altitude = reading.altitude() - ground_altitude;
-    //         list.rotate_left(1);
-    //         list[9] = altitude;
-    //         let mut sum = 0.0;
-    //         for i in 0..10 {
-    //             sum += list[i];
-    //         }
-    //         let avg = sum / 10.0;
-    //         altitude_channel.publish_immediate(avg);
-    //     }
-    // };
-
-    // let drouge_chute_fut = async {
-    //     let mut max = 0.0f32;
-    //     let mut sub = altitude_channel.subscriber().unwrap();
-    //     loop {
-    //         let altitude = sub.next_message_pure().await;
-    //         if altitude > max {
-    //             max = altitude;
-    //         }
-    //         if altitude < max - 10.0 {
-    //             sleep!(1000);
-    //             led2.set_high();
-    //             break;
-    //         }
-    //     }
-    // };
-
-    // let main_chute_fut = async {
-    //     let mut past_upper = false;
-    //     let mut deploy = false;
-    //     let mut sub = altitude_channel.subscriber().unwrap();
-
-    //     loop {
-    //         let altitude = sub.next_message_pure().await;
-    //         if altitude > UPPER_ALTITUDE {
-    //             past_upper = true;
-    //         }
-    //         if altitude < LOWER_ALTITUDE && past_upper {
-    //             deploy = true;
-    //         }
-    //         if deploy {
-    //             led3.set_high();
-    //         }
-    //     }
-    // };
-
-    // let led_fut = async {
-    //     let mut sub = altitude_channel.subscriber().unwrap();
-    //     loop {
-    //         let altitude = sub.next_message_pure().await;
-    //         let mut light_state = floorf(altitude / 300.0) as i32;
-    //         if light_state < 0 {
-    //             light_state = 0;
-    //         }
-
-    //         info!("altitude: {:?}, light_state: {:?}", altitude, light_state);
-    //         for _ in 0..=light_state {
-    //             led1.set_high();
-    //             sleep!(50);
-    //             led1.set_low();
-    //             sleep!(300);
-    //         }
-
-    //         sleep!(2000);
-    //     }
-    // };
-
-    // join!(baro_fut, drouge_chute_fut, main_chute_fut, led_fut);
 }

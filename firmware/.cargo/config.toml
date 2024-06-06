@@ -1,7 +1,7 @@
 # This file was automatically generated.
 
 [target.thumbv7em-none-eabi]
-runner = 'probe-rs run --chip STM32H723VGHx'
+runner = 'probe-rs run --chip STM32H723VGHx --always-print-stacktrace --catch-hardfault'
 rustflags = [
   "-C", "link-arg=--nmagic",
   "-C", "link-arg=-Tlink.x",

@@ -3,6 +3,7 @@ use embassy_time::Instant;
 use embedded_hal_async::i2c::Error;
 use embedded_hal_async::i2c::{ErrorKind, I2c};
 use firmware_common::driver::meg::{MegReading, Megnetometer};
+use firmware_common::driver::timestamp::BootTimestamp;
 
 use crate::sleep;
 
@@ -60,7 +61,7 @@ impl<B: I2c> Megnetometer for MMC5603<B> {
     }
 
     // unit: Gauss
-    async fn read(&mut self) -> Result<MegReading, ErrorKind> {
+    async fn read(&mut self) -> Result<MegReading<BootTimestamp>, ErrorKind> {
         let timestamp = Instant::now().as_micros() as f64 / 1000.0;
 
         let mut read_buffer = [0; 9];
@@ -82,9 +83,6 @@ impl<B: I2c> Megnetometer for MMC5603<B> {
             | u32::from(read_buffer[8]) >> 4;
         let z = (z as f32 * 0.0625f32 - 32768f32) / 1000.0;
 
-        Ok(MegReading {
-            timestamp,
-            meg: [x, y, z],
-        })
+        Ok(MegReading::new(timestamp, [x, y, z]))
     }
 }

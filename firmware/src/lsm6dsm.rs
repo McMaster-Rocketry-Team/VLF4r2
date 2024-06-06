@@ -2,6 +2,7 @@ use embassy_time::Instant;
 use embedded_hal_async::spi::Error;
 use embedded_hal_async::spi::{ErrorKind, SpiDevice};
 use firmware_common::driver::imu::{IMUReading, IMU};
+use firmware_common::driver::timestamp::BootTimestamp;
 
 use crate::sleep;
 
@@ -106,7 +107,7 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
         Ok(())
     }
 
-    async fn read(&mut self) -> Result<IMUReading, Self::Error> {
+    async fn read(&mut self) -> Result<IMUReading<BootTimestamp>, Self::Error> {
         let status = self.check_status().await?;
         let new_gyro_data = status & 0x02 != 0;
         let new_accel_data = status & 0x01 != 0;
@@ -136,20 +137,18 @@ impl<B: SpiDevice> IMU for LSM6DSM<B> {
         let acc_scale = 16.0 / 32768.0; // ±16g range
         let gyro_scale = 2000.0 / 32768.0; // ±2000dps range
 
-        let imu_reading = IMUReading {
-            timestamp: Instant::now().as_micros() as f64 / 1000.0,
-            acc: [
+        Ok(IMUReading::new(
+            Instant::now().as_micros() as f64 / 1000.0,
+            [
                 acc_x as f32 * acc_scale,
                 acc_y as f32 * acc_scale,
                 acc_z as f32 * acc_scale,
             ],
-            gyro: [
+            [
                 gyro_x as f32 * gyro_scale,
                 gyro_y as f32 * gyro_scale,
                 gyro_z as f32 * gyro_scale,
             ],
-        };
-
-        Ok(imu_reading)
+        ))
     }
 }
