@@ -41,12 +41,11 @@ impl ADC for BatteryAdc {
     async fn read(&mut self) -> Result<f32, Self::Error> {
         let vrefint = self.adc.read(&mut self.vrefint_channel);
         info!("Vref 1: {}", vrefint);
-        // let vref_ratio = 1.216 / vrefint as f32;
-        // let measured = self.adc.read(&mut self.pin);
-        // info!("measured: {}", measured);
+        let vref_ratio = 1.216 / vrefint as f32;
+        let measured = self.adc.read(&mut self.pin);
+        info!("measured: {}", measured);
         let divider_ratio = 0.163f32;
-        // Ok(measured as f32 * vref_ratio)
-        Ok(0.0)
+        Ok(measured as f32 * vref_ratio / divider_ratio)
     }
 }
 
@@ -58,7 +57,6 @@ pub struct CurrentAdc {
     adc3_vrefint: VrefInt,
     adc3_pin_curr_m: PC3,
 }
-
 
 impl CurrentAdc {
     pub async fn new(adc2: ADC2, adc3: ADC3, adc2_pin_curr_ref: PC1, adc3_pin_curr_m: PC3) -> Self {

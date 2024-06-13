@@ -57,8 +57,7 @@ use firmware_common::driver::adc::ADC;
 use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
-use firmware_common::driver::serial::DummySerial;
-use firmware_common::driver::usb::DummyUSB;
+use firmware_common::driver::serial::get_dummy_serial;
 use firmware_common::{init, DeviceManager};
 use futures::join;
 use indicator::GPIOLED;
@@ -118,7 +117,7 @@ async fn main(_spawner: Spawner) {
             source: PllSource::HSE,
             prediv: PllPreDiv::DIV1,
             mul: PllMul::MUL20,
-            divp: Some(PllDiv::DIV32),
+            divp: Some(PllDiv::DIV8),
             divq: Some(PllDiv::DIV2),
             divr: Some(PllDiv::DIV2),
         });
@@ -317,7 +316,8 @@ async fn main(_spawner: Spawner) {
 
         // USB
         debug!("Setting up USB");
-        let (usb, mut usb_runner) = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
+        let usb = Usb::new(p.USB_OTG_HS, p.PA12, p.PA11);
+        let mut usb_runner = usb.get_runner();
 
         // Pyro
         debug!("Setting up Pyro");
@@ -332,12 +332,12 @@ async fn main(_spawner: Spawner) {
         // System Reset
         let sys_reset = SysReset::new();
 
-        loop {
-            // info!("Battery: {}V", battery_adc.read().await.unwrap());
-            battery_adc.read().await.unwrap();
-            current_adc.read().await.unwrap();
-            sleep!(100);
-        }
+        // loop {
+        //     info!("Battery: {}V", battery_adc.read().await.unwrap());
+        //     // battery_adc.read().await.unwrap();
+        //     // current_adc.read().await.unwrap();
+        //     sleep!(100);
+        // }
 
         let mut device_manager = DeviceManager::new(
             sys_reset,
@@ -352,8 +352,8 @@ async fn main(_spawner: Spawner) {
             (pyro2_cont, pyro2_ctrl),
             (pyro3_cont, pyro3_ctrl),
             arming_switch,
-            DummySerial::new(Delay),
-            usb,
+            get_dummy_serial(Delay),
+            &usb,
             buzzer,
             meg,
             lora,

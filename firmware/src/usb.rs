@@ -1,13 +1,15 @@
+use core::cell::RefCell;
 use core::mem::MaybeUninit;
 use embassy_stm32::bind_interrupts;
 use embassy_stm32::peripherals::{PA11, PA12, USB_OTG_HS};
 use embassy_stm32::usb::{self, Config as USBDriverConfig, Driver};
 use embassy_time::{Duration, Timer};
-use embassy_usb::class::cdc_acm::{CdcAcmClass, State};
+use embassy_usb::class::cdc_acm::{CdcAcmClass, Receiver, Sender, State};
 use embassy_usb::driver::EndpointError;
 use embassy_usb::Config as USBConfig;
 use embassy_usb::{Builder, UsbDevice};
-use firmware_common::driver::usb::USB as CommonUSB;
+use firmware_common::driver::serial::SplitableSerial;
+use firmware_common::driver::usb::SplitableUSB;
 use futures::future::{select, Either};
 use futures::pin_mut;
 use stm32_device_signature::device_id_hex;
@@ -23,22 +25,25 @@ static mut BOS_DESCRIPTOR: [u8; 256] = [0; 256];
 static mut CONTROL_BUF: [u8; 64] = [0; 64];
 static mut STATE: MaybeUninit<State> = MaybeUninit::uninit();
 
-pub struct UsbRunner {
-    usb_device: UsbDevice<'static, Driver<'static, USB_OTG_HS>>,
+pub struct UsbRunner<'a> {
+    usb: &'a Usb,
 }
 
-impl UsbRunner {
+impl<'a> UsbRunner<'a> {
     pub async fn run(&mut self) {
-        self.usb_device.run().await;
+        let mut usb_device = self.usb.usb_device.borrow_mut();
+        usb_device.run().await;
     }
 }
 
 pub struct Usb {
-    class: CdcAcmClass<'static, Driver<'static, USB_OTG_HS>>,
+    usb_device: RefCell<UsbDevice<'static, Driver<'static, USB_OTG_HS>>>,
+    tx: RefCell<Sender<'static, Driver<'static, USB_OTG_HS>>>,
+    rx: RefCell<Receiver<'static, Driver<'static, USB_OTG_HS>>>,
 }
 
 impl Usb {
-    pub fn new(usb: USB_OTG_HS, dp: PA12, dm: PA11) -> (Self, UsbRunner) {
+    pub fn new(usb: USB_OTG_HS, dp: PA12, dm: PA11) -> Self {
         let mut config = USBDriverConfig::default();
         config.vbus_detection = true;
         let driver = Driver::new_fs(usb, Irqs, dp, dm, unsafe { &mut EP_OUT_BUFFER }, config);
@@ -69,41 +74,142 @@ impl Usb {
         );
         let class = CdcAcmClass::new(&mut builder, unsafe { STATE.write(State::new()) }, 64);
         let usb_device = builder.build();
+        let (tx, rx) = class.split();
+        Self {
+            usb_device: RefCell::new(usb_device),
+            tx: RefCell::new(tx),
+            rx: RefCell::new(rx),
+        }
+    }
 
-        (Self { class }, UsbRunner { usb_device })
+    pub fn get_runner(&self) -> UsbRunner {
+        UsbRunner { usb: self }
     }
 }
 
-#[derive(defmt::Format)]
+#[derive(defmt::Format, Debug)]
 pub enum UsbError {
     Timeout,
     EndPoint(EndpointError),
 }
 
-impl CommonUSB for Usb {
+impl embedded_io_async::Error for UsbError {
+    fn kind(&self) -> embedded_io_async::ErrorKind {
+        match self {
+            UsbError::Timeout => embedded_io_async::ErrorKind::TimedOut,
+            UsbError::EndPoint(EndpointError::BufferOverflow) => {
+                embedded_io_async::ErrorKind::OutOfMemory
+            }
+            UsbError::EndPoint(EndpointError::Disabled) => embedded_io_async::ErrorKind::Other,
+        }
+    }
+}
+
+impl SplitableUSB for &Usb {
+    async fn wait_connection(&mut self) {
+        let mut rx = self.rx.borrow_mut();
+        rx.wait_connection().await;
+    }
+}
+
+impl SplitableSerial for &Usb {
     type Error = UsbError;
 
-    async fn write_64b(&mut self, data: &[u8]) -> Result<(), UsbError> {
-        let write_fut = self.class.write_packet(data);
+    fn split(
+        &mut self,
+    ) -> (
+        impl embedded_io_async::Write<Error = Self::Error>,
+        impl embedded_io_async::Read<Error = Self::Error>,
+    ) {
+        let tx = TXGuard { usb: self };
+        let rx = RXGuard {
+            usb: self,
+            buffer: [0u8; 64],
+            buffer_len: 0,
+        };
+        (tx, rx)
+    }
+}
+
+struct TXGuard<'a> {
+    usb: &'a Usb,
+}
+
+impl<'a> embedded_io_async::ErrorType for TXGuard<'a> {
+    type Error = UsbError;
+}
+
+impl<'a> embedded_io_async::Write for TXGuard<'a> {
+    async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
+        // can only write 64 bytes at a time
+        let mut tx = self.usb.tx.borrow_mut();
+
+        let write_fut = async {
+            if buf.len() > 64 {
+                tx.write_packet(&buf[..64]).await
+            } else if buf.len() == 64 {
+                let result = tx.write_packet(buf).await;
+                if result.is_err() {
+                    return result;
+                }
+                tx.write_packet(&[]).await
+            } else {
+                tx.write_packet(buf).await
+            }
+        };
+
         let timeout_fut = Timer::after(Duration::from_millis(1000));
         pin_mut!(write_fut);
         pin_mut!(timeout_fut);
         match select(write_fut, timeout_fut).await {
-            Either::Left((Ok(_), _)) => Ok(()),
+            Either::Left((Ok(_), _)) => Ok(buf.len()),
             Either::Left((Err(e), _)) => Err(UsbError::EndPoint(e)),
             Either::Right(_) => Err(UsbError::Timeout),
         }
     }
+}
 
-    async fn read(&mut self, buffer: &mut [u8]) -> Result<usize, UsbError> {
-        let length = self.class.read_packet(buffer).await;
-        match length {
-            Ok(length) => Ok(length),
-            Err(e) => Err(UsbError::EndPoint(e)),
+struct RXGuard<'a> {
+    usb: &'a Usb,
+    buffer: [u8; 64],
+    buffer_len: usize,
+}
+
+impl<'a> embedded_io_async::ErrorType for RXGuard<'a> {
+    type Error = UsbError;
+}
+
+impl<'a> embedded_io_async::Read for RXGuard<'a> {
+    async fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
+        if self.buffer_len > 0 {
+            if self.buffer_len > buf.len() {
+                buf.copy_from_slice(&self.buffer[..self.buffer_len]);
+                self.buffer.copy_within(buf.len()..self.buffer_len, 0);
+                self.buffer_len -= buf.len();
+                Ok(buf.len())
+            } else {
+                buf[..self.buffer_len].copy_from_slice(&self.buffer[..self.buffer_len]);
+                let len = self.buffer_len;
+                self.buffer_len = 0;
+                Ok(len)
+            }
+        } else {
+            let mut rx = self.usb.rx.borrow_mut();
+            let length = rx.read_packet(&mut self.buffer).await;
+            match length {
+                Ok(length) => {
+                    if length > buf.len() {
+                        buf.copy_from_slice(&self.buffer[..length]);
+                        self.buffer.copy_within(buf.len()..length, 0);
+                        self.buffer_len = length - buf.len();
+                        Ok(buf.len())
+                    } else {
+                        buf[..length].copy_from_slice(&self.buffer[..length]);
+                        Ok(length)
+                    }
+                }
+                Err(e) => Err(UsbError::EndPoint(e)),
+            }
         }
-    }
-
-    async fn wait_connection(&mut self) {
-        self.class.wait_connection().await
     }
 }
