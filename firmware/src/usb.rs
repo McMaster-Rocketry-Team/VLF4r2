@@ -1,5 +1,6 @@
 use core::cell::RefCell;
 use core::mem::MaybeUninit;
+use defmt::debug;
 use embassy_stm32::bind_interrupts;
 use embassy_stm32::peripherals::{PA11, PA12, USB_OTG_HS};
 use embassy_stm32::usb::{self, Config as USBDriverConfig, Driver};
@@ -142,27 +143,34 @@ impl<'a> embedded_io_async::ErrorType for TXGuard<'a> {
 impl<'a> embedded_io_async::Write for TXGuard<'a> {
     async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {
         // can only write 64 bytes at a time
+        debug!("Writing to USB, requested len: {}", buf.len());
         let mut tx = self.usb.tx.borrow_mut();
 
         let write_fut = async {
-            if buf.len() > 64 {
-                tx.write_packet(&buf[..64]).await
-            } else if buf.len() == 64 {
-                let result = tx.write_packet(buf).await;
-                if result.is_err() {
-                    return result;
+            let result: Result<usize, EndpointError> = try {
+                if buf.len() > 64 {
+                    debug!("Buffer is larger than 64 bytes");
+                    tx.write_packet(&buf[..64]).await?;
+                    64
+                } else if buf.len() == 64 {
+                    debug!("Buffer is 64 bytes");
+                    tx.write_packet(buf).await?;
+                    tx.write_packet(&[]).await?;
+                    64
+                } else {
+                    debug!("Buffer is smaller than 64 bytes");
+                    tx.write_packet(buf).await?;
+                    buf.len()
                 }
-                tx.write_packet(&[]).await
-            } else {
-                tx.write_packet(buf).await
-            }
+            };
+            result
         };
 
         let timeout_fut = Timer::after(Duration::from_millis(1000));
         pin_mut!(write_fut);
         pin_mut!(timeout_fut);
         match select(write_fut, timeout_fut).await {
-            Either::Left((Ok(_), _)) => Ok(buf.len()),
+            Either::Left((Ok(len), _)) => Ok(len),
             Either::Left((Err(e), _)) => Err(UsbError::EndPoint(e)),
             Either::Right(_) => Err(UsbError::Timeout),
         }
@@ -181,29 +189,36 @@ impl<'a> embedded_io_async::ErrorType for RXGuard<'a> {
 
 impl<'a> embedded_io_async::Read for RXGuard<'a> {
     async fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
+        debug!("Reading from USB, requested len: {}", buf.len());
         if self.buffer_len > 0 {
+            debug!("Using buffer");
             if self.buffer_len > buf.len() {
-                buf.copy_from_slice(&self.buffer[..self.buffer_len]);
+                debug!("Buffer is larger than requested");
+                buf.copy_from_slice(&self.buffer[..buf.len()]);
                 self.buffer.copy_within(buf.len()..self.buffer_len, 0);
                 self.buffer_len -= buf.len();
                 Ok(buf.len())
             } else {
+                debug!("Buffer is smaller than requested");
                 buf[..self.buffer_len].copy_from_slice(&self.buffer[..self.buffer_len]);
                 let len = self.buffer_len;
                 self.buffer_len = 0;
                 Ok(len)
             }
         } else {
+            debug!("Reading from USB, no buffer");
             let mut rx = self.usb.rx.borrow_mut();
             let length = rx.read_packet(&mut self.buffer).await;
             match length {
                 Ok(length) => {
                     if length > buf.len() {
-                        buf.copy_from_slice(&self.buffer[..length]);
+                        debug!("Read length is larger than requested");
+                        buf.copy_from_slice(&self.buffer[..buf.len()]);
                         self.buffer.copy_within(buf.len()..length, 0);
                         self.buffer_len = length - buf.len();
                         Ok(buf.len())
                     } else {
+                        debug!("Read length is smaller or equal than requested");
                         buf[..length].copy_from_slice(&self.buffer[..length]);
                         Ok(length)
                     }
