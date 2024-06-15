@@ -43,6 +43,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "arbitrary-int"
+version = "1.2.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c84fc003e338a6f69fbd4f7fe9f92b535ff13e9af8997f3b14b6ddff8b1df46d"
+
+[[package]]
 name = "arrayvec"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -82,6 +88,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5deb64efa5bd81e31fcd1938615a6d98c82eafcbcd787162b6f63b91d6bac5b3"
 dependencies = [
  "rustc_version 0.2.3",
+]
+
+[[package]]
+name = "bilge"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc707ed8ebf81de5cd6c7f48f54b4c8621760926cdf35a57000747c512e67b57"
+dependencies = [
+ "arbitrary-int",
+ "bilge-impl",
+]
+
+[[package]]
+name = "bilge-impl"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "feb11e002038ad243af39c2068c8a72bcf147acf05025dcdb916fcc000adb2d8"
+dependencies = [
+ "itertools",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.66",
 ]
 
 [[package]]
@@ -228,6 +257,12 @@ name = "critical-section"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7059fff8937831a9ae6f0fe4d658ffabf58f2ca96aa9dec1c889f936f705f216"
+
+[[package]]
+name = "cryptoxide"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "382ce8820a5bb815055d3553a610e8cb542b2d767bbacea99038afda96cd760d"
 
 [[package]]
 name = "darling"
@@ -666,10 +701,12 @@ version = "0.1.0"
 dependencies = [
  "ahrs",
  "approx",
+ "bilge",
  "bitflags 2.5.0",
  "bitvec",
  "chrono",
  "crc",
+ "cryptoxide",
  "defmt",
  "either",
  "embassy-futures 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -682,6 +719,7 @@ dependencies = [
  "futures",
  "heapless 0.8.0",
  "libm",
+ "lora-modulation 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "lora-phy",
  "micromath",
  "nalgebra 0.32.5",
@@ -877,6 +915,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
 
 [[package]]
+name = "itertools"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1c173a5686ce8bfa551b3563d0c2170bf24ca44da99c7ca4bfdab5418c3fe57"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.155"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -913,6 +960,12 @@ dependencies = [
 [[package]]
 name = "lora-modulation"
 version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe94d1a6dac71b9d54e7a76eb093fdb8e622601c3515f15e8cdca197d663b41c"
+
+[[package]]
+name = "lora-modulation"
+version = "0.1.4"
 source = "git+https://github.com/lora-rs/lora-rs#b4b6741152b0bc599574eecff9a7ffc031ba1823"
 
 [[package]]
@@ -923,7 +976,7 @@ dependencies = [
  "defmt",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
- "lora-modulation",
+ "lora-modulation 0.1.4 (git+https://github.com/lora-rs/lora-rs)",
  "num-traits",
 ]
 
@@ -1545,6 +1598,7 @@ dependencies = [
  "embassy-sync 0.6.0",
  "embassy-time",
  "embassy-usb",
+ "embedded-can",
  "embedded-hal-async",
  "embedded-io-async",
  "firmware-common",
@@ -1566,6 +1620,7 @@ dependencies = [
  "defmt",
  "embassy-sync 0.5.0",
  "embedded-hal-async",
+ "embedded-io-async",
  "futures",
  "heapless 0.8.0",
  "paste",

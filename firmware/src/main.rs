@@ -6,6 +6,7 @@
 
 mod adc;
 mod buzzer;
+mod can_bus;
 mod clock;
 mod e22;
 mod fmt;
@@ -30,22 +31,23 @@ use crate::mmc5603::MMC5603;
 use crate::ms5607::MS5607;
 use adc::{BatteryAdc, CurrentAdc};
 use buzzer::Buzzer;
+use can_bus::CanBus;
 use clock::{Clock, Delay};
 use defmt::{debug, info};
 use e22::E22;
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
 use embassy_stm32::exti::ExtiInput;
 use embassy_stm32::gpio::Pin;
-use embassy_stm32::i2c;
 use embassy_stm32::i2c::Config as I2cConfig;
 use embassy_stm32::i2c::I2c;
 use embassy_stm32::pac;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
+use embassy_stm32::{can, i2c};
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::I2C1;
+use embassy_stm32::peripherals::{FDCAN1, I2C1};
 use embassy_stm32::wdg::IndependentWatchdog;
 use embassy_stm32::{
     bind_interrupts,
@@ -54,7 +56,6 @@ use embassy_stm32::{
     Config,
 };
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, mutex::Mutex};
-use firmware_common::driver::adc::ADC;
 use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
@@ -72,14 +73,15 @@ use panic_probe as _;
 use pyro::{ArmingSwitch, PyroContinuity, PyroCtrl};
 use rng::RNG;
 use spi_flash::{CrcWrapper, SpiFlash};
+use stm32_device_signature::device_id;
 use sys_reset::SysReset;
 use usb::Usb;
 use vlfs::{EraseTune, ManagedEraseFlash};
 
-// bind_interrupts!(struct Irqs {
-//     FDCAN2_IT0 => can::IT0InterruptHandler<FDCAN2>;
-//     FDCAN2_IT1 => can::IT1InterruptHandler<FDCAN2>;
-// });
+bind_interrupts!(struct IrqsCan {
+    FDCAN1_IT0 => can::IT0InterruptHandler<FDCAN1>;
+    FDCAN1_IT1 => can::IT1InterruptHandler<FDCAN1>;
+});
 
 bind_interrupts!(struct Irqs {
     I2C1_EV => i2c::EventInterruptHandler<I2C1>;
@@ -102,7 +104,9 @@ async fn main(_spawner: Spawner) {
             mode: HseMode::Oscillator,
         });
         config.rcc.csi = false;
-        config.rcc.hsi48 = Some(Hsi48Config{sync_from_usb: false});
+        config.rcc.hsi48 = Some(Hsi48Config {
+            sync_from_usb: false,
+        });
         config.rcc.ls = LsConfig::default_lsi();
 
         config.rcc.pll1 = Some(Pll {
@@ -330,6 +334,10 @@ async fn main(_spawner: Spawner) {
         let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
         let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
 
+        // Can bus
+        debug!("Setting up CAN bus");
+        let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
+
         // System Reset
         let sys_reset = SysReset::new();
 
@@ -359,85 +367,25 @@ async fn main(_spawner: Spawner) {
             meg,
             lora,
             rng,
-            led_green,
             led_red,
+            led_green,
+            led_blue,
             baro,
             gps,
             gps_pps,
             DummyCamera {},
+            can_bus,
             DummyDebugger {},
         );
 
         info!("Starting firmware common");
-        let firmware_common_future = init(
-            &mut device_manager,
-            Some(firmware_common::DeviceMode::GroundTestGCM),
-        );
+        let firmware_common_future = init(&mut device_manager, device_id(), None);
 
         #[allow(unreachable_code)]
         {
-            join!(
-                firmware_common_future,
-                usb_runner.run(),
-            );
+            join!(firmware_common_future, usb_runner.run(),);
         }
     };
 
     join!(main_fut, watchdog_fut);
-
-    // let mut can_en = Output::new(p.PB11, Level::Low, Speed::Low);
-    // let mut can_stb_n = Output::new(p.PE12, Level::Low, Speed::Low);
-    // let mut can_err_n = Input::new(p.PD4, Pull::None);
-
-    // sleep!(10);
-    // can_en.set_high();
-    // can_stb_n.set_high();
-
-    // let mut can = can::CanConfigurator::new(p.FDCAN2, p.PB12, p.PB13, Irqs);
-    // can.set_bitrate(250_000);
-    // let can = can.into_normal_mode();
-    // info!("CAN Configured");
-
-    // let (mut tx, mut rx, _props) = can.split();
-
-    // let send_fut = async {
-    //     sleep!(5000);
-    //     loop {
-    //         sleep!(500);
-    //         let frame = can::frame::Frame::new_extended(10, &[44; 8]).unwrap();
-
-    //         info!("write");
-    //         tx.write(&frame).await;
-    //         sleep!(1);
-    //     }
-    // };
-
-    // let read_fut = async {
-    //     loop {
-    //         match rx.read().await {
-    //             Ok(_envelope) => {
-    //                 led1.set_high();
-    //                 sleep!(100);
-    //                 led1.set_low();
-    //             }
-    //             Err(err) => {
-    //                 error!("Error in frame {}", err);
-    //                 // panic!();
-    //             },
-    //         }
-    //     }
-    // };
-    // join!(send_fut, read_fut);
-
-    // loop {
-    //     sleep!(10);
-    //     let tx_buffer = [0x2d | 0b10000000, 0x0];
-    //     let mut rx_buffer = [0u8; 2];
-    //     cs.set_low();
-    //     spi1.transfer(&mut rx_buffer, &tx_buffer).await.unwrap();
-    //     cs.set_high();
-    //     info!("{=u8:08b}", &rx_buffer[1]);
-    // }
-
-    // info!("a");
 }

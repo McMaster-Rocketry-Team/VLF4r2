@@ -51,6 +51,15 @@ impl From<ErrorKind> for SpiFlashError {
     }
 }
 
+impl embedded_io_async::Error for SpiFlashError {
+    fn kind(&self) -> embedded_io_async::ErrorKind {
+        match self {
+            SpiFlashError::BusError(_) => embedded_io_async::ErrorKind::Other,
+            SpiFlashError::WaitBusyTimeout { .. } => embedded_io_async::ErrorKind::TimedOut,
+        }
+    }
+}
+
 #[derive(defmt::Format)]
 pub struct StatusRegister1 {
     busy: bool,
