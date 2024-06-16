@@ -78,11 +78,6 @@ use sys_reset::SysReset;
 use usb::Usb;
 use vlfs::{EraseTune, ManagedEraseFlash};
 
-bind_interrupts!(struct IrqsCan {
-    FDCAN1_IT0 => can::IT0InterruptHandler<FDCAN1>;
-    FDCAN1_IT1 => can::IT1InterruptHandler<FDCAN1>;
-});
-
 bind_interrupts!(struct Irqs {
     I2C1_EV => i2c::EventInterruptHandler<I2C1>;
     I2C1_ER => i2c::ErrorInterruptHandler<I2C1>;
