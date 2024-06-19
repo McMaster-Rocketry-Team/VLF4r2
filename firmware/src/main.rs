@@ -6,6 +6,7 @@
 
 mod adc;
 mod buzzer;
+mod camera;
 mod can_bus;
 mod clock;
 mod e22;
@@ -31,6 +32,7 @@ use crate::mmc5603::MMC5603;
 use crate::ms5607::MS5607;
 use adc::{BatteryAdc, CurrentAdc};
 use buzzer::Buzzer;
+use camera::GPIOCamera;
 use can_bus::CanBus;
 use clock::{Clock, Delay};
 use defmt::{debug, info};
@@ -38,16 +40,20 @@ use e22::E22;
 use embassy_embedded_hal::shared_bus::asynch::spi::SpiDeviceWithConfig;
 use embassy_stm32::exti::ExtiInput;
 use embassy_stm32::gpio::Pin;
+use embassy_stm32::i2c;
 use embassy_stm32::i2c::Config as I2cConfig;
 use embassy_stm32::i2c::I2c;
 use embassy_stm32::pac;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
-use embassy_stm32::{can, i2c};
+use firmware_common::driver::buzzer::Buzzer as _;
+use firmware_common::driver::indicator::Indicator;
+use firmware_common::driver::pyro::PyroCtrl as _;
+use heapless::Vec;
 
 use defmt_rtt as _;
 use embassy_executor::Spawner;
-use embassy_stm32::peripherals::{FDCAN1, I2C1};
+use embassy_stm32::peripherals::I2C1;
 use embassy_stm32::wdg::IndependentWatchdog;
 use embassy_stm32::{
     bind_interrupts,
@@ -65,7 +71,7 @@ use futures::join;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
 use lora_phy::sx126x::{self, Sx126x, TcxoCtrlVoltage};
-use lora_phy::LoRa;
+use lora_phy::{DelayNs, LoRa};
 // #[cfg(not(debug_assertions))]
 // use panic_halt as _;
 // #[cfg(debug_assertions)]
@@ -160,12 +166,16 @@ async fn main(_spawner: Spawner) {
     let baro_buffer = unsafe { &mut RAM_D3[0..8] };
 
     let mut watchdog = IndependentWatchdog::new(p.IWDG1, 500_000);
-    // watchdog.unleash();
+    if !cfg!(debug_assertions) {
+        watchdog.unleash();
+    }
     let watchdog_fut = async {
-        // loop {
-        //     watchdog.pet();
-        //     sleep!(250)
-        // }
+        if !cfg!(debug_assertions) {
+            loop {
+                watchdog.pet();
+                sleep!(250)
+            }
+        }
     };
 
     let main_fut = async {
@@ -326,14 +336,18 @@ async fn main(_spawner: Spawner) {
         let pyro1_ctrl = PyroCtrl::new(p.PC9.degrade());
         let pyro2_cont = PyroContinuity::new(ExtiInput::new(p.PA10, p.EXTI10, Pull::Up));
         let pyro2_ctrl = PyroCtrl::new(p.PC7.degrade());
-        let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
-        let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
+        // let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
+        // let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
 
         // Can bus
         debug!("Setting up CAN bus");
         let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
 
+        // Camera
+        let camera = GPIOCamera::new(p.PD4.degrade());
+
         // System Reset
+        debug!("Setting up System Reset");
         let sys_reset = SysReset::new();
 
         // loop {
@@ -343,6 +357,8 @@ async fn main(_spawner: Spawner) {
         //     sleep!(100);
         // }
 
+        buzzer.play(3000, 50).await;
+
         let mut device_manager = DeviceManager::new(
             sys_reset,
             Clock::new(),
@@ -350,11 +366,12 @@ async fn main(_spawner: Spawner) {
             flash,
             crc,
             low_g_imu,
+            high_g_imu,
             battery_adc,
             current_adc,
             (pyro1_cont, pyro1_ctrl),
             (pyro2_cont, pyro2_ctrl),
-            (pyro3_cont, pyro3_ctrl),
+            None,
             arming_switch,
             get_dummy_serial(Delay),
             &usb,
@@ -368,8 +385,9 @@ async fn main(_spawner: Spawner) {
             baro,
             gps,
             gps_pps,
-            DummyCamera {},
-            can_bus,
+            camera,
+            &can_bus,
+            Vec::from_slice(&[0, 0]).unwrap(),
             DummyDebugger {},
         );
 

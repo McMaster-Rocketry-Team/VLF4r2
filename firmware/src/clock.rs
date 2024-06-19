@@ -1,5 +1,6 @@
 use embassy_time::{Delay as EmbassyDelay, Instant};
 use embedded_hal_async::delay::DelayNs;
+use firmware_common::driver::delay::Delay as DelayTrait;
 
 #[derive(Clone, Copy)]
 pub struct Clock {}
@@ -22,5 +23,11 @@ pub struct Delay;
 impl DelayNs for Delay {
     async fn delay_ns(&mut self, ns: u32) {
         EmbassyDelay.delay_ns(ns).await
+    }
+}
+
+impl DelayTrait for Delay {
+    async fn delay_ms(&self, ms: u32) {
+        EmbassyDelay.delay_ms(ms).await
     }
 }

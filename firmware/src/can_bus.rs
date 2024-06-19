@@ -17,7 +17,7 @@ use embassy_sync::{
 use embedded_can::{ExtendedId, Id};
 use firmware_common::driver::can_bus::{
     CanBusMessage as CanBusMessageTrait, CanBusRX as CanBusRXTrait, CanBusTX as CanBusTXTrait,
-    SplitableCanBus,
+    CanBusTXFrame, SplitableCanBus,
 };
 use futures::join;
 use heapless::Vec;
@@ -135,16 +135,13 @@ impl SplitableCanBus for &CanBus {
         Ok(())
     }
 
-    async fn split(
+    fn split(
         &mut self,
     ) -> (
         impl CanBusTXTrait<Error = Self::Error>,
         impl CanBusRXTrait<Error = Self::Error>,
     ) {
-        (
-            CanBusTx::new(self),
-            CanBusRx::new(self),
-        )
+        (CanBusTx::new(self), CanBusRx::new(self))
     }
 }
 
@@ -183,20 +180,24 @@ impl<'a> CanBusTx<'a> {
 impl CanBusTXTrait for CanBusTx<'_> {
     type Error = ();
 
-    async fn send_data(&mut self, id: u32, data: &[u8]) -> Result<(), Self::Error> {
-        self.publisher
-            .publish(FdFrame::new_extended(id, data).unwrap())
-            .await;
-        Ok(())
-    }
-
-    async fn send_remote(&mut self, id: u32, length: usize) -> Result<(), Self::Error> {
-        self.publisher
-            .publish(
-                FdFrame::new_remote(Id::Extended(ExtendedId::new(id).unwrap()), length).unwrap(),
-            )
-            .await;
-        Ok(())
+    async fn send(&mut self, frame: CanBusTXFrame) -> Result<(), Self::Error> {
+        match frame {
+            CanBusTXFrame::Data { id, data } => {
+                self.publisher
+                    .publish(FdFrame::new_extended(id, data.as_slice()).unwrap())
+                    .await;
+                Ok(())
+            }
+            CanBusTXFrame::Remote { id, length } => {
+                self.publisher
+                    .publish(
+                        FdFrame::new_remote(Id::Extended(ExtendedId::new(id).unwrap()), length)
+                            .unwrap(),
+                    )
+                    .await;
+                Ok(())
+            }
+        }
     }
 }
 

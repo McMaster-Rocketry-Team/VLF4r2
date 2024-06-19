@@ -3,8 +3,11 @@ use embassy_stm32::{
     adc::{Adc, Resolution, SampleTime, VrefInt},
     peripherals::{ADC1, ADC2, ADC3, PC0, PC1, PC3},
 };
-use embassy_time::{Duration, Timer};
-use firmware_common::driver::adc::ADC;
+use embassy_time::{Duration, Instant, Timer};
+use firmware_common::driver::{
+    adc::{ADCReading, Ampere, Volt, ADC},
+    timestamp::BootTimestamp,
+};
 
 // TODO temperature sensor
 
@@ -34,18 +37,21 @@ impl BatteryAdc {
     }
 }
 
-impl ADC for BatteryAdc {
+impl ADC<Volt> for BatteryAdc {
     type Error = ();
 
     // unit: V
-    async fn read(&mut self) -> Result<f32, Self::Error> {
+    async fn read(&mut self) -> Result<ADCReading<Volt, BootTimestamp>, Self::Error> {
         let vrefint = self.adc.read(&mut self.vrefint_channel);
         info!("Vref 1: {}", vrefint);
         let vref_ratio = 1.216 / vrefint as f32;
         let measured = self.adc.read(&mut self.pin);
         info!("measured: {}", measured);
         let divider_ratio = 0.163f32;
-        Ok(measured as f32 * vref_ratio / divider_ratio)
+        Ok(ADCReading::new(
+            Instant::now().as_micros() as f64 / 1000.0,
+            measured as f32 * vref_ratio / divider_ratio,
+        ))
     }
 }
 
@@ -84,17 +90,20 @@ impl CurrentAdc {
     }
 }
 
-impl ADC for CurrentAdc {
+impl ADC<Ampere> for CurrentAdc {
     type Error = ();
 
     // unit: A
-    async fn read(&mut self) -> Result<f32, Self::Error> {
+    async fn read(&mut self) -> Result<ADCReading<Ampere, BootTimestamp>, Self::Error> {
         // TODO
         let vrefint2 = self.adc2.read(&mut self.adc2_vrefint);
         info!("Vref 2: {}", vrefint2);
         // let vrefint3 = self.adc3.read(&mut self.adc3_vrefint);
         // info!("Vref 3: {}", vrefint3);
 
-        Ok(0.0)
+        Ok(ADCReading::new(
+            Instant::now().as_micros() as f64 / 1000.0,
+            0.0,
+        ))
     }
 }

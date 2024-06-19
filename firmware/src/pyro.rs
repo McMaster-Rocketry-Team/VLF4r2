@@ -28,14 +28,15 @@ impl Continuity for PyroContinuity {
     }
 }
 
-
 pub struct PyroCtrl {
     ctrl_pin: Output<'static>,
 }
 
 impl PyroCtrl {
     pub fn new(ctrl_pin: AnyPin) -> Self {
-        Self { ctrl_pin:Output::new(ctrl_pin, Level::Low, Speed::Low) }
+        Self {
+            ctrl_pin: Output::new(ctrl_pin, Level::Low, Speed::Low),
+        }
     }
 }
 
@@ -48,8 +49,6 @@ impl PyroCtrlDriver for PyroCtrl {
         Ok(())
     }
 }
-
-
 
 pub struct ArmingSwitch {
     switch: ExtiInput<'static>,
