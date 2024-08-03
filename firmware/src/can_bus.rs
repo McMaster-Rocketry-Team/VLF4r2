@@ -74,16 +74,12 @@ impl SplitableCanBus for CanBus {
                 self_node_id: self.self_node_id,
                 self_node_type: self.self_node_type,
             },
-            CanBusRx {
-                can_rx,
-                self_node_id: self.self_node_id,
-                self_node_type: self.self_node_type,
-            },
+            CanBusRx { can_rx },
         )
     }
 }
 
-struct CanBusTx {
+pub struct CanBusTx {
     self_node_type: u8,
     self_node_id: u16,
     can_tx: CanTx<'static>,
@@ -126,7 +122,7 @@ impl CanBusTXTrait for CanBusTx {
     }
 }
 
-struct EnvelopeWrapper(Envelope);
+pub struct EnvelopeWrapper(Envelope);
 
 impl CanBusRawMessage for EnvelopeWrapper {
     fn id(&self) -> u32 {
@@ -145,10 +141,8 @@ impl CanBusRawMessage for EnvelopeWrapper {
     }
 }
 
-struct CanBusRx {
+pub struct CanBusRx {
     can_rx: CanRx<'static>,
-    self_node_type: u8,
-    self_node_id: u16,
 }
 
 impl CanBusRXTrait for CanBusRx {

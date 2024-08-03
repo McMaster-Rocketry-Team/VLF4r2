@@ -718,19 +718,17 @@ dependencies = [
  "either",
  "embassy-futures 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embassy-sync 0.5.0",
- "embedded-alloc",
  "embedded-hal-async",
  "embedded-io-async",
  "eskf",
  "ferraris-calibration",
  "futures",
  "heapless 0.8.0",
- "heatshrink",
  "icao-isa",
  "icao-units",
  "int-enum",
  "libm 0.2.8",
- "lora-modulation 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lora-modulation",
  "lora-phy",
  "micromath",
  "nalgebra 0.32.6",
@@ -931,12 +929,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "heatshrink"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b94defcbbb6dc44a18c52fb872edc27fff6dad1c093e7b88ea3bc8f732e19f5"
-
-[[package]]
 name = "icao-isa"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1023,12 +1015,6 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 [[package]]
 name = "lora-modulation"
 version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe94d1a6dac71b9d54e7a76eb093fdb8e622601c3515f15e8cdca197d663b41c"
-
-[[package]]
-name = "lora-modulation"
-version = "0.1.4"
 source = "git+https://github.com/lora-rs/lora-rs#36885275fbfed98578e1a3a48555d973638b6105"
 
 [[package]]
@@ -1040,7 +1026,7 @@ dependencies = [
  "document-features",
  "embedded-hal 1.0.0",
  "embedded-hal-async",
- "lora-modulation 0.1.4 (git+https://github.com/lora-rs/lora-rs)",
+ "lora-modulation",
  "num-traits",
 ]
 
@@ -1704,6 +1690,7 @@ dependencies = [
  "embassy-sync 0.6.0",
  "embassy-time",
  "embassy-usb",
+ "embedded-alloc",
  "embedded-can",
  "embedded-hal-async",
  "embedded-io-async",

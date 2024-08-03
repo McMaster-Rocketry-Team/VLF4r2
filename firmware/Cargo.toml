@@ -51,6 +51,7 @@ firmware-common = { path = "../rust-monorepo/firmware-common" }
 vlfs = { path = "../rust-monorepo/vlfs" }
 stm32-device-signature = { version = "0.3.3", features = ["stm32h72x"] }
 embedded-can = "0.4.1"
+embedded-alloc = "0.5.1"
 
 
 [[bin]]

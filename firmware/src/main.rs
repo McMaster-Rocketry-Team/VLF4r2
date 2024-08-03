@@ -68,10 +68,11 @@ use futures::join;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
 use lora_phy::sx126x::{self, Sx126x, TcxoCtrlVoltage};
-use lora_phy::{DelayNs, LoRa};
+use lora_phy::LoRa;
 // #[cfg(not(debug_assertions))]
 // use panic_halt as _;
 // #[cfg(debug_assertions)]
+use embedded_alloc::Heap;
 use panic_probe as _;
 use pyro::{ArmingSwitch, PyroContinuity, PyroCtrl};
 use rng::RNG;
@@ -85,6 +86,9 @@ bind_interrupts!(struct Irqs {
     I2C1_EV => i2c::EventInterruptHandler<I2C1>;
     I2C1_ER => i2c::ErrorInterruptHandler<I2C1>;
 });
+
+#[global_allocator]
+static HEAP: Heap = Heap::empty();
 
 #[link_section = ".ram_d3"]
 static mut RAM_D3: [u8; 16 * 1024] = [0u8; 16 * 1024];
@@ -159,6 +163,13 @@ async fn main(_spawner: Spawner) {
     info!("Hello, World!");
     let rcc_cr = pac::RCC.cr().read();
     debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
+
+    {
+        use core::mem::MaybeUninit;
+        const HEAP_SIZE: usize = 1024;
+        static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
+        unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
+    }
 
     let baro_buffer = unsafe { &mut RAM_D3[0..8] };
 
