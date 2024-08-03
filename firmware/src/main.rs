@@ -4,7 +4,7 @@
 #![feature(impl_trait_in_assoc_type)]
 #![feature(try_blocks)]
 
-mod adc;
+// mod adc;
 mod buzzer;
 mod camera;
 mod can_bus;
@@ -30,9 +30,7 @@ use crate::h3lis100dl::H3LIS100DL;
 use crate::lsm6dsm::LSM6DSM;
 use crate::mmc5603::MMC5603;
 use crate::ms5607::MS5607;
-use adc::{BatteryAdc, CurrentAdc};
 use buzzer::Buzzer;
-use camera::GPIOCamera;
 use can_bus::CanBus;
 use clock::{Clock, Delay};
 use defmt::{debug, info};
@@ -46,9 +44,8 @@ use embassy_stm32::i2c::I2c;
 use embassy_stm32::pac;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
+use firmware_common::driver::adc::DummyADC;
 use firmware_common::driver::buzzer::Buzzer as _;
-use firmware_common::driver::indicator::Indicator;
-use firmware_common::driver::pyro::PyroCtrl as _;
 use heapless::Vec;
 
 use defmt_rtt as _;
@@ -256,10 +253,10 @@ async fn main(_spawner: Spawner) {
         );
         let high_g_imu = H3LIS100DL::new(high_g_imu_spi_device);
 
-        // ADC
-        debug!("Setting up ADCs");
-        let mut battery_adc = BatteryAdc::new(p.ADC1, p.PC0).await;
-        let mut current_adc = CurrentAdc::new(p.ADC2, p.ADC3, p.PC1, p.PC3).await;
+        // ADCs are broken on VLF4r2
+        // debug!("Setting up ADCs");
+        // let mut battery_adc = BatteryAdc::new(p.ADC1, p.PC0).await;
+        // let mut current_adc = CurrentAdc::new(p.ADC2, p.ADC3, p.PC1, p.PC3).await;
 
         // meg
         debug!("Setting up Megnetometer");
@@ -336,15 +333,15 @@ async fn main(_spawner: Spawner) {
         let pyro1_ctrl = PyroCtrl::new(p.PC9.degrade());
         let pyro2_cont = PyroContinuity::new(ExtiInput::new(p.PA10, p.EXTI10, Pull::Up));
         let pyro2_ctrl = PyroCtrl::new(p.PC7.degrade());
-        // let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
-        // let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
+        let pyro3_cont = PyroContinuity::new(ExtiInput::new(p.PA8, p.EXTI8, Pull::Up));
+        let pyro3_ctrl = PyroCtrl::new(p.PD4.degrade());
 
         // Can bus
         debug!("Setting up CAN bus");
         let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
 
         // Camera
-        let camera = GPIOCamera::new(p.PD4.degrade());
+        // let camera = GPIOCamera::new(p.PD4.degrade());
 
         // System Reset
         debug!("Setting up System Reset");
@@ -367,11 +364,11 @@ async fn main(_spawner: Spawner) {
             crc,
             low_g_imu,
             high_g_imu,
-            battery_adc,
-            current_adc,
+            DummyADC::new(Delay),
+            DummyADC::new(Delay),
             (pyro1_cont, pyro1_ctrl),
             (pyro2_cont, pyro2_ctrl),
-            None,
+            (pyro3_cont, pyro3_ctrl),
             arming_switch,
             get_dummy_serial(Delay),
             &usb,
@@ -385,8 +382,8 @@ async fn main(_spawner: Spawner) {
             baro,
             gps,
             gps_pps,
-            camera,
-            &can_bus,
+            DummyCamera {},
+            can_bus,
             Vec::from_slice(&[0, 0]).unwrap(),
             DummyDebugger {},
         );

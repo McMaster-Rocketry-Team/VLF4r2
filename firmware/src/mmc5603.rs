@@ -2,7 +2,8 @@ use defmt::info;
 use embassy_time::Instant;
 use embedded_hal_async::i2c::Error;
 use embedded_hal_async::i2c::{ErrorKind, I2c};
-use firmware_common::driver::meg::{MegReading, Megnetometer};
+use firmware_common::common::sensor_reading::SensorReading;
+use firmware_common::driver::mag::{MagData, Magnetometer};
 use firmware_common::driver::timestamp::BootTimestamp;
 
 use crate::sleep;
@@ -31,7 +32,7 @@ impl<B: I2c> MMC5603<B> {
     }
 }
 
-impl<B: I2c> Megnetometer for MMC5603<B> {
+impl<B: I2c> Magnetometer for MMC5603<B> {
     type Error = ErrorKind;
 
     // reset and config the meg to 75Hz, auto set/reset
@@ -61,7 +62,7 @@ impl<B: I2c> Megnetometer for MMC5603<B> {
     }
 
     // unit: Gauss
-    async fn read(&mut self) -> Result<MegReading<BootTimestamp>, ErrorKind> {
+    async fn read(&mut self) -> Result<SensorReading<BootTimestamp, MagData>, ErrorKind> {
         let timestamp = Instant::now().as_micros() as f64 / 1000.0;
 
         let mut read_buffer = [0; 9];
@@ -83,6 +84,6 @@ impl<B: I2c> Megnetometer for MMC5603<B> {
             | u32::from(read_buffer[8]) >> 4;
         let z = (z as f32 * 0.0625f32 - 32768f32) / 1000.0;
 
-        Ok(MegReading::new(timestamp, [x, y, z]))
+        Ok(SensorReading::new(timestamp, MagData { mag: [x, y, z] }))
     }
 }

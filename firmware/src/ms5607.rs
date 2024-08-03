@@ -2,7 +2,8 @@ use crate::sleep;
 use embassy_time::{Duration, Instant, Timer};
 use embedded_hal_async::spi::Error;
 use embedded_hal_async::spi::{ErrorKind, SpiDevice};
-use firmware_common::driver::barometer::{BaroReading, Barometer};
+use firmware_common::common::sensor_reading::SensorReading;
+use firmware_common::driver::barometer::{BaroData, Barometer};
 use firmware_common::driver::timestamp::BootTimestamp;
 
 #[derive(Clone, Copy)]
@@ -79,7 +80,7 @@ impl<'a, B: SpiDevice> Barometer for MS5607<'a, B> {
         Ok(())
     }
 
-    async fn read(&mut self) -> Result<BaroReading<BootTimestamp>, ErrorKind> {
+    async fn read(&mut self) -> Result<SensorReading<BootTimestamp, BaroData>, ErrorKind> {
         // request measurement pressure with OSR=1024
         let timestamp = Instant::now().as_micros() as f64 / 1000.0 + 1.0; // timestamp of the pressure measurement
         let (read_buffer, write_buffer) = create_buffer!(self, [0x44]);
@@ -146,6 +147,12 @@ impl<'a, B: SpiDevice> Barometer for MS5607<'a, B> {
         // pressure calculation
         let pressure = (((((d1 as i64) * sens) >> 21) - off) >> 15) as i32;
 
-        Ok(BaroReading::new(timestamp,temperature as f32 / 100.0,pressure as f32))
+        Ok(SensorReading::new(
+            timestamp,
+            BaroData {
+                temperature: temperature as f32 / 100.0,
+                pressure: pressure as f32,
+            },
+        ))
     }
 }

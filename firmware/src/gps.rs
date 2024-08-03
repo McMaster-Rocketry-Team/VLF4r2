@@ -1,3 +1,5 @@
+use core::cell::RefCell;
+
 use defmt::trace;
 use embassy_stm32::{
     bind_interrupts,
@@ -5,10 +7,14 @@ use embassy_stm32::{
     gpio::{Level, Output, Speed},
     mode::Async,
     peripherals::{DMA2_CH0, DMA2_CH1, PA2, PA3, PE9, USART2},
-    usart::{self, Config as UartConfig, Uart},
+    usart::{self, Config as UartConfig, Error, RingBufferedUartRx, Uart},
 };
 use embassy_time::Instant;
-use firmware_common::driver::gps;
+use firmware_common::driver::uart_gps::UARTGPS as CommonUartGPS;
+use firmware_common::{
+    common::sensor_reading::SensorReading,
+    driver::{clock::Clock, gps as common_gps, timestamp::BootTimestamp},
+};
 use heapless::String;
 
 use crate::sleep;
@@ -18,9 +24,8 @@ bind_interrupts!(struct Irqs {
 });
 
 pub struct UartGPS {
-    uart: Option<Uart<'static, Async>>,
-    buffer: [u8; 9],
-    sentence: String<84>,
+    uart: RefCell<Option<Uart<'static, Async>>>,
+    gps: CommonUartGPS,
     nrst: Output<'static>,
 }
 
@@ -34,9 +39,8 @@ impl UartGPS {
         _tx_dma: DMA2_CH1,
     ) -> Self {
         Self {
-            uart: None,
-            buffer: [0; 9],
-            sentence: String::new(),
+            uart: RefCell::new(None),
+            gps: CommonUartGPS::new(),
             nrst: Output::new(nsrt, Level::High, Speed::Low),
         }
     }
@@ -59,43 +63,9 @@ impl UartGPS {
             .unwrap()
         }
     }
-}
 
-impl gps::GPS for UartGPS {
-    async fn next_nmea_sentence(&mut self) -> gps::NmeaSentence {
-        let uart = self.uart.as_mut().expect("GPS not initialized");
-        'outer: loop {
-            match uart.read_until_idle(&mut self.buffer).await {
-                Ok(length) => {
-                    for i in 0..length {
-                        self.sentence.push(self.buffer[i] as char).ok();
-
-                        if self.buffer[i] == 10u8 || self.sentence.len() == 84 {
-                            if self.sentence.as_bytes()[0] != b'$' {
-                                self.sentence.clear();
-                            }
-
-                            let sentence = self.sentence.clone();
-                            self.sentence.clear();
-                            for j in (i + 1)..length {
-                                self.sentence.push(self.buffer[j] as char).ok();
-                            }
-                            break 'outer gps::NmeaSentence {
-                                sentence,
-                                timestamp: Instant::now().as_micros() as f64 / 1000.0,
-                            };
-                        }
-                    }
-                }
-                Err(error) => {
-                    defmt::warn!("Failed to read from GPS: {:?}", error);
-                }
-            }
-        }
-    }
-
-    async fn reset(&mut self) {
-        if let Some(uart) = self.uart.take() {
+    pub async fn reset(&mut self) {
+        if let Some(uart) = self.uart.borrow_mut().take() {
             drop(uart);
         }
 
@@ -115,7 +85,26 @@ impl gps::GPS for UartGPS {
         uart.write("$PMTK255,1*2D\r\n".as_bytes()).await.unwrap();
         sleep!(200);
 
-        self.uart.replace(uart);
+        self.uart.replace(Some(uart));
+    }
+
+    pub fn run(&self, clock: impl Clock) -> Result<(), Error> {
+        let uart = self.uart.borrow_mut().take().unwrap();
+        let rx = uart.split().1;
+        let mut buffer = [0u8; 84];
+        let mut rx = rx.into_ring_buffered(&mut buffer);
+        self.gps.run(&mut rx, clock);
+        Ok(())
+    }
+}
+
+impl common_gps::GPS for UartGPS {
+    type Error = Error;
+
+    async fn next_location(
+        &mut self,
+    ) -> Result<SensorReading<BootTimestamp, common_gps::GPSData>, Self::Error> {
+        todo!()
     }
 }
 
@@ -129,7 +118,7 @@ impl GPSPPS {
     }
 }
 
-impl gps::GPSPPS for GPSPPS {
+impl common_gps::GPSPPS for GPSPPS {
     async fn wait_for_pps(&mut self) {
         self.pps.wait_for_rising_edge().await;
         trace!("PPS");

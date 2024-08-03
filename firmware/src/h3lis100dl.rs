@@ -1,7 +1,8 @@
 use embassy_time::Instant;
 use embedded_hal_async::spi::Error;
 use embedded_hal_async::spi::{ErrorKind, SpiDevice};
-use firmware_common::driver::imu::{IMUReading, IMU};
+use firmware_common::common::sensor_reading::SensorReading;
+use firmware_common::driver::imu::{IMUData, IMU};
 use firmware_common::driver::timestamp::BootTimestamp;
 
 use crate::sleep;
@@ -45,7 +46,7 @@ impl<B: SpiDevice> IMU for H3LIS100DL<B> {
         Ok(())
     }
 
-    async fn read(&mut self) -> Result<IMUReading<BootTimestamp>, Self::Error> {
+    async fn read(&mut self) -> Result<SensorReading<BootTimestamp, IMUData>, Self::Error> {
         let timestamp = Instant::now().as_micros() as f64 / 1000.0;
         // TODO merge into one read?
         let x = self.read_register(OUT_X_REG).await? as i8;
@@ -56,6 +57,12 @@ impl<B: SpiDevice> IMU for H3LIS100DL<B> {
         let y = (y as f32 * 100.0 / 127.0) * 9.81;
         let z = (z as f32 * 100.0 / 127.0) * 9.81;
 
-        Ok(IMUReading::new(timestamp, [x, y, z], [0.0, 0.0, 0.0]))
+        Ok(SensorReading::new(
+            timestamp,
+            IMUData {
+                acc: [x, y, z],
+                gyro: [0.0, 0.0, 0.0],
+            },
+        ))
     }
 }

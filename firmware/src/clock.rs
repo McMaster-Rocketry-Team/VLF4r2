@@ -27,7 +27,8 @@ impl DelayNs for Delay {
 }
 
 impl DelayTrait for Delay {
-    async fn delay_ms(&self, ms: u32) {
-        EmbassyDelay.delay_ms(ms).await
+    async fn delay_ms(&self, ms: f64) {
+        // FIXME: more accurate delay
+        EmbassyDelay.delay_ms(ms as u32).await
     }
 }
