@@ -7,15 +7,13 @@ use embassy_stm32::{
     gpio::{Level, Output, Speed},
     mode::Async,
     peripherals::{DMA2_CH0, DMA2_CH1, PA2, PA3, PE9, USART2},
-    usart::{self, Config as UartConfig, Error, RingBufferedUartRx, Uart},
+    usart::{self, Config as UartConfig, Error, Uart},
 };
-use embassy_time::Instant;
 use firmware_common::driver::uart_gps::UARTGPS as CommonUartGPS;
 use firmware_common::{
     common::sensor_reading::SensorReading,
     driver::{clock::Clock, gps as common_gps, timestamp::BootTimestamp},
 };
-use heapless::String;
 
 use crate::sleep;
 
@@ -88,23 +86,22 @@ impl UartGPS {
         self.uart.replace(Some(uart));
     }
 
-    pub fn run(&self, clock: impl Clock) -> Result<(), Error> {
+    pub async fn run(&self, clock: impl Clock) -> Result<(), Error> {
         let uart = self.uart.borrow_mut().take().unwrap();
         let rx = uart.split().1;
         let mut buffer = [0u8; 84];
         let mut rx = rx.into_ring_buffered(&mut buffer);
-        self.gps.run(&mut rx, clock);
-        Ok(())
+        self.gps.run(&mut rx, clock).await;
     }
 }
 
-impl common_gps::GPS for UartGPS {
+impl common_gps::GPS for &UartGPS {
     type Error = Error;
 
     async fn next_location(
         &mut self,
     ) -> Result<SensorReading<BootTimestamp, common_gps::GPSData>, Self::Error> {
-        todo!()
+        Ok((&self.gps).next_location().await.unwrap())
     }
 }
 

@@ -4,6 +4,7 @@
 edition = "2021"
 name = "vlf4r2-firmware"
 version = "0.1.0"
+default-run = "vlf4r2-firmware"
 
 [dependencies]
 cortex-m = { version = "0.7.7", features = [
@@ -37,7 +38,7 @@ embassy-sync = { git = "https://github.com/embassy-rs/embassy.git", default-feat
 embassy-time = { git = "https://github.com/embassy-rs/embassy.git", features = [
     "defmt",
     "defmt-timestamp-uptime",
-    "tick-hz-32_768",
+    "tick-hz-512_000",
 ] }
 embedded-hal-async = { version = "1.0.0", features = ["defmt-03"] }
 embedded-io-async = "0.6.1"
@@ -73,9 +74,9 @@ lto = true
 incremental = true
 
 [profile.release]
-opt-level = "z"
+debug = true      # symbols are nice and they don't increase the size on Flash
+opt-level = 3
 codegen-units = 1
 lto = true
-# panic = "abort"
-debug = true      # symbols are nice and they don't increase the size on Flash
 incremental = true
+# panic = "abort"

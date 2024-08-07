@@ -1,7 +1,7 @@
 # This file was automatically generated.
 
-[target.thumbv7em-none-eabi]
-runner = 'probe-rs run --chip STM32H723VGHx --always-print-stacktrace --catch-hardfault'
+[target.thumbv7em-none-eabihf]
+runner = 'probe-run --chip STM32H723VGHx --connect-under-reset --measure-stack'
 rustflags = [
   "-C", "link-arg=--nmagic",
   "-C", "link-arg=-Tlink.x",
@@ -9,7 +9,7 @@ rustflags = [
   "-C", "linker=flip-link",
 ]
 [build]
-target = "thumbv7em-none-eabi"
+target = "thumbv7em-none-eabihf"
 
 [env]
 DEFMT_LOG = "debug,lora_phy=warn"

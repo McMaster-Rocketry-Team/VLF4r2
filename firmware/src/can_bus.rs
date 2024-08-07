@@ -32,7 +32,6 @@ impl CanBus {
     pub fn new(fdcan: FDCAN1, rx: PD0, tx: PD1, en: PD3, stb_n: PD5, err_n: PD2) -> Self {
         let mut can_config: CanConfigurator = CanConfigurator::new(fdcan, rx, tx, Irqs);
         can_config.set_bitrate(250_000);
-        can_config.set_fd_data_bitrate(250_000, false);
         let can = can_config.into_normal_mode();
 
         Self {

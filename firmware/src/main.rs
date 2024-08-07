@@ -100,7 +100,7 @@ async fn main(_spawner: Spawner) {
         use embassy_stm32::rcc::mux::*;
         use embassy_stm32::rcc::*;
 
-        config.rcc.hsi = None;
+        config.rcc.hsi = Some(HSIPrescaler::DIV1);
         config.rcc.hse = Some(Hse {
             freq: mhz(16),
             mode: HseMode::Oscillator,
@@ -289,7 +289,9 @@ async fn main(_spawner: Spawner) {
         // GPS
         debug!("Setting up GPS");
         let gps_pps = GPSPPS::new(ExtiInput::new(p.PD12, p.EXTI12, Pull::None));
-        let gps = UartGPS::new(p.PE9, p.USART2, p.PA3, p.PA2, p.DMA2_CH0, p.DMA2_CH1);
+        let mut gps = UartGPS::new(p.PE9, p.USART2, p.PA3, p.PA2, p.DMA2_CH0, p.DMA2_CH1);
+        gps.reset().await;
+        let gps_fut = gps.run(Clock::new());
 
         // Buzzer
         debug!("Setting up Buzzer");
@@ -297,34 +299,35 @@ async fn main(_spawner: Spawner) {
 
         // lora
         debug!("Setting up LoRa");
-        let mut spi_config = SpiConfig::default();
-        spi_config.frequency = Hertz(250_000);
-        let spi2 = Mutex::<NoopRawMutex, _>::new(Spi::new(
-            p.SPI2, p.PB13, p.PB15, p.PB14, p.DMA2_CH3, p.DMA2_CH2, spi_config,
-        ));
+        // let mut spi_config = SpiConfig::default();
+        // spi_config.frequency = Hertz(250_000);
+        // let spi2 = Mutex::<NoopRawMutex, _>::new(Spi::new(
+        //     p.SPI2, p.PB13, p.PB15, p.PB14, p.DMA2_CH3, p.DMA2_CH2, spi_config,
+        // ));
 
-        let lora_spi_device = SpiDeviceWithConfig::new(
-            &spi2,
-            Output::new(p.PB0, Level::High, Speed::High),
-            spi_config,
-        );
+        // let lora_spi_device = SpiDeviceWithConfig::new(
+        //     &spi2,
+        //     Output::new(p.PB0, Level::High, Speed::High),
+        //     spi_config,
+        // );
 
-        let config = sx126x::Config {
-            chip: E22,
-            tcxo_ctrl: Some(TcxoCtrlVoltage::Ctrl1V7),
-            use_dcdc: true,
-            rx_boost: true,
-        };
-        let iv = GenericSx126xInterfaceVariant::new(
-            Output::new(p.PE8.degrade(), Level::High, Speed::Low),
-            ExtiInput::new(p.PD15, p.EXTI15, Pull::Down),
-            ExtiInput::new(p.PD13, p.EXTI13, Pull::Down),
-            Some(Output::new(p.PC5.degrade(), Level::High, Speed::High)),
-            Some(Output::new(p.PD14.degrade(), Level::High, Speed::High)),
-        )
-        .unwrap();
-        let sx1262 = Sx126x::new(lora_spi_device, iv, config);
-        let lora = LoRa::new(sx1262, false, Delay).await.unwrap();
+        // let config = sx126x::Config {
+        //     chip: E22,
+        //     tcxo_ctrl: Some(TcxoCtrlVoltage::Ctrl1V7),
+        //     use_dcdc: true,
+        //     rx_boost: true,
+        // };
+        // let iv = GenericSx126xInterfaceVariant::new(
+        //     Output::new(p.PE8.degrade(), Level::High, Speed::Low),
+        //     ExtiInput::new(p.PD15, p.EXTI15, Pull::Down),
+        //     ExtiInput::new(p.PD13, p.EXTI13, Pull::Down),
+        //     Some(Output::new(p.PC5.degrade(), Level::High, Speed::High)),
+        //     Some(Output::new(p.PD14.degrade(), Level::High, Speed::High)),
+        // )
+        // .unwrap();
+        // let sx1262 = Sx126x::new(lora_spi_device, iv, config);
+        // let lora = LoRa::new(sx1262, false, Delay).await.ok();
+        let lora: Option<LoRa<Sx126x<SpiDeviceWithConfig<NoopRawMutex, Spi<embassy_stm32::mode::Async>, Output>, GenericSx126xInterfaceVariant<Output, ExtiInput>, E22>, Delay>> = None;
 
         let rcc_cr = pac::RCC.cr().read();
         debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
@@ -391,7 +394,7 @@ async fn main(_spawner: Spawner) {
             led_green,
             led_blue,
             baro,
-            gps,
+            &gps,
             gps_pps,
             DummyCamera {},
             can_bus,
@@ -404,7 +407,7 @@ async fn main(_spawner: Spawner) {
 
         #[allow(unreachable_code)]
         {
-            join!(firmware_common_future, usb_runner.run(),);
+            join!(firmware_common_future, usb_runner.run(), gps_fut);
         }
     };
 

@@ -1,5 +1,5 @@
 use core::cell::RefCell;
-use core::mem::MaybeUninit;
+use cortex_m::singleton;
 use defmt::debug;
 use embassy_stm32::bind_interrupts;
 use embassy_stm32::peripherals::{PA11, PA12, USB_OTG_HS};
@@ -18,13 +18,6 @@ use stm32_device_signature::device_id_hex;
 bind_interrupts!(struct Irqs {
     OTG_HS => usb::InterruptHandler<USB_OTG_HS>;
 });
-
-static mut EP_OUT_BUFFER: [u8; 256] = [0u8; 256];
-static mut DEVICE_DESCRIPTOR: [u8; 256] = [0; 256];
-static mut CONFIG_DESCRIPTOR: [u8; 256] = [0; 256];
-static mut BOS_DESCRIPTOR: [u8; 256] = [0; 256];
-static mut CONTROL_BUF: [u8; 64] = [0; 64];
-static mut STATE: MaybeUninit<State> = MaybeUninit::uninit();
 
 pub struct UsbRunner<'a> {
     usb: &'a Usb,
@@ -47,7 +40,8 @@ impl Usb {
     pub fn new(usb: USB_OTG_HS, dp: PA12, dm: PA11) -> Self {
         let mut config = USBDriverConfig::default();
         config.vbus_detection = true;
-        let driver = Driver::new_fs(usb, Irqs, dp, dm, unsafe { &mut EP_OUT_BUFFER }, config);
+        let ep_out_buf = singleton!(: [u8; 256] = [0u8; 256]).unwrap();
+        let driver = Driver::new_fs(usb, Irqs, dp, dm, ep_out_buf, config);
 
         let mut config = USBConfig::new(0xc0de, 0xcafe);
 
@@ -62,18 +56,20 @@ impl Usb {
         config.device_protocol = 0x01;
         config.composite_with_iads = true;
 
-        unsafe {
-            STATE.write(State::new());
-        }
+        let state = singleton!(: State = State::new()).unwrap();
+        let config_descriptor_buf = singleton!(: [u8; 256] = [0u8; 256]).unwrap();
+        let bos_descriptor_buf = singleton!(: [u8; 256] = [0u8; 256]).unwrap();
+        let msos_descriptor_buf: &mut [u8; 256] = singleton!(: [u8; 256] = [0u8; 256]).unwrap();
+        let control_buf = singleton!(: [u8; 64] = [0u8; 64]).unwrap();
         let mut builder = Builder::new(
             driver,
             config,
-            unsafe { &mut DEVICE_DESCRIPTOR },
-            unsafe { &mut CONFIG_DESCRIPTOR },
-            unsafe { &mut BOS_DESCRIPTOR },
-            unsafe { &mut CONTROL_BUF },
+            config_descriptor_buf,
+            bos_descriptor_buf,
+            msos_descriptor_buf,
+            control_buf,
         );
-        let class = CdcAcmClass::new(&mut builder, unsafe { STATE.write(State::new()) }, 64);
+        let class = CdcAcmClass::new(&mut builder, state, 64);
         let usb_device = builder.build();
         let (tx, rx) = class.split();
         Self {
