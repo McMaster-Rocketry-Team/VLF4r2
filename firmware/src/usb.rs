@@ -145,16 +145,13 @@ impl<'a> embedded_io_async::Write for TXGuard<'a> {
         let write_fut = async {
             let result: Result<usize, EndpointError> = try {
                 if buf.len() > 64 {
-                    debug!("Buffer is larger than 64 bytes");
                     tx.write_packet(&buf[..64]).await?;
                     64
                 } else if buf.len() == 64 {
-                    debug!("Buffer is 64 bytes");
                     tx.write_packet(buf).await?;
                     tx.write_packet(&[]).await?;
                     64
                 } else {
-                    debug!("Buffer is smaller than 64 bytes");
                     tx.write_packet(buf).await?;
                     buf.len()
                 }
@@ -185,36 +182,30 @@ impl<'a> embedded_io_async::ErrorType for RXGuard<'a> {
 
 impl<'a> embedded_io_async::Read for RXGuard<'a> {
     async fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
-        debug!("Reading from USB, requested len: {}", buf.len());
         if self.buffer_len > 0 {
             debug!("Using buffer");
             if self.buffer_len > buf.len() {
-                debug!("Buffer is larger than requested");
                 buf.copy_from_slice(&self.buffer[..buf.len()]);
                 self.buffer.copy_within(buf.len()..self.buffer_len, 0);
                 self.buffer_len -= buf.len();
                 Ok(buf.len())
             } else {
-                debug!("Buffer is smaller than requested");
                 buf[..self.buffer_len].copy_from_slice(&self.buffer[..self.buffer_len]);
                 let len = self.buffer_len;
                 self.buffer_len = 0;
                 Ok(len)
             }
         } else {
-            debug!("Reading from USB, no buffer");
             let mut rx = self.usb.rx.borrow_mut();
             let length = rx.read_packet(&mut self.buffer).await;
             match length {
                 Ok(length) => {
                     if length > buf.len() {
-                        debug!("Read length is larger than requested");
                         buf.copy_from_slice(&self.buffer[..buf.len()]);
                         self.buffer.copy_within(buf.len()..length, 0);
                         self.buffer_len = length - buf.len();
                         Ok(buf.len())
                     } else {
-                        debug!("Read length is smaller or equal than requested");
                         buf[..length].copy_from_slice(&self.buffer[..length]);
                         Ok(length)
                     }

@@ -48,8 +48,8 @@ libm = "0.2.8"
 heapless = { version = "0.8.0", features = ["defmt-03"], default-features = false }
 lora-phy = {  git = "https://github.com/lora-rs/lora-rs", default-features = false }
 embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
-firmware-common = { path = "../rust-monorepo/firmware-common" }
-vlfs = { path = "../rust-monorepo/vlfs" }
+vlfs ={ path = "../rust-monorepo/vlfs" }
+firmware-common = { path = "../rust-monorepo/firmware-common", features = ["defmt"] }
 stm32-device-signature = { version = "0.3.3", features = ["stm32h72x"] }
 embedded-can = "0.4.1"
 embedded-alloc = "0.5.1"

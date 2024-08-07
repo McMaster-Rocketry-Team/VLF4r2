@@ -12,7 +12,7 @@ rustflags = [
 target = "thumbv7em-none-eabihf"
 
 [env]
-DEFMT_LOG = "debug,lora_phy=warn"
+DEFMT_LOG = "debug,lora_phy=warn,vlfs=debug"
 
 [unstable]
 build-std = ["core", "alloc"]
