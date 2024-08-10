@@ -63,7 +63,7 @@ use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
 use firmware_common::driver::serial::get_dummy_serial;
-use firmware_common::{init, DeviceManager};
+use firmware_common::{vl_main, DeviceManager};
 use futures::join;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
@@ -409,7 +409,7 @@ async fn main(_spawner: Spawner) {
         );
 
         info!("Starting firmware common");
-        let firmware_common_future = init(&mut device_manager, device_id(), None);
+        let firmware_common_future = vl_main(&mut device_manager, device_id(), None);
 
         #[allow(unreachable_code)]
         {
