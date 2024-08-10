@@ -10,7 +10,7 @@ impl SysReset {
 }
 
 impl CommonSysReset for SysReset {
-    fn reset(self) -> ! {
+    fn reset(&self) -> ! {
         cortex_m::peripheral::SCB::sys_reset()
     }
 }
