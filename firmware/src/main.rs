@@ -162,7 +162,13 @@ async fn main(_spawner: Spawner) {
     let p = embassy_stm32::init(config);
     info!("Hello, World!");
     let rcc_cr = pac::RCC.cr().read();
-    debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
+    
+    let debug_fut = async {
+        loop{
+            sleep!(1000);
+            debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
+        }
+    };
 
     {
         use core::mem::MaybeUninit;
@@ -411,5 +417,5 @@ async fn main(_spawner: Spawner) {
         }
     };
 
-    join!(main_fut, watchdog_fut);
+    join!(main_fut, watchdog_fut, debug_fut);
 }
