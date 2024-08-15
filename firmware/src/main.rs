@@ -63,7 +63,7 @@ use firmware_common::driver::barometer::Barometer;
 use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
 use firmware_common::driver::serial::get_dummy_serial;
-use firmware_common::{vl_main, DeviceManager};
+use firmware_common::{vl_main, VLDeviceManager};
 use futures::join;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
@@ -358,7 +358,7 @@ async fn main(_spawner: Spawner) {
 
         // Can bus
         debug!("Setting up CAN bus");
-        let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
+        let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5).await;
 
         // Camera
         // let camera = GPIOCamera::new(p.PD4.degrade());
@@ -376,7 +376,7 @@ async fn main(_spawner: Spawner) {
 
         buzzer.play(3000, 50).await;
 
-        let mut device_manager = DeviceManager::new(
+        let mut device_manager = VLDeviceManager::new(
             sys_reset,
             Clock::new(),
             Delay,

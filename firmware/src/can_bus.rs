@@ -1,14 +1,17 @@
+use core::mem;
+
 use embassy_stm32::{
     bind_interrupts,
-    can::{self, enums::BusError, frame::Envelope, Can, CanConfigurator, CanRx, CanTx, Frame},
-    gpio::{Input, Level, Output, Pull, Speed},
-    peripherals::{FDCAN1, PD0, PD1, PD2, PD3, PD5},
+    can::{self, enums::BusError, frame::Envelope, CanConfigurator, CanRx, CanTx, Frame},
+    gpio::{Level, Output, Speed},
+    peripherals::{FDCAN1, PD0, PD1, PD3, PD5},
 };
 use embedded_can::{ExtendedId, Id};
 use firmware_common::{
     common::can_bus::message::CanBusMessage,
     driver::can_bus::{
-        CanBusRX as CanBusRXTrait, CanBusRawMessage, CanBusTX as CanBusTXTrait, SplitableCanBus,
+        CanBusRX as CanBusRXTrait, CanBusRawMessage, CanBusTX as CanBusTXTrait,
+        SplitableCanBusWrapper,
     },
 };
 
@@ -19,69 +22,46 @@ bind_interrupts!(struct Irqs {
     FDCAN1_IT1 => can::IT1InterruptHandler<FDCAN1>;
 });
 
-pub struct CanBus {
-    fdcan: Can<'static>,
-    en: Output<'static>,
-    stb_n: Output<'static>,
-    err_n: Input<'static>,
-    self_node_type: u8,
-    self_node_id: u16,
-}
+pub struct CanBus;
 
 impl CanBus {
-    pub fn new(fdcan: FDCAN1, rx: PD0, tx: PD1, en: PD3, stb_n: PD5, err_n: PD2) -> Self {
+    pub async fn new(
+        fdcan: FDCAN1,
+        rx: PD0,
+        tx: PD1,
+        en: PD3,
+        stb_n: PD5,
+    ) -> SplitableCanBusWrapper<CanBusTx, CanBusRx, BusError> {
+        let mut en = Output::new(en, Level::Low, Speed::Low);
+        let mut stb_n = Output::new(stb_n, Level::Low, Speed::Low);
+        en.set_low();
+        stb_n.set_low();
+        sleep!(10);
+        en.set_high();
+        stb_n.set_high();
+        sleep!(10);
+        mem::forget(en);
+        mem::forget(stb_n);
+
         let mut can_config = CanConfigurator::new(fdcan, rx, tx, Irqs);
         can_config.set_bitrate(250_000);
         let can = can_config.into_normal_mode();
 
-        Self {
-            fdcan: can,
-            en: Output::new(en, Level::Low, Speed::Low),
-            stb_n: Output::new(stb_n, Level::Low, Speed::Low),
-            err_n: Input::new(err_n, Pull::None),
-            self_node_type: 0,
-            self_node_id: 0,
-        }
-    }
-}
+        let (tx, rx, _) = can.split();
+        let tx = CanBusTx {
+            can_tx: tx,
+            self_node: (0, 0),
+        };
+        let rx = CanBusRx { can_rx: rx };
 
-impl SplitableCanBus for CanBus {
-    type Error = BusError;
-    type TX = CanBusTx;
-    type RX = CanBusRx;
-
-    async fn reset(&mut self) -> Result<(), Self::Error> {
-        self.en.set_low();
-        self.stb_n.set_low();
-        sleep!(10);
-        self.en.set_high();
-        self.stb_n.set_high();
-        sleep!(10);
-        Ok(())
-    }
-
-    fn configure_self_node(&mut self, node_type: u8, node_id: u16) {
-        self.self_node_type = node_type;
-        self.self_node_id = node_id;
-    }
-
-    fn split(self) -> (CanBusTx, CanBusRx) {
-        let (can_tx, can_rx, _) = self.fdcan.split();
-        (
-            CanBusTx {
-                can_tx,
-                self_node_id: self.self_node_id,
-                self_node_type: self.self_node_type,
-            },
-            CanBusRx { can_rx },
-        )
+        SplitableCanBusWrapper::new(tx, rx)
     }
 }
 
 pub struct CanBusTx {
-    self_node_type: u8,
-    self_node_id: u16,
     can_tx: CanTx<'static>,
+    // node type, node id
+    self_node: (u8, u16),
 }
 
 impl CanBusTXTrait for CanBusTx {
@@ -93,7 +73,7 @@ impl CanBusTXTrait for CanBusTx {
         priority: u8,
     ) -> Result<(), Self::Error> {
         let frame = Frame::new_extended(
-            T::create_id(priority, self.self_node_type, self.self_node_id).into(),
+            T::create_id(priority, self.self_node.0, self.self_node.1).into(),
             &message.to_data(),
         )
         .unwrap();
@@ -106,10 +86,8 @@ impl CanBusTXTrait for CanBusTx {
     async fn send_remote<T: CanBusMessage>(&mut self, priority: u8) -> Result<(), Self::Error> {
         let frame = Frame::new_remote(
             Id::Extended(
-                ExtendedId::new(
-                    T::create_id(priority, self.self_node_type, self.self_node_id).into(),
-                )
-                .unwrap(),
+                ExtendedId::new(T::create_id(priority, self.self_node.0, self.self_node.1).into())
+                    .unwrap(),
             ),
             T::len(),
         )
@@ -119,11 +97,19 @@ impl CanBusTXTrait for CanBusTx {
         }
         Ok(())
     }
+
+    fn configure_self_node(&mut self, node_type: u8, node_id: u16) {
+        self.self_node = (node_type, node_id);
+    }
 }
 
 pub struct EnvelopeWrapper(Envelope);
 
 impl CanBusRawMessage for EnvelopeWrapper {
+    fn timestamp(&self) -> f64 {
+        self.0.ts.as_micros() as f64 / 1000.0
+    }
+
     fn id(&self) -> u32 {
         match self.0.frame.id() {
             Id::Standard(id) => id.as_raw() as u32,

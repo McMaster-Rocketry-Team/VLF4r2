@@ -1,4 +1,5 @@
 use core::cell::RefCell;
+use core::fmt;
 use cortex_m::singleton;
 use defmt::debug;
 use embassy_stm32::bind_interrupts;
@@ -102,6 +103,12 @@ impl embedded_io_async::Error for UsbError {
     }
 }
 
+impl fmt::Debug for &Usb {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Usb")
+    }
+}
+
 impl SplitableUSB for &Usb {
     async fn wait_connection(&mut self) {
         let mut rx = self.rx.borrow_mut();
@@ -111,12 +118,14 @@ impl SplitableUSB for &Usb {
 
 impl SplitableSerial for &Usb {
     type Error = UsbError;
+    type TX<'a> = TXGuard<'a> where Self: 'a;
+    type RX<'a> = RXGuard<'a> where Self: 'a;
 
     fn split(
         &mut self,
     ) -> (
-        impl embedded_io_async::Write<Error = Self::Error>,
-        impl embedded_io_async::Read<Error = Self::Error>,
+        TXGuard<'_>,
+        RXGuard<'_>,
     ) {
         let tx = TXGuard { usb: self };
         let rx = RXGuard {
@@ -128,7 +137,7 @@ impl SplitableSerial for &Usb {
     }
 }
 
-struct TXGuard<'a> {
+pub struct TXGuard<'a> {
     usb: &'a Usb,
 }
 
@@ -170,7 +179,7 @@ impl<'a> embedded_io_async::Write for TXGuard<'a> {
     }
 }
 
-struct RXGuard<'a> {
+pub struct RXGuard<'a> {
     usb: &'a Usb,
     buffer: [u8; 64],
     buffer_len: usize,
