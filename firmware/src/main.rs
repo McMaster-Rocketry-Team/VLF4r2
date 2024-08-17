@@ -172,7 +172,7 @@ async fn main(_spawner: Spawner) {
 
     {
         use core::mem::MaybeUninit;
-        const HEAP_SIZE: usize = 1024;
+        const HEAP_SIZE: usize = 512;
         static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
         unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
     }
@@ -413,7 +413,11 @@ async fn main(_spawner: Spawner) {
 
         #[allow(unreachable_code)]
         {
-            join!(firmware_common_future, usb_runner.run(), gps_fut);
+            join!(
+                firmware_common_future, 
+                usb_runner.run(), 
+                gps_fut,
+            );
         }
     };
 

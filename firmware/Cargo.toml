@@ -30,7 +30,7 @@ embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", features = 
     "defmt",
     "memory-x",
     "stm32h723vg",
-    "time-driver-any",
+    "time-driver-tim3",
     "exti",
     "unstable-pac",
 ] }
@@ -68,7 +68,7 @@ bench = false
 
 [profile.dev]
 debug = true
-opt-level = "z"
+opt-level = 3
 codegen-units = 1
 lto = true
 incremental = true

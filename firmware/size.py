@@ -31,7 +31,7 @@ if "--loc" in sys.argv:
     exit()
 
 FLASH_SIZE_KIB = 1024
-RAM_SIZE_KIB = 512
+RAM_SIZE_KIB = 320
 
 build_env = os.environ.copy()
 # build_env['DEFMT_LOG'] = 'off'
