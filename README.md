@@ -82,3 +82,5 @@ SRAD Avionics from the [McMaster Rocketry Team](https://www.macrocketry.ca/)
 - X-out board: Accept
 - Package Box: With JLCPCB logo
 - Board Outline Tolerance: ±0.2mm(Regular)
+
+![image](https://github.com/user-attachments/assets/86976e86-a113-4939-8f95-d82e5439f3dc)
