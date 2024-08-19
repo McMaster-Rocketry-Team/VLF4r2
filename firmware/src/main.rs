@@ -361,7 +361,7 @@ async fn main(_spawner: Spawner) {
         let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
 
         // Camera
-        // let camera = GPIOCamera::new(p.PD4.degrade());
+        let camera = GPIOCamera::new(p.PB11.degrade());
 
         // System Reset
         debug!("Setting up System Reset");
@@ -402,7 +402,7 @@ async fn main(_spawner: Spawner) {
             baro,
             &gps,
             gps_pps,
-            DummyCamera {},
+            camera,
             can_bus,
             Vec::from_slice(&[0, 0]).unwrap(),
             DummyDebugger {},
