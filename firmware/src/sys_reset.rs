@@ -1,7 +1,7 @@
 use firmware_common::driver::sys_reset::SysReset as CommonSysReset;
 
 #[derive(Clone, Copy)]
-pub struct SysReset {}
+pub struct SysReset;
 
 impl SysReset {
     pub fn new() -> Self {

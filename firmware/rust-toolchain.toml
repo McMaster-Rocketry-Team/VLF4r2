@@ -2,5 +2,5 @@
 channel = "nightly-2024-08-04"
 components = [ "rust-src", "rustfmt", "llvm-tools" ]
 targets = [
-    "thumbv7em-none-eabi"
+    "thumbv7em-none-eabihf"
 ]

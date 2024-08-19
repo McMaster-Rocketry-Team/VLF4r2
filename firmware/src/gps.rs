@@ -1,14 +1,15 @@
 use core::cell::RefCell;
 
-use defmt::trace;
+use defmt::{trace, warn};
 use embassy_stm32::{
     bind_interrupts,
     exti::ExtiInput,
     gpio::{Level, Output, Speed},
     mode::Async,
     peripherals::{DMA2_CH0, DMA2_CH1, PA2, PA3, PE9, USART2},
-    usart::{self, Config as UartConfig, Error, Uart},
+    usart::{self, Config as UartConfig, Error, RingBufferedUartRx, Uart},
 };
+use embedded_io_async::Read;
 use firmware_common::driver::uart_gps::UARTGPS as CommonUartGPS;
 use firmware_common::{
     common::sensor_reading::SensorReading,
@@ -90,8 +91,30 @@ impl UartGPS {
         let uart = self.uart.borrow_mut().take().unwrap();
         let rx = uart.split().1;
         let mut buffer = [0u8; 84];
-        let mut rx = rx.into_ring_buffered(&mut buffer);
+        let rx = rx.into_ring_buffered(&mut buffer);
+        let mut rx = RingBufferedRxOverrunWrapper(rx);
         self.gps.run(&mut rx, clock).await;
+    }
+}
+
+struct RingBufferedRxOverrunWrapper<'a>(RingBufferedUartRx<'a>);
+
+impl<'a> embedded_io_async::ErrorType for RingBufferedRxOverrunWrapper<'a> {
+    type Error = Error;
+}
+
+impl<'a> embedded_io_async::Read for RingBufferedRxOverrunWrapper<'a> {
+    async fn read(&mut self, buf: &mut [u8]) -> Result<usize, Self::Error> {
+        let result = self.0.read(buf).await;
+        match result {
+            Ok(size) => Ok(size),
+            Err(Error::Overrun) => {
+                warn!("Uart overrun");
+                self.0.start()?;
+                Err(Error::Overrun)
+            }
+            Err(e) => Err(e),
+        }
     }
 }
 

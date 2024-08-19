@@ -31,6 +31,7 @@ use crate::lsm6dsm::LSM6DSM;
 use crate::mmc5603::MMC5603;
 use crate::ms5607::MS5607;
 use buzzer::Buzzer;
+use camera::GPIOCamera;
 use can_bus::CanBus;
 use clock::{Clock, Delay};
 use defmt::{debug, info};
@@ -60,10 +61,9 @@ use embassy_stm32::{
 };
 use embassy_sync::{blocking_mutex::raw::NoopRawMutex, mutex::Mutex};
 use firmware_common::driver::barometer::Barometer;
-use firmware_common::driver::camera::DummyCamera;
 use firmware_common::driver::debugger::DummyDebugger;
 use firmware_common::driver::serial::get_dummy_serial;
-use firmware_common::{init, DeviceManager};
+use firmware_common::{vl_main, VLDeviceManager};
 use futures::join;
 use indicator::GPIOLED;
 use lora_phy::iv::GenericSx126xInterfaceVariant;
@@ -162,9 +162,9 @@ async fn main(_spawner: Spawner) {
     let p = embassy_stm32::init(config);
     info!("Hello, World!");
     let rcc_cr = pac::RCC.cr().read();
-    
+
     let debug_fut = async {
-        loop{
+        loop {
             sleep!(1000);
             debug!("HSE Ready: {} HSE on: {}", rcc_cr.hserdy(), rcc_cr.hseon());
         }
@@ -172,7 +172,7 @@ async fn main(_spawner: Spawner) {
 
     {
         use core::mem::MaybeUninit;
-        const HEAP_SIZE: usize = 1024;
+        const HEAP_SIZE: usize = 512;
         static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
         unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
     }
@@ -358,7 +358,7 @@ async fn main(_spawner: Spawner) {
 
         // Can bus
         debug!("Setting up CAN bus");
-        let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5, p.PD2);
+        let can_bus = CanBus::new(p.FDCAN1, p.PD0, p.PD1, p.PD3, p.PD5).await;
 
         // Camera
         let camera = GPIOCamera::new(p.PB11.degrade());
@@ -376,7 +376,7 @@ async fn main(_spawner: Spawner) {
 
         buzzer.play(3000, 50).await;
 
-        let mut device_manager = DeviceManager::new(
+        let mut device_manager = VLDeviceManager::new(
             sys_reset,
             Clock::new(),
             Delay,
@@ -409,11 +409,11 @@ async fn main(_spawner: Spawner) {
         );
 
         info!("Starting firmware common");
-        let firmware_common_future = init(&mut device_manager, device_id(), None);
+        let firmware_common_future = vl_main(&mut device_manager, device_id(), None);
 
         #[allow(unreachable_code)]
         {
-            join!(firmware_common_future, usb_runner.run(), gps_fut);
+            join!(firmware_common_future, usb_runner.run(), gps_fut,);
         }
     };
 
