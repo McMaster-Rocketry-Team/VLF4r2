@@ -1,5 +1,6 @@
 use core::mem;
 
+use defmt::info;
 use embassy_stm32::{
     bind_interrupts,
     can::{self, enums::BusError, frame::Envelope, CanConfigurator, CanRx, CanTx, Frame},
@@ -45,6 +46,7 @@ impl CanBus {
 
         let mut can_config = CanConfigurator::new(fdcan, rx, tx, Irqs);
         can_config.set_bitrate(250_000);
+        // can_config.set_config(mode)
         let can = can_config.into_normal_mode();
 
         let (tx, rx, _) = can.split();
@@ -77,9 +79,12 @@ impl CanBusTXTrait for CanBusTx {
             &message.to_data(),
         )
         .unwrap();
+        info!("Sending CAN frame");
         if let Some(returned_frame) = self.can_tx.write(&frame).await {
+            info!("Sending returned CAN frame");
             self.can_tx.write(&returned_frame).await;
         }
+        info!("Sent CAN frame");
         Ok(())
     }
 
