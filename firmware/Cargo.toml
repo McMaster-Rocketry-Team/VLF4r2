@@ -1,0 +1,82 @@
+# This file was automatically generated.
+
+[package]
+edition = "2021"
+name = "vlf4r2-firmware"
+version = "0.1.0"
+default-run = "vlf4r2-firmware"
+
+[dependencies]
+cortex-m = { version = "0.7.7", features = [
+    "inline-asm",
+    "critical-section-single-core",
+] }
+cortex-m-rt = "0.7.3"
+defmt = "0.3"
+defmt-rtt = "0.4"
+embassy-executor = { git = "https://github.com/embassy-rs/embassy.git", features = [
+    "nightly",
+    "defmt",
+    "arch-cortex-m",
+    "executor-thread",
+    "integrated-timers",
+] }
+embassy-futures = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
+embassy-usb = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
+futures = { version = "0.3.17", default-features = false, features = [
+    "async-await",
+] }
+embassy-stm32 = { git = "https://github.com/embassy-rs/embassy.git", features = [
+    "defmt",
+    "memory-x",
+    "stm32h723vg",
+    "time-driver-tim3",
+    "exti",
+    "unstable-pac",
+] }
+embassy-sync = { git = "https://github.com/embassy-rs/embassy.git", default-features = false }
+embassy-time = { git = "https://github.com/embassy-rs/embassy.git", features = [
+    "defmt",
+    "defmt-timestamp-uptime",
+    "tick-hz-512_000",
+] }
+embedded-hal-async = { version = "1.0.0", features = ["defmt-03"] }
+embedded-io-async = "0.6.1"
+panic-halt = "0.2.0"
+panic-probe = { version = "0.3.1", features = ["print-defmt"] }
+libm = "0.2.8"
+heapless = { version = "0.8.0", features = ["defmt-03"], default-features = false }
+lora-phy = {  git = "https://github.com/lora-rs/lora-rs", default-features = false }
+embassy-embedded-hal = { git = "https://github.com/embassy-rs/embassy.git", features = ["defmt"] }
+vlfs ={ path = "../rust-monorepo/vlfs" }
+firmware-common = { path = "../rust-monorepo/firmware-common", features = ["defmt"] }
+stm32-device-signature = { version = "0.3.3", features = ["stm32h72x"] }
+embedded-can = "0.4.1"
+embedded-alloc = "0.5.1"
+
+
+[[bin]]
+name = "vlf4r2-firmware"
+test = false
+bench = false
+
+# [[bin]]
+# name = "bringup"
+# path = "src/bring_up.rs"
+# test = false
+# bench = false
+
+[profile.dev]
+debug = true
+opt-level = 3
+codegen-units = 1
+lto = true
+incremental = true
+
+[profile.release]
+debug = true      # symbols are nice and they don't increase the size on Flash
+opt-level = 3
+codegen-units = 1
+lto = true
+incremental = true
+# panic = "abort"
